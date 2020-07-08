@@ -1,0 +1,30 @@
+<h2 id="tableLabel">Empleats</h2>
+
+<button [routerLink]='["/employee-detail"]' class="btn-add">Afegir empleat</button>
+
+<p *ngIf="!employees"><em>Loading...</em></p>
+
+<table *ngIf="employees">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nom</th>
+      <th>Cognoms</th>
+      <th>Càrrec</th>
+      <th>Salari</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of employees">
+      <td>{{ employee.id }}</td>
+      <td>{{ employee.firstName }}</td>
+      <td>{{ employee.lastName }}</td>
+      <td>{{ employee.position }}</td>
+      <td>{{ employee.salary }}</td>
+      <td><button routerLink="/employee-detail/{{employee.id}}"
+        class="btn-update" title="update employee">Editar</button></td>
+      <td><button class="btn-delete" title="delete employee"
+        (click)="delete(employee)">Borrar</button></td>
+    </tr>
+  </tbody>
+</table>
