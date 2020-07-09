@@ -1,6 +1,4 @@
-import { Person } from '../person/person';
-
-export interface Employee {
+export interface Client {
   id: number;
   personId: number;
   position: string;

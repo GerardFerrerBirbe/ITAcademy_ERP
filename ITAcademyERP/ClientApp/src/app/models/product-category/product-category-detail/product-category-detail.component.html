@@ -1,1 +1,22 @@
-<p>product-category-detail works!</p>
+<h2>{{editionMode ? 'Fitxa' : 'Nova'}} Categoria</h2>
+<form class="form-horizontal" novalidate
+    (ngSubmit)="save()" [formGroup]="formGroup">
+      <div class="form-group">
+        <label for="nameId">Nom Categoria</label>
+        <div>
+          <input class="form-control"
+          id="nameId"
+          type="text"
+          required
+          formControlName="productCategoryName"/>
+        </div>
+      </div>        
+      <div class="form-group">
+        <div>
+          <button type="submit">Guardar</button>
+        </div>
+      </div>
+</form>
+
+<button (click)="goBack()">Tornar</button>
+

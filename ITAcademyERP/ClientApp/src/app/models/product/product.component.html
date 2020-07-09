@@ -1,1 +1,28 @@
-<p>product works!</p>
+<h2 id="tableLabel">Productes</h2>
+
+<button [routerLink]='["/product-detail"]' class="btn-add">Nou producte</button>
+<button [routerLink]='["/product-cat"]' class="btn-add">Llistat Categories</button>
+
+<p *ngIf="!products"><em>Loading...</em></p>
+
+<table *ngIf="products">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nom Producte</th>
+      <th>Id Categoria</th>      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.productName }}</td>
+      <td>{{ product.productCategoryId }}</td>       
+      <td><button routerLink="/product-detail/{{product.id}}"
+        class="btn-update" title="update product">Seleccionar</button></td>
+      <td><button class="btn-delete" title="delete product"
+        (click)="delete(product)">Borrar</button></td>
+    </tr>
+  </tbody>
+</table>
+

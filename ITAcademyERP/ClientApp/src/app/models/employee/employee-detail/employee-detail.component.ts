@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Employee } from '../employee';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { EmployeeService }  from '../../../services/employee.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-detail',
@@ -7,9 +12,70 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EmployeeDetailComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private employeeService: EmployeeService,
+    private location: Location
+  ) { }
+
+  editionMode: boolean = false;
+  formGroup: FormGroup;
+  employeeId: any;
+
+  employees: Employee[];
 
   ngOnInit(): void {
+    this.formGroup = this.fb.group({
+      personId: '',
+      position: '',
+      salary: '',
+      userName: '',
+      password: ''
+    });  
+
+    this.route.params.subscribe(params => {
+      if (params["id"] == undefined){
+        return;
+      }
+      this.editionMode = true;
+
+      this.employeeId = params["id"];
+
+      this.employeeService.getEmployee(this.employeeId.toString())
+      .subscribe(employee => this.loadForm(employee));
+    });
+  }
+
+  loadForm(employee: Employee){
+    this.formGroup.patchValue({
+      personId: employee.personId,
+      position: employee.position,
+      salary: employee.salary,
+      userName: employee.userName,
+      password: employee.password
+    })
+  }
+
+  save() {
+    let employee: Employee = Object.assign({}, this.formGroup.value);
+    console.table(employee);
+
+    if (this.editionMode){
+      //edit employee     
+      this.employeeId = parseInt(this.employeeId);
+      employee.id = this.employeeId;      
+      this.employeeService.updateEmployee(employee)
+      .subscribe();
+    } else {
+      //add employee
+      this.employeeService.addEmployee(employee)
+      .subscribe();
+    }    
+  }
+  
+  goBack(): void {
+    this.location.back();
   }
 
 }

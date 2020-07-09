@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Person } from './person';
+import { PersonService } from 'src/app/services/person.service';
 
 @Component({
   selector: 'app-person',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PersonComponent implements OnInit {
 
-  constructor() { }
+  public people: Person[];
+  
+  constructor(private personService: PersonService) { }
 
   ngOnInit(): void {
+    this.getPeople();
+  }
+
+  getPeople(): void {
+    this.personService.getPeople()
+    .subscribe(people => this.people = people);
+  }
+
+  delete(person: Person): void {
+    this.people = this.people.filter(p => p !== person);
+    this.personService.deletePerson(person).subscribe();
   }
 
 }

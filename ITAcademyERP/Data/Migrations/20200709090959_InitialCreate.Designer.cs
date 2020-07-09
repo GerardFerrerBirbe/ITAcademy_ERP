@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITAcademyERP.Data.Migrations
 {
     [DbContext(typeof(ITAcademyERPContext))]
-    [Migration("20200707115757_InitialCreate")]
+    [Migration("20200709090959_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,6 +114,9 @@ namespace ITAcademyERP.Data.Migrations
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OrderPriorityId")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrderStateId")
                         .HasColumnType("int");
 
@@ -124,6 +127,8 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasIndex("DeliveryAddressId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("OrderPriorityId");
 
                     b.HasIndex("OrderStateId");
 
@@ -142,6 +147,9 @@ namespace ITAcademyERP.Data.Migrations
 
                     b.Property<string>("ProductId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
 
                     b.Property<double?>("Quantity")
                         .HasColumnType("float");
@@ -162,7 +170,24 @@ namespace ITAcademyERP.Data.Migrations
 
                     b.HasIndex("OrderHeaderId");
 
+                    b.HasIndex("ProductId1");
+
                     b.ToTable("OrderLine");
+                });
+
+            modelBuilder.Entity("ITAcademyERP.Models.OrderPriority", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Priority")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderPriority");
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.OrderState", b =>
@@ -210,9 +235,6 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderLinesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
 
@@ -220,8 +242,6 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderLinesId");
 
                     b.HasIndex("ProductCategoryId");
 
@@ -277,6 +297,12 @@ namespace ITAcademyERP.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ITAcademyERP.Models.OrderPriority", "OrderPriority")
+                        .WithMany("OrderHeader")
+                        .HasForeignKey("OrderPriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ITAcademyERP.Models.OrderState", "OrderState")
                         .WithMany("OrderHeader")
                         .HasForeignKey("OrderStateId")
@@ -289,6 +315,10 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasOne("ITAcademyERP.Models.OrderHeader", "OrderHeader")
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderHeaderId");
+
+                    b.HasOne("ITAcademyERP.Models.Product", "Product")
+                        .WithMany("OrderLines")
+                        .HasForeignKey("ProductId1");
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.Person", b =>
@@ -300,10 +330,6 @@ namespace ITAcademyERP.Data.Migrations
 
             modelBuilder.Entity("ITAcademyERP.Models.Product", b =>
                 {
-                    b.HasOne("ITAcademyERP.Models.OrderLine", "OrderLines")
-                        .WithMany("Product")
-                        .HasForeignKey("OrderLinesId");
-
                     b.HasOne("ITAcademyERP.Models.ProductCategory", "ProductCategory")
                         .WithMany("Product")
                         .HasForeignKey("ProductCategoryId")

@@ -1,6 +1,6 @@
 <h2 id="tableLabel">Empleats</h2>
 
-<button [routerLink]='["/employee-detail"]' class="btn-add">Afegir empleat</button>
+<button [routerLink]='["/employee-detail"]' class="btn-add">Nou empleat</button>
 
 <p *ngIf="!employees"><em>Loading...</em></p>
 
@@ -8,21 +8,23 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>Nom</th>
-      <th>Cognoms</th>
+      <th>Id persona</th>
       <th>Càrrec</th>
       <th>Salari</th>
+      <th>Usuari</th>
+      <th>Contrasenya</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let employee of employees">
       <td>{{ employee.id }}</td>
-      <td>{{ employee.firstName }}</td>
-      <td>{{ employee.lastName }}</td>
+      <td>{{ employee.personId }}</td>
       <td>{{ employee.position }}</td>
       <td>{{ employee.salary }}</td>
+      <td>{{ employee.userName }}</td>
+      <td>{{ employee.password }}</td>        
       <td><button routerLink="/employee-detail/{{employee.id}}"
-        class="btn-update" title="update employee">Editar</button></td>
+        class="btn-update" title="update employee">Seleccionar</button></td>
       <td><button class="btn-delete" title="delete employee"
         (click)="delete(employee)">Borrar</button></td>
     </tr>

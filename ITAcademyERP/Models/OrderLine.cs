@@ -7,7 +7,6 @@ namespace ITAcademyERP.Models
     {
         public OrderLine()
         {            
-            Product = new HashSet<Product>();
         }
 
         public int Id { get; set; }
@@ -20,6 +19,6 @@ namespace ITAcademyERP.Models
         public double? TotalVatPrice { get; set; }
 
         public virtual OrderHeader OrderHeader { get; set; }
-        public virtual ICollection<Product> Product { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

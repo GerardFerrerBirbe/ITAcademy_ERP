@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductCategory } from './product-category';
+import { ProductCategoryService } from 'src/app/services/product-category.service';
+
 
 @Component({
   selector: 'app-product-category',
@@ -7,9 +10,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductCategoryComponent implements OnInit {
 
-  constructor() { }
+  public productCategories: ProductCategory[];
+  
+  constructor(private productCategoryService: ProductCategoryService) { }
 
   ngOnInit(): void {
+    this.getProductCategories();
   }
 
+  getProductCategories(): void {
+    this.productCategoryService.getProductCategories()
+    .subscribe(productCategories => this.productCategories = productCategories);
+  }
+
+  delete(productCategory: ProductCategory): void {
+    this.productCategories = this.productCategories.filter(e => e !== productCategory);
+    this.productCategoryService.deleteProductCategory(productCategory).subscribe();
+  }
 }

@@ -6,54 +6,53 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Models;
-using SQLitePCL;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly ITAcademyERPContext _context;
 
-        public EmployeesController(ITAcademyERPContext context)
+        public ProductsController(ITAcademyERPContext context)
         {
             _context = context;
         }
 
-        // GET: api/Employees
+        // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployee()
-        {            
-            return await _context.Employee.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        {
+            return await _context.Product.ToListAsync();
         }
 
-        // GET: api/Employees/5
+        // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
-        {              
-            var employee = await _context.Employee.FindAsync(id);
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            var product = await _context.Product.FindAsync(id);
 
-            if (employee == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return employee;
+            return product;
         }
 
-        // PUT: api/Employees/5
+        // PUT: api/Products/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            if (id != employee.Id)
+            if (id != product.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(employee).State = EntityState.Modified;
+            _context.Entry(product).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +60,7 @@ namespace ITAcademyERP.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployeeExists(id))
+                if (!ProductExists(id))
                 {
                     return NotFound();
                 }
@@ -74,37 +73,37 @@ namespace ITAcademyERP.Controllers
             return NoContent();
         }
 
-        // POST: api/Employees
+        // POST: api/Products
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.Employee.Add(employee);
+            _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
+            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
-        // DELETE: api/Employees/5
+        // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Employee>> DeleteEmployee(int id)
+        public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
-            var employee = await _context.Employee.FindAsync(id);
-            if (employee == null)
+            var product = await _context.Product.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Employee.Remove(employee);
+            _context.Product.Remove(product);
             await _context.SaveChangesAsync();
 
-            return employee;
+            return product;
         }
 
-        private bool EmployeeExists(int id)
+        private bool ProductExists(int id)
         {
-            return _context.Employee.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.Id == id);
         }
     }
 }

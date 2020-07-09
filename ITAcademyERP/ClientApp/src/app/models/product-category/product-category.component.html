@@ -1,1 +1,25 @@
-<p>product-category works!</p>
+<h2 id="tableLabel">Categories Productes</h2>
+
+<button [routerLink]='["/product-cat-detail"]' class="btn-add">Nova Categoria</button>
+<button [routerLink]='["/product"]' class="btn-add">Tornar a Productes</button>
+
+<p *ngIf="!productCategories"><em>Loading...</em></p>
+
+<table *ngIf="productCategories">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nom Categoria</th>      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let productCategory of productCategories">
+      <td>{{ productCategory.id }}</td>
+      <td>{{ productCategory.productCategoryName }}</td>      
+      <td><button routerLink="/product-cat-detail/{{productCategory.id}}"
+        class="btn-update" title="update productCategory">Seleccionar</button></td>
+      <td><button class="btn-delete" title="delete productCategory"
+        (click)="delete(productCategory)">Borrar</button></td>
+    </tr>
+  </tbody>
+</table>

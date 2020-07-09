@@ -146,6 +146,9 @@ namespace ITAcademyERP.Data.Migrations
                     b.Property<string>("ProductId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
+
                     b.Property<double?>("Quantity")
                         .HasColumnType("float");
 
@@ -164,6 +167,8 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderHeaderId");
+
+                    b.HasIndex("ProductId1");
 
                     b.ToTable("OrderLine");
                 });
@@ -228,9 +233,6 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("OrderLinesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCategoryId")
                         .HasColumnType("int");
 
@@ -238,8 +240,6 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderLinesId");
 
                     b.HasIndex("ProductCategoryId");
 
@@ -313,6 +313,10 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasOne("ITAcademyERP.Models.OrderHeader", "OrderHeader")
                         .WithMany("OrderLines")
                         .HasForeignKey("OrderHeaderId");
+
+                    b.HasOne("ITAcademyERP.Models.Product", "Product")
+                        .WithMany("OrderLines")
+                        .HasForeignKey("ProductId1");
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.Person", b =>
@@ -324,10 +328,6 @@ namespace ITAcademyERP.Data.Migrations
 
             modelBuilder.Entity("ITAcademyERP.Models.Product", b =>
                 {
-                    b.HasOne("ITAcademyERP.Models.OrderLine", "OrderLines")
-                        .WithMany("Product")
-                        .HasForeignKey("OrderLinesId");
-
                     b.HasOne("ITAcademyERP.Models.ProductCategory", "ProductCategory")
                         .WithMany("Product")
                         .HasForeignKey("ProductCategoryId")

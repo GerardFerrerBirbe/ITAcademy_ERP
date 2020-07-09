@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Employee } from '../models/employee/employee';
 
@@ -22,7 +22,8 @@ export class EmployeeService {
 
   getEmployee(id: string): Observable<Employee> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Employee>(url)
+    let params = new HttpParams().set('includePerson', "true");
+    return this.http.get<Employee>(url, {params: params});
   }
 
   updateEmployee(employee: Employee): Observable<Employee> {
