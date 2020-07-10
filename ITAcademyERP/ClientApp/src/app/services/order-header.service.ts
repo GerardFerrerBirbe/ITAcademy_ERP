@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { OrderHeader } from '../models/order-header/order-header';
 
@@ -21,8 +21,9 @@ export class OrderHeaderService {
   }
 
   getOrderHeader(id: string): Observable<OrderHeader> {
+    let params = new HttpParams().set('includeOrderLines', "true");
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<OrderHeader>(url);
+    return this.http.get<OrderHeader>(url, {params: params});
   }
 
   updateOrderHeader(orderHeader: OrderHeader): Observable<OrderHeader> {

@@ -29,9 +29,18 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/OrderHeaders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderHeader>> GetOrderHeader(int id)
+        public async Task<ActionResult<OrderHeader>> GetOrderHeader(int id, bool includeOrderLines = false)
         {
-            var orderHeader = await _context.OrderHeader.FindAsync(id);
+            OrderHeader orderHeader;
+
+            if (includeOrderLines)
+            {
+                orderHeader = await _context.OrderHeader.Include(x => x.OrderLines).SingleOrDefaultAsync(x => x.Id == id);
+            }
+            else
+            {
+                orderHeader = await _context.OrderHeader.SingleOrDefaultAsync(x => x.Id == id);
+            }
 
             if (orderHeader == null)
             {

@@ -1,8 +1,8 @@
 export interface OrderLine {
   id: number;
-  personId: number;
-  position: string;
-  salary: number;
-  userName: string;
-  password: string
+  orderHeaderId: number;
+  productId: number;
+  unitPrice: number;
+  vat: string;
+  quantity: string
 }

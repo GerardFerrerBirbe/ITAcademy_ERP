@@ -1,3 +1,5 @@
+import { OrderLine } from '../order-line/order-line'
+
 export interface OrderHeader {
   id: number;
   orderNumber: number;
@@ -9,4 +11,5 @@ export interface OrderHeader {
   creationDate: string;
   assignToEmployeeDate: string;
   finalisationDate: string;
+  orderLines: OrderLine[];
 }

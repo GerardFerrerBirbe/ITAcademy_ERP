@@ -3,7 +3,7 @@ import { OrderHeader } from '../order-header';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { OrderHeaderService }  from '../../../services/order-header.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-order-detail',
@@ -22,6 +22,7 @@ export class OrderDetailComponent implements OnInit {
   editionMode: boolean = false;
   formGroup: FormGroup;
   orderHeaderId: any;
+  orderLinesToDelete: number[] = [];
 
   orderHeaders: OrderHeader[];
 
@@ -35,7 +36,8 @@ export class OrderDetailComponent implements OnInit {
       orderPriorityId: '',
       creationDate: '',
       assignToEmployeeDate: '',
-      finalisationDate: ''
+      finalisationDate: '',
+      orderLines: this.fb.array([])
     });  
 
     this.route.params.subscribe(params => {
@@ -49,6 +51,37 @@ export class OrderDetailComponent implements OnInit {
       this.orderHeaderService.getOrderHeader(this.orderHeaderId.toString())
       .subscribe(orderHeader => this.loadForm(orderHeader));
     });
+  }
+
+  get orderLines(): FormArray {
+    return this.formGroup.get('orderLines') as FormArray;
+  };
+  
+  buildOrderLine(){
+    return this.fb.group({
+      id: '0',
+      orderHeaderId: this.orderHeaderId != null ? this.orderHeaderId : 0,
+      productId: '0',
+      unitPrice: '0',
+      vat: '0',
+      quantity: '0'
+    })
+  }  
+  
+  addOrderLine(){    
+    let orderLineFG = this.buildOrderLine();
+    this.orderLines.push(orderLineFG);
+  }
+
+  
+
+  deleteOrderLine(index: number){
+    let orderLines = this.formGroup.get('orderLines') as FormArray;
+    let orderLineDelete = orderLines.at(index) as FormGroup;
+    if (orderLineDelete.controls['id'].value != '0') {
+      this.orderLinesToDelete.push(<number>orderLineDelete.controls['id'].value);
+    }
+    orderLines.removeAt(index);
   }
 
   loadForm(orderHeader: OrderHeader){
