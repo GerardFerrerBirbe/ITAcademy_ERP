@@ -1,1 +1,40 @@
-<p>order-header works!</p>
+<h2 id="tableLabel">Comandes</h2>
+
+<button [routerLink]='["/order-detail"]' class="btn-add">Nova comanda</button>
+
+<p *ngIf="!orderHeaders"><em>Loading...</em></p>
+
+<table *ngIf="orderHeaders">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Número Comanda</th>
+      <th>Adreça</th>
+      <th>Client</th>
+      <th>Empleat</th>
+      <th>Estat Ordre</th>
+      <th>Prioritat</th>
+      <th>Data Creació</th> 
+      <th>Data Assignació Empleat</th> 
+      <th>Data Finalització</th> 
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let orderHeader of orderHeaders">
+      <td>{{ orderHeader.id }}</td>
+      <td>{{ orderHeader.orderNumber }}</td>
+      <td>{{ orderHeader.deliveryAddressId }}</td>
+      <td>{{ orderHeader.clientId }}</td>
+      <td>{{ orderHeader.employeeId }}</td>
+      <td>{{ orderHeader.orderStateId }}</td>
+      <td>{{ orderHeader.orderPriorityId }}</td>
+      <td>{{ orderHeader.creationDate }}</td>
+      <td>{{ orderHeader.assignToEmployeeDate }}</td>
+      <td>{{ orderHeader.finalisationDate }}</td>     
+      <td><button routerLink="/order-detail/{{orderHeader.id}}"
+        class="btn-update" title="update orderHeader">Seleccionar</button></td>
+      <td><button class="btn-delete" title="delete orderHeader"
+        (click)="delete(orderHeader)">Borrar</button></td>
+    </tr>
+  </tbody>
+</table>

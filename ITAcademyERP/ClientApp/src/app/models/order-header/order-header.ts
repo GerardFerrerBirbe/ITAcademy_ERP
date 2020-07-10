@@ -1,8 +1,12 @@
 export interface OrderHeader {
   id: number;
-  personId: number;
-  position: string;
-  salary: number;
-  userName: string;
-  password: string
+  orderNumber: number;
+  deliveryAddressId: number;
+  clientId: number;
+  employeeId: number;
+  orderStateId: number;
+  orderPriorityId: number;
+  creationDate: string;
+  assignToEmployeeDate: string;
+  finalisationDate: string;
 }

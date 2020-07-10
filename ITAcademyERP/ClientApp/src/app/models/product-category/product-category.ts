@@ -2,5 +2,6 @@ import { Product } from '../product/product';
 
 export interface ProductCategory {
   id: number;  
-  productCategoryName: string
+  productCategoryName: string;
+  product: Product[];
 }

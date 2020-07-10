@@ -1,1 +1,129 @@
-<p>order-detail works!</p>
+<h2>{{editionMode ? 'Fitxa' : 'Nova'}} Comanda</h2>
+<form class="form-horizontal" novalidate
+  (ngSubmit)="save()" [formGroup]="formGroup">
+  <table>
+    <tr>
+      <td>
+        <div class="form-group">
+          <label for="personIdId">Número Comanda</label>
+          <div>
+            <input class="form-control"
+            id="orderNumberId"
+            type="number"
+            required
+            formControlName="orderNumber"/>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <label for="orderStateIdId">Estat</label>
+          <div>
+            <input class="form-control"
+            id="orderStateIdId"
+            type="number"
+            required
+            formControlName="orderStateId"/>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <label for="orderPriorityIdId">Prioritat</label>
+          <div>
+            <input class="form-control"
+            id="orderPriorityIdId"
+            type="number"
+            required
+            formControlName="orderPriorityId"/>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="form-group">
+          <label for="employeeIdId">Empleat</label>
+          <div>
+            <input class="form-control"
+            id="employeeIdId"
+            type="number"
+            required
+            formControlName="employeeId"/>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <label for="clientIdId">Client</label>
+          <div>
+            <input class="form-control"
+            id="clientIdId"
+            type="number"
+            required
+            formControlName="clientId"/>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <label for="deliveryAddressIdId">Adreça</label>
+          <div>
+            <input class="form-control"
+            id="deliveryAddressIdId"
+            type="number"
+            required
+            formControlName="deliveryAddressId"/>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="form-group">
+          <label for="creationDateId">Data Creació</label>
+          <div>
+            <input class="form-control"
+            id="creationDateId"
+            type="text"
+            required
+            formControlName="creationDate"/>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <label for="assignToEmployeeDateId">Data Assignació Empleat</label>
+          <div>
+            <input class="form-control"
+            id="assignToEmployeeDateId"
+            type="text"
+            required
+            formControlName="assignToEmployeeDate"/>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <label for="finalisationDateId">Data Finalització</label>
+          <div>
+            <input class="form-control"
+            id="finalisationDateId"
+            type="text"
+            required
+            formControlName="finalisationDate"/>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <div class="form-group">
+        <div>
+          <button type="submit">Guardar</button>
+        </div>
+      </div>
+    </tr>
+  </table>      
+</form>
+<button (click)="goBack()">Tornar</button>
+
