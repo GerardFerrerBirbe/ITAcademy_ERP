@@ -3,6 +3,7 @@ import { OrderHeader } from '../order-header';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { OrderHeaderService }  from '../../../services/order-header.service';
+import { OrderLineService } from '../../../services/order-line.service';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 @Component({
@@ -10,12 +11,13 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
   templateUrl: './order-detail.component.html',
   styleUrls: ['./order-detail.component.css']
 })
-export class OrderDetailComponent implements OnInit {
-
+export class OrderDetailComponent implements OnInit {  
+  
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private orderHeaderService: OrderHeaderService,
+    private orderLineService: OrderLineService,
     private location: Location
   ) { }
 
@@ -25,6 +27,10 @@ export class OrderDetailComponent implements OnInit {
   orderLinesToDelete: number[] = [];
 
   orderHeaders: OrderHeader[];
+
+  get orderLines(): FormArray {
+    return this.formGroup.get('orderLines') as FormArray;
+  };
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
@@ -53,35 +59,28 @@ export class OrderDetailComponent implements OnInit {
     });
   }
 
-  get orderLines(): FormArray {
-    return this.formGroup.get('orderLines') as FormArray;
-  };
+  addOrderLine(){    
+    let orderLineFG = this.buildOrderLine();
+    this.orderLines.push(orderLineFG);
+  }  
   
   buildOrderLine(){
     return this.fb.group({
-      id: '0',
-      orderHeaderId: this.orderHeaderId != null ? this.orderHeaderId : 0,
+      id: 0,
+      orderHeaderId: this.orderHeaderId != null ? parseInt(this.orderHeaderId) : null,
       productId: '0',
       unitPrice: '0',
       vat: '0',
       quantity: '0'
     })
   }  
-  
-  addOrderLine(){    
-    let orderLineFG = this.buildOrderLine();
-    this.orderLines.push(orderLineFG);
-  }
 
-  
-
-  deleteOrderLine(index: number){
-    let orderLines = this.formGroup.get('orderLines') as FormArray;
-    let orderLineDelete = orderLines.at(index) as FormGroup;
-    if (orderLineDelete.controls['id'].value != '0') {
-      this.orderLinesToDelete.push(<number>orderLineDelete.controls['id'].value);
+  deleteOrderLine(index: number){    
+    let orderLineToDelete = this.orderLines.at(index) as FormGroup;
+    if (orderLineToDelete.controls['id'].value != 0) {
+      this.orderLinesToDelete.push(<number>orderLineToDelete.controls['id'].value);
     }
-    orderLines.removeAt(index);
+    this.orderLines.removeAt(index);
   }
 
   loadForm(orderHeader: OrderHeader){
@@ -95,7 +94,14 @@ export class OrderDetailComponent implements OnInit {
       creationDate: orderHeader.creationDate,
       assignToEmployeeDate: orderHeader.assignToEmployeeDate,
       finalisationDate: orderHeader.finalisationDate
-    })
+    });
+
+    orderHeader.orderLines.forEach(orderLine => {
+      let orderLineFG = this.buildOrderLine();
+      orderLineFG.patchValue(orderLine);
+      this.orderLines.push(orderLineFG);
+    });
+    
   }
 
   save() {
@@ -107,14 +113,25 @@ export class OrderDetailComponent implements OnInit {
       this.orderHeaderId = parseInt(this.orderHeaderId);
       orderHeader.id = this.orderHeaderId;      
       this.orderHeaderService.updateOrderHeader(orderHeader)
-      .subscribe();
+      .subscribe(orderHeader => this.deleteOrderLines());
     } else {
       //add order
       this.orderHeaderService.addOrderHeader(orderHeader)
       .subscribe();
     }    
   }
-  
+
+  deleteOrderLines(){
+    if(this.orderLinesToDelete.length === 0){
+      this.goBack();
+      return;
+    }
+
+    this.orderLineService.deleteOrderLines(this.orderLinesToDelete)
+      .subscribe();
+
+  }
+
   goBack(): void {
     this.location.back();
   }

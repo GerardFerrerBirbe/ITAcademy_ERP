@@ -27,19 +27,24 @@ namespace ITAcademyERP.Controllers
             return await _context.OrderHeader.ToListAsync();
         }
 
-        // GET: api/OrderHeaders/5
+        //GET: api/OrderHeaders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderHeader>> GetOrderHeader(int id, bool includeOrderLines = false)
+        public async Task<IActionResult> GetOrderHeader([FromRoute] int id, bool includeOrderLines = false)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             OrderHeader orderHeader;
 
             if (includeOrderLines)
             {
-                orderHeader = await _context.OrderHeader.Include(x => x.OrderLines).SingleOrDefaultAsync(x => x.Id == id);
+                orderHeader = await _context.OrderHeader.Include(o => o.OrderLines).SingleOrDefaultAsync(o => o.Id == id);
             }
             else
             {
-                orderHeader = await _context.OrderHeader.SingleOrDefaultAsync(x => x.Id == id);
+                orderHeader = await _context.OrderHeader.SingleOrDefaultAsync(o => o.Id == id);
             }
 
             if (orderHeader == null)
@@ -47,7 +52,7 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            return orderHeader;
+            return Ok(orderHeader);
         }
 
         // PUT: api/OrderHeaders/5
@@ -65,6 +70,7 @@ namespace ITAcademyERP.Controllers
 
             try
             {
+                await CreateOrEditOrderLines(orderHeader.OrderLines);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -80,6 +86,22 @@ namespace ITAcademyERP.Controllers
             }
 
             return NoContent();
+        }
+
+        private async Task CreateOrEditOrderLines (ICollection<OrderLine> orderLines)
+        {
+            ICollection<OrderLine> orderLinesToCreate = orderLines.Where(x => x.Id == 0).ToList();
+            ICollection<OrderLine> orderLinesToEdit = orderLines.Where(x => x.Id != 0).ToList();
+
+            if (orderLinesToCreate.Any())
+            {
+                await _context.AddRangeAsync(orderLinesToCreate);
+            }
+
+            if (orderLinesToEdit.Any())
+            {
+                _context.UpdateRange(orderLinesToEdit);
+            }
         }
 
         // POST: api/OrderHeaders

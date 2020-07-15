@@ -5,7 +5,7 @@
     <tr>
       <td>
         <div class="form-group">
-          <label for="personIdId">Número Comanda</label>
+          <label for="orderNumberId">Número Comanda</label>
           <div>
             <input class="form-control"
             id="orderNumberId"
@@ -115,63 +115,62 @@
           </div>
         </div>
       </td>
-    </tr>
-    <tr>
-      <div class="form-group">
-        <div>
-          <button type="submit">Guardar</button>
-        </div>
-      </div>
-    </tr>
+    </tr>   
   </table>      
+
+  <div class="form-group">
+    <button class="btn btn-primary" (click)="addOrderLine()">Afegir Línia Comanda</button>
+  </div>
+  
+  <div formArrayName="orderLines"
+        *ngFor="let orderLine of orderLines.controls; let i = index;">
+    <div [formGroupName]="i">      
+      <div class="form-group">    
+        <label class="col-md-2 control-label" [attr.for]="'productId' + i">
+          Id Producte
+        </label>            
+        <div class="col-md-8">
+          <input class="form-control" [attr.id]="'productId' + i" type="number" formControlName="productId" />
+        </div>
+      </div>    
+      <div class="form-group">  
+        <label class="col-md-2 control-label" [attr.for]="'unitPrice' + i">
+          Preu unitari
+        </label>              
+        <div class="col-md-8">
+          <input class="form-control" [attr.id]="'unitPrice' + i" type="number" formControlName="unitPrice" />
+        </div>
+      </div>          
+      <div class="form-group">  
+        <label class="col-md-2 control-label" [attr.for]="'vat' + i">
+          IVA
+        </label>            
+        <div class="col-md-8">
+          <input class="form-control" [attr.id]="'vat' + i" type="number" formControlName="vat" />
+        </div>
+      </div>          
+      <div class="form-group"> 
+        <label class="col-md-2 control-label" [attr.for]="'quantity' + i">
+          Quantitat
+        </label>          
+        <div class="col-md-8">
+          <input class="form-control" [attr.id]="'quantity' + i" type="number" formControlName="quantity" />
+        </div>
+      </div>         
+      <div class="form-group">
+        <div class="col-md-10">
+          <button type="button" class="btn btn-danger pull-right" (click)="deleteOrderLine(i)">Borrar línia</button>
+        </div>
+      </div>             
+    </div>  
+  </div>
+
+  <div class="form-group">
+    <div>
+      <button type="submit">Guardar</button>
+    </div>
+  </div>
+
 </form>
 
 <button (click)="goBack()">Tornar</button>
-
-<div class="form-group">
-  <button class="btn btn-primary" (click)="addOrderLine()">Afegir Línia Comanda</button>
-</div>
-
-<div formArrayName="orderLines">
-  <div *ngFor="let orderLine of orderLines.controls; let i = index"
-   [formGroupName]="i">
-    <div class="form-group">
-      <label class="col-md-2 control-label" [attr.for]="'productId' + i">
-        Id Prodcute
-      </label>
-      <div class="col-md-8">
-        <input class="form-control" [attr.id]="'productId' + i" type="number" formControlName="productId" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-2 control-label" [attr.for]="'unitPrice' + i">
-        Preu unitari
-      </label>
-      <div class="col-md-8">
-        <input class="form-control" [attr.id]="'unitPrice' + i" type="number" formControlName="unitPrice" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-2 control-label" [attr.for]="'vat' + i">
-        IVA
-      </label>
-      <div class="col-md-8">
-        <input class="form-control" [attr.id]="'vat' + i" type="number" formControlName="vat" />
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-2 control-label" [attr.for]="'quantity' + i">
-        Quantitat
-      </label>
-      <div class="col-md-8">
-        <input class="form-control" [attr.id]="'quantity' + i" type="number" formControlName="quantity" />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-md-10">
-        <button type="button" class="btn btn-danger pull-right" (click)="deleteOrderLine(i)">Borrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
