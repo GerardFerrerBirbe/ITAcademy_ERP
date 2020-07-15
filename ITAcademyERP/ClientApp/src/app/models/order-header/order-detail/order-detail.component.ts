@@ -67,11 +67,11 @@ export class OrderDetailComponent implements OnInit {
   buildOrderLine(){
     return this.fb.group({
       id: 0,
-      orderHeaderId: this.orderHeaderId != null ? parseInt(this.orderHeaderId) : null,
-      productId: '0',
-      unitPrice: '0',
-      vat: '0',
-      quantity: '0'
+      orderHeaderId: this.orderHeaderId != null ? parseInt(this.orderHeaderId) : 0,
+      productId: 0,
+      unitPrice: 0,
+      vat: 0,
+      quantity: 0
     })
   }  
 

@@ -19,7 +19,6 @@ namespace ITAcademyERP.Controllers
         {
             _context = context;
         }
-
         
         // POST: api/OrderLines
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
