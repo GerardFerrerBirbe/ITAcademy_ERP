@@ -24,7 +24,15 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeader>>> GetOrderHeader()
         {
-            return await _context.OrderHeader.ToListAsync();
+            return await _context.OrderHeader
+                    .Include(o => o.DeliveryAddress)
+                    .Include(o => o.Client)
+                    .ThenInclude(c => c.Person)
+                    .Include(o => o.Employee)
+                    .ThenInclude(e => e.Person)
+                    .Include(o => o.OrderState)
+                    .Include(o => o.OrderPriority)
+                    .ToListAsync();
         }
 
         //GET: api/OrderHeaders/5

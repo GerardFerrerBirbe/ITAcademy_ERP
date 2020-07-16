@@ -23,11 +23,11 @@
     <tr *ngFor="let orderHeader of orderHeaders">
       <td>{{ orderHeader.id }}</td>
       <td>{{ orderHeader.orderNumber }}</td>
-      <td>{{ orderHeader.deliveryAddressId }}</td>
-      <td>{{ orderHeader.clientId }}</td>
-      <td>{{ orderHeader.employeeId }}</td>
-      <td>{{ orderHeader.orderStateId }}</td>
-      <td>{{ orderHeader.orderPriorityId }}</td>
+      <td>{{ orderHeader.deliveryAddress.addressName }}</td>
+      <td>{{ orderHeader.client.person.firstName }} {{ orderHeader.employee.person.lastName }}</td>
+      <td>{{ orderHeader.employee.person.firstName }} {{ orderHeader.employee.person.lastName }}</td>
+      <td>{{ orderHeader.orderState.state }}</td>
+      <td>{{ orderHeader.orderPriority.priority }}</td>
       <td>{{ orderHeader.creationDate }}</td>
       <td>{{ orderHeader.assignToEmployeeDate }}</td>
       <td>{{ orderHeader.finalisationDate }}</td>     

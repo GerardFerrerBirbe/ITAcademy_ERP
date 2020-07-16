@@ -9,15 +9,15 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>Nom Producte</th>
-      <th>Id Categoria</th>      
+      <th>Producte</th>
+      <th>Categoria</th>      
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let product of products">
       <td>{{ product.id }}</td>
       <td>{{ product.productName }}</td>
-      <td>{{ product.productCategoryId }}</td>       
+      <td>{{ product.productCategoryName }}</td>       
       <td><button routerLink="/product-detail/{{product.id}}"
         class="btn-update" title="update product">Seleccionar</button></td>
       <td><button class="btn-delete" title="delete product"

@@ -8,7 +8,8 @@
   <thead>
     <tr>
       <th>Id</th>
-      <th>Id persona</th>
+      <th>Nom</th>
+      <th>Cognoms</th>
       <th>Càrrec</th>
       <th>Salari</th>
       <th>Usuari</th>
@@ -18,7 +19,8 @@
   <tbody>
     <tr *ngFor="let employee of employees">
       <td>{{ employee.id }}</td>
-      <td>{{ employee.personId }}</td>
+      <td>{{ employee.firstName }}</td>
+      <td>{{ employee.lastName }}</td>
       <td>{{ employee.position }}</td>
       <td>{{ employee.salary }}</td>
       <td>{{ employee.userName }}</td>

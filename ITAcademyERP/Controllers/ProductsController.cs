@@ -22,15 +22,41 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProduct()
         {
-            return await _context.Product.ToListAsync();
+            return await _context.Product
+                .Include(p => p.ProductCategory)
+                .Select(p => ProductToDTO(p))
+                .ToListAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
+            var product = await _context.Product
+                .Include(p => p.ProductCategory)
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return ProductToDTO(product);
+        }
+
+        // PUT: api/Products/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProduct(int id, ProductDTO productDTO)
+        {
+            if (id != productDTO.Id)
+            {
+                return BadRequest();
+            }
+
             var product = await _context.Product.FindAsync(id);
 
             if (product == null)
@@ -38,20 +64,14 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            return product;
-        }
+            product.ProductName = productDTO.ProductName;
 
-        // PUT: api/Products/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
-        {
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
-
+            var productCategoryId = _context.ProductCategory
+                            .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
+                            .Id;
+            
+            product.ProductCategoryId = productCategoryId;
+            
             _context.Entry(product).State = EntityState.Modified;
 
             try
@@ -77,12 +97,22 @@ namespace ITAcademyERP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
         {
+            var productCategoryId = _context.ProductCategory
+                            .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
+                            .Id;
+
+            var product = new Product
+            {
+                ProductName = productDTO.ProductName,
+                ProductCategoryId = productCategoryId
+            };
+            
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, ProductToDTO(product));
         }
 
         // DELETE: api/Products/5
@@ -90,6 +120,7 @@ namespace ITAcademyERP.Controllers
         public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
             var product = await _context.Product.FindAsync(id);
+            
             if (product == null)
             {
                 return NotFound();
@@ -105,5 +136,13 @@ namespace ITAcademyERP.Controllers
         {
             return _context.Product.Any(e => e.Id == id);
         }
+
+        private static ProductDTO ProductToDTO(Product product) =>
+            new ProductDTO
+            {
+                Id = product.Id,
+                ProductName = product.ProductName,
+                ProductCategoryName = product.ProductCategory.ProductCategoryName
+            };
     }
 }

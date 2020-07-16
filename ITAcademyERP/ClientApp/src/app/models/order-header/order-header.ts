@@ -1,4 +1,9 @@
-import { OrderLine } from '../order-line/order-line'
+import { OrderLine } from '../order-line/order-line';
+import { Address } from '../address/address';
+import { Employee } from '../employee/employee';
+import { Client } from '../client/client';
+import { OrderState } from '../order-state/order-state';
+import { OrderPriority } from '../order-priority/order-priority';
 
 export interface OrderHeader {
   id: number;
@@ -12,4 +17,10 @@ export interface OrderHeader {
   assignToEmployeeDate: string;
   finalisationDate: string;
   orderLines: OrderLine[];
+  deliveryAddress: Address;
+  client: Client;
+  employee: Employee;
+  orderState: OrderState;
+  orderPriority: OrderPriority
+
 }

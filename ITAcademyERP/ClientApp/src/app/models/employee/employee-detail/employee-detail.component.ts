@@ -27,7 +27,8 @@ export class EmployeeDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
-      personId: '',
+      firstName: '',
+      lastName: '',
       position: '',
       salary: '',
       userName: '',
@@ -49,7 +50,8 @@ export class EmployeeDetailComponent implements OnInit {
 
   loadForm(employee: Employee){
     this.formGroup.patchValue({
-      personId: employee.personId,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
       position: employee.position,
       salary: employee.salary,
       userName: employee.userName,

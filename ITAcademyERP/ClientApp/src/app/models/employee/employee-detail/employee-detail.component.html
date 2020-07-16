@@ -2,13 +2,23 @@
 <form class="form-horizontal" novalidate
     (ngSubmit)="save()" [formGroup]="formGroup">
       <div class="form-group">
-        <label for="personIdId">Id Persona</label>
+        <label for="firstNameId">Nom</label>
         <div>
           <input class="form-control"
-          id="personIdId"
-          type="number"
+          id="firstNameId"
+          type="string"
           required
-          formControlName="personId"/>
+          formControlName="firstName"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lastNameId">Cognoms</label>
+        <div>
+          <input class="form-control"
+          id="lastNameId"
+          type="string"
+          required
+          formControlName="lastName"/>
         </div>
       </div>
       <div class="form-group">

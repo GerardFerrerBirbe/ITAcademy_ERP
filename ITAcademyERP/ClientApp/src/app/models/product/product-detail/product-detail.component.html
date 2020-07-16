@@ -2,7 +2,7 @@
 <form class="form-horizontal" novalidate
     (ngSubmit)="save()" [formGroup]="formGroup">
       <div class="form-group">
-        <label for="nameId">Nom Producte</label>
+        <label for="nameId">Producte</label>
         <div>
           <input class="form-control"
           id="nameId"
@@ -12,13 +12,13 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="categoryIdId">Id Categoria</label>
+        <label for="categoryNameId">Categoria</label>
         <div>
           <input class="form-control"
-          id="categoryIdId"
-          type="number"
+          id="categoryNameId"
+          type="text"
           required
-          formControlName="productCategoryId"/>
+          formControlName="productCategoryName"/>
         </div>
       </div>      
       <div class="form-group">

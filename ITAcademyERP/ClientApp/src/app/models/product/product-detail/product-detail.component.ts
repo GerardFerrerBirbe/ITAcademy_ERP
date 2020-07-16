@@ -28,7 +28,7 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       productName: '',
-      productCategoryId: ''
+      productCategoryName: ''
     });  
 
     this.route.params.subscribe(params => {
@@ -47,7 +47,7 @@ export class ProductDetailComponent implements OnInit {
   loadForm(product: Product){
     this.formGroup.patchValue({
       productName: product.productName,
-      productCategoryId: product.productCategoryId
+      productCategoryName: product.productCategoryName
     })
   }
 
