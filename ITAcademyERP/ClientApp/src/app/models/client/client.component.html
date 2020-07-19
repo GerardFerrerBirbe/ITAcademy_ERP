@@ -1,1 +1,26 @@
-<p>client works!</p>
+<h2 id="tableLabel">Clients</h2>
+
+<button [routerLink]='["/client-detail"]' class="btn-add">Nou client</button>
+
+<p *ngIf="!clients"><em>Loading...</em></p>
+
+<table *ngIf="clients">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nom</th>
+      <th>Cognoms</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients">
+      <td>{{ client.id }}</td>
+      <td>{{ client.firstName }}</td>
+      <td>{{ client.lastName }}</td>        
+      <td><button routerLink="/client-detail/{{client.id}}"
+        class="btn-update" title="update client">Seleccionar</button></td>
+      <td><button class="btn-delete" title="delete client"
+        (click)="delete(client)">Borrar</button></td>
+    </tr>
+  </tbody>
+</table>
