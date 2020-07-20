@@ -8,19 +8,13 @@ import { OrderPriority } from '../order-priority/order-priority';
 export interface OrderHeader {
   id: number;
   orderNumber: number;
-  deliveryAddressId: number;
-  clientId: number;
-  employeeId: number;
-  orderStateId: number;
-  orderPriorityId: number;
+  address: string;
+  client: string;
+  employee: string;
+  orderState: string;
+  orderPriority: string;
   creationDate: string;
   assignToEmployeeDate: string;
   finalisationDate: string;
   orderLines: OrderLine[];
-  deliveryAddress: Address;
-  client: Client;
-  employee: Employee;
-  orderState: OrderState;
-  orderPriority: OrderPriority
-
 }

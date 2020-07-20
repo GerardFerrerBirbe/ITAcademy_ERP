@@ -17,25 +17,25 @@
       </td>
       <td>
         <div class="form-group">
-          <label for="orderStateIdId">Estat</label>
+          <label for="orderStateId">Estat</label>
           <div>
             <input class="form-control"
-            id="orderStateIdId"
-            type="number"
+            id="orderStateId"
+            type="text"
             required
-            formControlName="orderStateId"/>
+            formControlName="orderState"/>
           </div>
         </div>
       </td>
       <td>
         <div class="form-group">
-          <label for="orderPriorityIdId">Prioritat</label>
+          <label for="orderPriorityId">Prioritat</label>
           <div>
             <input class="form-control"
-            id="orderPriorityIdId"
-            type="number"
+            id="orderPriorityId"
+            type="text"
             required
-            formControlName="orderPriorityId"/>
+            formControlName="orderPriority"/>
           </div>
         </div>
       </td>
@@ -43,37 +43,37 @@
     <tr>
       <td>
         <div class="form-group">
-          <label for="employeeIdId">Empleat</label>
+          <label for="employeeId">Empleat</label>
           <div>
             <input class="form-control"
-            id="employeeIdId"
-            type="number"
+            id="employeeId"
+            type="text"
             required
-            formControlName="employeeId"/>
+            formControlName="employee"/>
           </div>
         </div>
       </td>
       <td>
         <div class="form-group">
-          <label for="clientIdId">Client</label>
+          <label for="clientId">Client</label>
           <div>
             <input class="form-control"
-            id="clientIdId"
-            type="number"
+            id="clientId"
+            type="text"
             required
-            formControlName="clientId"/>
+            formControlName="client"/>
           </div>
         </div>
       </td>
       <td>
         <div class="form-group">
-          <label for="deliveryAddressIdId">Adreça</label>
+          <label for="addressId">Adreça</label>
           <div>
             <input class="form-control"
-            id="deliveryAddressIdId"
-            type="number"
+            id="addressId"
+            type="text"
             required
-            formControlName="deliveryAddressId"/>
+            formControlName="address"/>
           </div>
         </div>
       </td>
@@ -126,11 +126,11 @@
         *ngFor="let orderLine of orderLines.controls; let i = index;">
     <div [formGroupName]="i">      
       <div class="form-group">    
-        <label class="col-md-2 control-label" [attr.for]="'productId' + i">
-          Id Producte
+        <label class="col-md-2 control-label" [attr.for]="'productName' + i">
+          Producte
         </label>            
         <div class="col-md-8">
-          <input class="form-control" [attr.id]="'productId' + i" type="number" formControlName="productId" />
+          <input class="form-control" [attr.id]="'productName' + i" type="text" formControlName="productName" />
         </div>
       </div>    
       <div class="form-group">  

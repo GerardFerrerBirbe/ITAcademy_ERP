@@ -35,11 +35,11 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       orderNumber: '',
-      deliveryAddressId: '',
-      clientId: '',
-      employeeId: '',
-      orderStateId: '',
-      orderPriorityId: '',
+      address: '',
+      client: '',
+      employee: '',
+      orderState: '',
+      orderPriority: '',
       creationDate: '',
       assignToEmployeeDate: '',
       finalisationDate: '',
@@ -68,7 +68,7 @@ export class OrderDetailComponent implements OnInit {
     return this.fb.group({
       id: 0,
       orderHeaderId: this.orderHeaderId != null ? parseInt(this.orderHeaderId) : 0,
-      productId: 0,
+      productName: '0',
       unitPrice: 0,
       vat: 0,
       quantity: 0
@@ -86,11 +86,11 @@ export class OrderDetailComponent implements OnInit {
   loadForm(orderHeader: OrderHeader){
     this.formGroup.patchValue({
       orderNumber: orderHeader.orderNumber,
-      deliveryAddressId: orderHeader.deliveryAddressId,
-      clientId: orderHeader.clientId,
-      employeeId: orderHeader.employeeId,
-      orderStateId: orderHeader.orderStateId,
-      orderPriorityId: orderHeader.orderPriorityId,
+      address: orderHeader.address,
+      client: orderHeader.client,
+      employee: orderHeader.employee,
+      orderState: orderHeader.orderState,
+      orderPriority: orderHeader.orderPriority,
       creationDate: orderHeader.creationDate,
       assignToEmployeeDate: orderHeader.assignToEmployeeDate,
       finalisationDate: orderHeader.finalisationDate
