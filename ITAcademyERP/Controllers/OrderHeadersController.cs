@@ -107,11 +107,7 @@ namespace ITAcademyERP.Controllers
 
             _context.Entry(orderHeader).State = EntityState.Modified;
 
-            var addressId = _context.Address
-                            .FirstOrDefault(a => a.AddressName == orderHeaderDTO.Address)
-                            .Id;
-
-            var address = await _context.Address.FindAsync(addressId);
+           var address = await _context.Address.FindAsync(orderHeaderDTO.AddressId);
 
             if (address == null)
             {
@@ -122,11 +118,7 @@ namespace ITAcademyERP.Controllers
 
             _context.Entry(address).State = EntityState.Modified;
 
-            var clientId = _context.Person
-                            .FirstOrDefault(p => p.FirstName + ' ' + p.LastName == orderHeaderDTO.Client)
-                            .Id;
-
-            var client = await _context.Person.FindAsync(clientId);
+            var client = await _context.Person.FindAsync(orderHeaderDTO.ClientId);
 
             if (client == null)
             {
@@ -142,11 +134,7 @@ namespace ITAcademyERP.Controllers
 
             _context.Entry(client).State = EntityState.Modified;
 
-            var employeeId = _context.Person
-                             .FirstOrDefault(p => p.FirstName + ' ' + p.LastName == orderHeaderDTO.Employee)
-                             .Id;
-
-            var employee = await _context.Person.FindAsync(employeeId);
+            var employee = await _context.Person.FindAsync(orderHeaderDTO.EmployeeId);
 
             if (employee == null)
             {
@@ -157,16 +145,12 @@ namespace ITAcademyERP.Controllers
             var employeeFirstName = employeeSplit[0];
             var employeeLastName = employeeSplit[1];
 
-            client.FirstName = employeeFirstName;
-            client.LastName = employeeLastName;
+            employee.FirstName = employeeFirstName;
+            employee.LastName = employeeLastName;
 
             _context.Entry(employee).State = EntityState.Modified;
 
-            var orderStateId = _context.OrderState
-                            .FirstOrDefault(o => o.State == orderHeaderDTO.OrderState)
-                            .Id;
-
-            var orderState = await _context.OrderState.FindAsync(orderStateId);
+            var orderState = await _context.OrderState.FindAsync(orderHeaderDTO.OrderStateId);
 
             if (orderState == null)
             {
@@ -177,11 +161,7 @@ namespace ITAcademyERP.Controllers
 
             _context.Entry(orderState).State = EntityState.Modified;
 
-            var orderPriorityId = _context.OrderPriority
-                            .FirstOrDefault(o => o.Priority == orderHeaderDTO.OrderPriority)
-                            .Id;
-
-            var orderPriority = await _context.OrderPriority.FindAsync(orderPriorityId);
+            var orderPriority = await _context.OrderPriority.FindAsync(orderHeaderDTO.OrderPriorityId);
 
             if (orderPriority == null)
             {
@@ -267,10 +247,15 @@ namespace ITAcademyERP.Controllers
             {
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
+                AddressId = orderHeader.DeliveryAddressId, 
                 Address = orderHeader.DeliveryAddress.AddressName,
+                ClientId = orderHeader.ClientId,
                 Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
+                EmployeeId = orderHeader.EmployeeId,
                 Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
+                OrderStateId = orderHeader.OrderStateId,
                 OrderState = orderHeader.OrderState.State,
+                OrderPriorityId = orderHeader.OrderPriorityId,
                 OrderPriority = orderHeader.OrderPriority.Priority,
                 CreationDate = orderHeader.CreationDate,
                 AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,

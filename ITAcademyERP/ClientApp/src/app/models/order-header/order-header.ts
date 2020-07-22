@@ -7,11 +7,16 @@ import { OrderPriority } from '../order-priority/order-priority';
 
 export interface OrderHeader {
   id: number;
-  orderNumber: number;
+  orderNumber: string;
+  addressId: number;
   address: string;
+  clientId: number;
   client: string;
+  employeeId: number;
   employee: string;
+  orderStateId: number;
   orderState: string;
+  orderPriorityId: number;
   orderPriority: string;
   creationDate: string;
   assignToEmployeeDate: string;
