@@ -22,11 +22,13 @@ export class ClientDetailComponent implements OnInit {
   editionMode: boolean = false;
   formGroup: FormGroup;
   clientId: any;
+  personId: any;
 
   clients: Client[];
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
+      personId: '',
       firstName: '',
       lastName: ''
     });  
@@ -46,6 +48,7 @@ export class ClientDetailComponent implements OnInit {
 
   loadForm(client: Client){
     this.formGroup.patchValue({
+      personId: client.personId,
       firstName: client.firstName,
       lastName: client.lastName
     })
@@ -63,6 +66,8 @@ export class ClientDetailComponent implements OnInit {
       .subscribe();
     } else {
       //add client
+      this.personId = 6;
+      client.personId = this.personId;
       this.clientService.addClient(client)
       .subscribe();
     }    

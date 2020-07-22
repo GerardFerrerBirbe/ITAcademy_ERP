@@ -63,11 +63,7 @@ namespace ITAcademyERP.Models
                 return NotFound();
             }
 
-            var personId = _context.Person
-                            .FirstOrDefault(p => p.FirstName == clientDTO.FirstName)
-                            .Id;
-
-            var person = await _context.Person.FindAsync(personId);
+            var person = await _context.Person.FindAsync(client.PersonId);
 
             if (person == null)
             {
@@ -104,17 +100,23 @@ namespace ITAcademyERP.Models
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
         {
-            var personId = _context.Person
-                            .FirstOrDefault(p => p.FirstName == clientDTO.FirstName)
-                            .Id;
+            var person = new Person
+            {
+                FirstName = clientDTO.FirstName,
+                LastName = clientDTO.LastName
+            };
+
+            _context.Person.Add(person);
+
+            await _context.SaveChangesAsync();
 
             var client = new Client
             {
-                PersonId = personId
+                PersonId = clientDTO.PersonId
             };
 
+            _context.Client.Add(client);            
 
-            _context.Client.Add(client);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetClient), new { id = client.Id }, ClientToDTO(client));
@@ -146,6 +148,7 @@ namespace ITAcademyERP.Models
             new ClientDTO
             {
                 Id = client.Id,
+                PersonId = client.PersonId,
                 FirstName = client.Person.FirstName,
                 LastName = client.Person.LastName
             };

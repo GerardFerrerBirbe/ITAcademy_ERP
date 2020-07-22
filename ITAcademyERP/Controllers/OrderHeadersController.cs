@@ -86,14 +86,111 @@ namespace ITAcademyERP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderHeader(int id, OrderHeader orderHeader)
+        public async Task<IActionResult> PutOrderHeader(int id, OrderHeaderDTO orderHeaderDTO)
         {
-            if (id != orderHeader.Id)
+            if (id != orderHeaderDTO.Id)
             {
                 return BadRequest();
             }
 
+            var orderHeader = await _context.OrderHeader.FindAsync(id);
+
+            if (orderHeader == null)
+            {
+                return NotFound();
+            }
+
+            orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
+            orderHeader.CreationDate = orderHeaderDTO.CreationDate;
+            orderHeader.AssignToEmployeeDate = orderHeaderDTO.AssignToEmployeeDate;
+            orderHeader.FinalisationDate = orderHeaderDTO.FinalisationDate;
+
             _context.Entry(orderHeader).State = EntityState.Modified;
+
+            var addressId = _context.Address
+                            .FirstOrDefault(a => a.AddressName == orderHeaderDTO.Address)
+                            .Id;
+
+            var address = await _context.Address.FindAsync(addressId);
+
+            if (address == null)
+            {
+                return NotFound();
+            }
+
+            address.AddressName = orderHeaderDTO.Address;
+
+            _context.Entry(address).State = EntityState.Modified;
+
+            var clientId = _context.Person
+                            .FirstOrDefault(p => p.FirstName + ' ' + p.LastName == orderHeaderDTO.Client)
+                            .Id;
+
+            var client = await _context.Person.FindAsync(clientId);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var clientSplit = orderHeaderDTO.Client.Split(' ');
+            var clientFirstName = clientSplit[0];
+            var clientLastName = clientSplit[1];
+            
+            client.FirstName = clientFirstName;
+            client.LastName = clientLastName;
+
+            _context.Entry(client).State = EntityState.Modified;
+
+            var employeeId = _context.Person
+                             .FirstOrDefault(p => p.FirstName + ' ' + p.LastName == orderHeaderDTO.Employee)
+                             .Id;
+
+            var employee = await _context.Person.FindAsync(employeeId);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var employeeSplit = orderHeaderDTO.Employee.Split(' ');
+            var employeeFirstName = employeeSplit[0];
+            var employeeLastName = employeeSplit[1];
+
+            client.FirstName = employeeFirstName;
+            client.LastName = employeeLastName;
+
+            _context.Entry(employee).State = EntityState.Modified;
+
+            var orderStateId = _context.OrderState
+                            .FirstOrDefault(o => o.State == orderHeaderDTO.OrderState)
+                            .Id;
+
+            var orderState = await _context.OrderState.FindAsync(orderStateId);
+
+            if (orderState == null)
+            {
+                return NotFound();
+            }
+
+            orderState.State = orderHeaderDTO.OrderState;
+
+            _context.Entry(orderState).State = EntityState.Modified;
+
+            var orderPriorityId = _context.OrderPriority
+                            .FirstOrDefault(o => o.Priority == orderHeaderDTO.OrderPriority)
+                            .Id;
+
+            var orderPriority = await _context.OrderPriority.FindAsync(orderPriorityId);
+
+            if (orderPriority == null)
+            {
+                return NotFound();
+            }
+
+            orderPriority.Priority = orderHeaderDTO.OrderPriority;
+
+            _context.Entry(orderPriority).State = EntityState.Modified;
 
             try
             {

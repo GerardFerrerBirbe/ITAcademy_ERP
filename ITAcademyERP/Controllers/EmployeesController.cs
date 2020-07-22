@@ -65,11 +65,7 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            var personId = _context.Person
-                            .FirstOrDefault(p => p.FirstName == employeeDTO.FirstName)
-                            .Id;
-
-            var person = await _context.Person.FindAsync(personId);
+            var person = await _context.Person.FindAsync(employeeDTO.PersonId);
 
             if (person == null)
             {
@@ -112,13 +108,19 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
         {
-            var personId = _context.Person
-                            .FirstOrDefault(p => p.FirstName == employeeDTO.FirstName)
-                            .Id;
+            var person = new Person
+            {
+                FirstName = employeeDTO.FirstName,
+                LastName = employeeDTO.LastName
+            };
+
+            _context.Person.Add(person);
+
+            await _context.SaveChangesAsync();
 
             var employee = new Employee
             {
-                PersonId = personId,
+                PersonId = employeeDTO.PersonId,
                 Position = employeeDTO.Position,
                 Salary = employeeDTO.Salary,
                 UserName = employeeDTO.UserName,
@@ -126,6 +128,7 @@ namespace ITAcademyERP.Controllers
             };            
             
             _context.Employee.Add(employee);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, EmployeeToDTO(employee));
@@ -157,6 +160,7 @@ namespace ITAcademyERP.Controllers
             new EmployeeDTO
             {
                 Id = employee.Id,
+                PersonId = employee.PersonId,
                 FirstName = employee.Person.FirstName,
                 LastName = employee.Person.LastName,
                 Position = employee.Position,
