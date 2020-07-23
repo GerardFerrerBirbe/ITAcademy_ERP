@@ -124,13 +124,9 @@ namespace ITAcademyERP.Controllers
             {
                 return NotFound();
             }
-
-            var clientSplit = orderHeaderDTO.Client.Split(' ');
-            var clientFirstName = clientSplit[0];
-            var clientLastName = clientSplit[1];
             
-            client.FirstName = clientFirstName;
-            client.LastName = clientLastName;
+            client.FirstName = orderHeaderDTO.ClientFirstName;
+            client.LastName = orderHeaderDTO.ClientLastName;
 
             _context.Entry(client).State = EntityState.Modified;
 
@@ -141,12 +137,8 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            var employeeSplit = orderHeaderDTO.Employee.Split(' ');
-            var employeeFirstName = employeeSplit[0];
-            var employeeLastName = employeeSplit[1];
-
-            employee.FirstName = employeeFirstName;
-            employee.LastName = employeeLastName;
+            employee.FirstName = orderHeaderDTO.EmployeeFirstName;
+            employee.LastName = orderHeaderDTO.EmployeeLastName;
 
             _context.Entry(employee).State = EntityState.Modified;
 
@@ -247,12 +239,14 @@ namespace ITAcademyERP.Controllers
             {
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
-                AddressId = orderHeader.DeliveryAddressId, 
+                AddressId = orderHeader.DeliveryAddressId,
                 Address = orderHeader.DeliveryAddress.AddressName,
                 ClientId = orderHeader.ClientId,
-                Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
+                ClientFirstName = orderHeader.Client.Person.FirstName,
+                ClientLastName = orderHeader.Client.Person.LastName,
                 EmployeeId = orderHeader.EmployeeId,
-                Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
+                EmployeeFirstName = orderHeader.Employee.Person.FirstName,
+                EmployeeLastName = orderHeader.Employee.Person.LastName,
                 OrderStateId = orderHeader.OrderStateId,
                 OrderState = orderHeader.OrderState.State,
                 OrderPriorityId = orderHeader.OrderPriorityId,

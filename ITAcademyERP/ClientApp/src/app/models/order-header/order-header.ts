@@ -11,9 +11,11 @@ export interface OrderHeader {
   addressId: number;
   address: string;
   clientId: number;
-  client: string;
+  clientFirstName: string;
+  clientLastName: string;
   employeeId: number;
-  employee: string;
+  employeeFirstName: string;
+  employeeLastName: string;
   orderStateId: number;
   orderState: string;
   orderPriorityId: number;
