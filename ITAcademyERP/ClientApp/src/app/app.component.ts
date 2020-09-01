@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AccountService } from './services/account.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,26 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ERP IT Academy';
+
+  constructor(private accountService: AccountService,
+    private router: Router) {}
+
+    isExpanded = false;
+
+    collapse() {
+      this.isExpanded = false;
+    }
+
+    toggle() {
+      this.isExpanded = !this.isExpanded;
+    }
+
+    logout() {
+      this.accountService.logout();
+      this.router.navigate(['/']);
+    }
+
+    isLogged() {
+      return this.accountService.isLogged();
+    }
 }

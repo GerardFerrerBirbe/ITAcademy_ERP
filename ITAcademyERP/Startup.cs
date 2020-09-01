@@ -1,4 +1,6 @@
 using ITAcademyERP.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITAcademyERP
 {
@@ -25,7 +31,26 @@ namespace ITAcademyERP
         {
             services.AddDbContext<ITAcademyERPContext>(opt =>
                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-              
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ITAcademyERPContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "yourdomain.com",
+                    ValidAudience = "yourdomain.com",
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["Llave_super_secreta"])),
+                        ClockSkew = TimeSpan.Zero
+                });
+         
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
 
@@ -62,6 +87,8 @@ namespace ITAcademyERP
                 app.UseSpaStaticFiles();
             }
 
+            app.UseAuthentication();
+            
             app.UseRouting();
 
             app.UseAuthorization();

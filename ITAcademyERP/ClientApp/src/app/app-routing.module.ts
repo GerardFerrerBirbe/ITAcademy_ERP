@@ -22,13 +22,16 @@ import { ProductDetailComponent } from './models/product/product-detail/product-
 import { ProductCategoryDetailComponent } from './models/product-category/product-category-detail/product-category-detail.component';
 import { OrderDetailComponent } from './models/order-Header/order-detail/order-detail.component';
 
+import { LoginComponent } from './login/login.component';
+import { AuthGuardService } from './services/auth-guard.service';
+
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'hhrr', component: HhrrComponent },
   { path: 'sales', component: SalesComponent },
   { path: 'statistics', component: StatisticsComponent },
-  { path: 'employee', component: EmployeeComponent },
+  { path: 'employee', component: EmployeeComponent, canActivate: [AuthGuardService] },
   { path: 'employee-detail', component: EmployeeDetailComponent },
   { path: 'employee-detail/:id', component: EmployeeDetailComponent },
   { path: 'client', component: ClientComponent },
@@ -48,7 +51,8 @@ const routes: Routes = [
   { path: 'product-detail/:id', component: ProductDetailComponent },
   { path: 'product-cat', component: ProductCategoryComponent },
   { path: 'product-cat-detail', component: ProductCategoryDetailComponent },
-  { path: 'product-cat-detail/:id', component: ProductCategoryDetailComponent }  
+  { path: 'product-cat-detail/:id', component: ProductCategoryDetailComponent },
+  { path: 'login', component: LoginComponent }
 ];
 
 @NgModule({

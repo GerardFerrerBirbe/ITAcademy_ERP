@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+
 
 namespace ITAcademyERP.Models
 {
-    public partial class ITAcademyERPContext : DbContext
+    public partial class ITAcademyERPContext : IdentityDbContext<ApplicationUser>
     {
         public ITAcademyERPContext()
         {

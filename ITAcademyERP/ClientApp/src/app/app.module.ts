@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule} from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -40,6 +40,11 @@ import { OrderHeaderService } from './services/order-header.service';
 import { OrderLineService } from './services/order-line.service';
 import { OrderPriorityService } from './services/order-priority.service';
 import { OrderStateService } from './services/order-state.service';
+import { LoginComponent } from './login/login.component';
+import { AuthGuardService } from './services/auth-guard.service';
+import { AccountService } from './services/account.service';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { LogInterceptorService } from './services/log-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -64,7 +69,8 @@ import { OrderStateService } from './services/order-state.service';
     PersonDetailComponent,
     ProductDetailComponent,
     ProductCategoryDetailComponent,
-    OrderDetailComponent    
+    OrderDetailComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +89,19 @@ import { OrderStateService } from './services/order-state.service';
     OrderHeaderService,
     OrderLineService,
     OrderPriorityService,
-    OrderStateService
+    OrderStateService,
+    AuthGuardService,
+    AccountService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LogInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

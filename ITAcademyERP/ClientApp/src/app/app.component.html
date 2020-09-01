@@ -1,4 +1,18 @@
 <h1>{{title}}</h1>
+<div>
+  <ul>
+    <li *ngIf="!isLogged()" [routerLinkActive]='["link-active"]'>
+      <a [routerLink]='["/login"]' (click)='collapse()'>
+        <span class='glyphicon glyphicon-th-list'></span> Registre / Login
+      </a>
+    </li>
+    <li *ngIf="isLogged()" [routerLinkActive]='["link-active"]'>
+      <a (click)='logout()'>
+        <span class='glyphicon glyphicon-th-list'></span> Logout
+      </a>
+    </li>
+</ul>
+</div>
 <nav>
   <button routerLink="/">Inici</button>
   <button routerLink="/hhrr">Recursos Humans</button>
