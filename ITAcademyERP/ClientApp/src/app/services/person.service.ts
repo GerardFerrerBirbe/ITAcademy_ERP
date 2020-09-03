@@ -18,7 +18,8 @@ export class PersonService {
   constructor(private http: HttpClient) { }
 
   getPeople(): Observable<Person[]>{
-    return this.http.get<Person[]>(this.apiUrl);
+    var output = this.http.get<Person[]>(this.apiUrl);
+    return output;
   }
 
   getPerson(id: string): Observable<Person> {

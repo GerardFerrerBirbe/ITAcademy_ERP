@@ -45,6 +45,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { AccountService } from './services/account.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
+import { PersonLastIdService } from './services/person-last-id.service';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { LogInterceptorService } from './services/log-interceptor.service';
   providers: [
     EmployeeService,
     PersonService,
+    PersonLastIdService,
     ClientService,
     AddressService,
     ProductService,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Client } from './client';
-import { ClientService } from 'src/app/services/client.service';
+import { ClientService } from '../../services/client.service';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class ClientComponent implements OnInit {
   getClients(): void {
     this.clientService.getClients()
     .subscribe(clients => this.clients = clients);
-  }
+  }  
 
   delete(client: Client): void {
     this.clients = this.clients.filter(e => e !== client);

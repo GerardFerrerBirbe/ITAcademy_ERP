@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ClientService }  from '../../../services/client.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { PersonLastIdService } from '../../../services/person-last-id.service';
 
 @Component({
   selector: 'app-client-detail',
@@ -16,6 +17,7 @@ export class ClientDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private clientService: ClientService,
+    private personLastIdService: PersonLastIdService,    
     private location: Location
   ) { }
 
@@ -35,6 +37,8 @@ export class ClientDetailComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
+        this.personId = this.personLastIdService.getPeopleLastId()
+        .subscribe(lastId => this.personId = lastId + 1);
         return;
       }
       this.editionMode = true;
@@ -66,7 +70,6 @@ export class ClientDetailComponent implements OnInit {
       .subscribe();
     } else {
       //add client
-      this.personId = 6;
       client.personId = this.personId;
       this.clientService.addClient(client)
       .subscribe();
