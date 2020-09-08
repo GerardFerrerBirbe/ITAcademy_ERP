@@ -18,25 +18,25 @@
       <td>
         <div class="form-group">
           <label for="orderStateId">Estat</label>
-          <div>
-            <input class="form-control"
-            id="orderStateId"
-            type="text"
-            required
-            formControlName="orderState"/>
-          </div>
+          <select
+          class="form-control"
+          id="orderStateId"
+          formControlName="orderState"
+          size="1">
+          <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
+        </select>
         </div>
       </td>
       <td>
         <div class="form-group">
           <label for="orderPriorityId">Prioritat</label>
-          <div>
-            <input class="form-control"
-            id="orderPriorityId"
-            type="text"
-            required
-            formControlName="orderPriority"/>
-          </div>
+          <select
+          class="form-control"
+          id="orderPriorityId"
+          formControlName="orderPriority"
+          size="1">
+          <option *ngFor="let orderPriority of orderPriorities">{{ orderPriority.priority }}</option>
+        </select>
         </div>
       </td>
       <td>
@@ -52,55 +52,31 @@
         </div>
       </td>
     </tr>
-    <tr>
+    <tr>      
       <td>
         <div class="form-group">
-          <label for="employeeFirstNameId">Nom Empleat</label>
-          <div>
-            <input class="form-control"
-            id="employeeFirstNameId"
-            type="text"
-            required
-            formControlName="employeeFirstName"/>
-          </div>
-        </div>
-      </td>
-      <td>
-        <div class="form-group">
-          <label for="employeeLastNameId">Cognoms Empleat</label>
-          <div>
-            <input class="form-control"
-            id="employeeLastNameId"
-            type="text"
-            required
-            formControlName="employeeLastName"/>
-          </div>
+          <label for="employeeId">Empleat</label>
+          <select
+          class="form-control"
+          id="employeeId"
+          formControlName="employee"
+          size="1">
+          <option *ngFor="let employee of employees">{{ employee.firstName }} {{ employee.lastName }}</option>
+        </select>
         </div>
       </td>      
     </tr>
-    <tr>
+    <tr>      
       <td>
         <div class="form-group">
-          <label for="clientFirstNameId">Nom Client</label>
-          <div>
-            <input class="form-control"
-            id="clientFirstNameId"
-            type="text"
-            required
-            formControlName="clientFirstName"/>
-          </div>
-        </div>
-      </td>
-      <td>
-        <div class="form-group">
-          <label for="clientLastNameId">Cognoms Client</label>
-          <div>
-            <input class="form-control"
-            id="clientLastNameId"
-            type="text"
-            required
-            formControlName="clientLastName"/>
-          </div>
+          <label for="clientId">Client</label>
+          <select
+          class="form-control"
+          id="clientId"
+          formControlName="client"
+          size="1">
+          <option *ngFor="let client of clients">{{ client.firstName }} {{ client.lastName }}</option>
+        </select>
         </div>
       </td>      
     </tr>

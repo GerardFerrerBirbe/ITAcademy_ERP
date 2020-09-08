@@ -4,7 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { OrderHeaderService }  from '../../../services/order-header.service';
 import { OrderLineService } from '../../../services/order-line.service';
+import { OrderStateService } from '../../../services/order-state.service';
+import { OrderPriorityService } from '../../../services/order-priority.service';
+import { EmployeeService } from '../../../services/employee.service';
+import { ClientService } from '../../../services/client.service';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { OrderState } from '../../order-state/order-state';
+import { OrderPriority } from '../../order-priority/order-priority';
+import { Employee } from '../../employee/employee';
+import { Client } from '../../client/client';
 
 @Component({
   selector: 'app-order-detail',
@@ -18,6 +26,10 @@ export class OrderDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private orderHeaderService: OrderHeaderService,
     private orderLineService: OrderLineService,
+    private orderStateService: OrderStateService,
+    private orderPriorityService: OrderPriorityService,
+    private employeeService: EmployeeService,
+    private clientService: ClientService,
     private location: Location
   ) { }
 
@@ -28,6 +40,11 @@ export class OrderDetailComponent implements OnInit {
 
   orderHeaders: OrderHeader[];
 
+  orderStates: OrderState[];
+  orderPriorities: OrderPriority[];
+  employees: Employee[];
+  clients: Client[];
+
   get orderLines(): FormArray {
     return this.formGroup.get('orderLines') as FormArray;
   };
@@ -37,11 +54,9 @@ export class OrderDetailComponent implements OnInit {
       orderNumber: '',
       address: '',
       addressId: '',
-      clientFirstName: '',
-      clientLastName: '',
+      client: '',
       clientId: '',
-      employeeFirstName: '',
-      employeeLastName: '',
+      employee: '',
       employeeId: '',
       orderState: '',
       orderStateId: '',
@@ -51,7 +66,19 @@ export class OrderDetailComponent implements OnInit {
       assignToEmployeeDate: '',
       finalisationDate: '',
       orderLines: this.fb.array([])
-    });  
+    });
+    
+    this.orderStateService.getOrderStates()
+    .subscribe(orderStates => this.orderStates = orderStates);
+
+    this.orderPriorityService.getOrderPriorities()
+    .subscribe(orderPriorities => this.orderPriorities = orderPriorities);
+
+    this.employeeService.getEmployees()
+    .subscribe(employees => this.employees = employees);
+
+    this.clientService.getClients()
+    .subscribe(clients => this.clients = clients);
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
@@ -95,11 +122,9 @@ export class OrderDetailComponent implements OnInit {
       orderNumber: orderHeader.orderNumber,
       address: orderHeader.address,
       addressId: orderHeader.addressId,
-      clientFirstName: orderHeader.clientFirstName,
-      clientLastName: orderHeader.clientLastName,
+      client: orderHeader.client,
       clientId: orderHeader.clientId,
-      employeeFirstName: orderHeader.employeeFirstName,
-      employeeLastName: orderHeader.employeeLastName,
+      employee: orderHeader.employee,
       employeeId: orderHeader.employeeId,
       orderState: orderHeader.orderState,
       orderStateId: orderHeader.orderStateId,
