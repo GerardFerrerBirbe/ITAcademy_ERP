@@ -3,7 +3,9 @@ import { Product } from '../product';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ProductService }  from '../../../services/product.service';
+import { ProductCategoryService }  from '../../../services/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { ProductCategory } from '../../product-category/product-category';
 
 @Component({
   selector: 'app-product-detail',
@@ -16,6 +18,7 @@ export class ProductDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private productService: ProductService,
+    private productCategoryService: ProductCategoryService,
     private location: Location
   ) { }
 
@@ -24,12 +27,16 @@ export class ProductDetailComponent implements OnInit {
   productId: any;
 
   products: Product[];
+  productCategories: ProductCategory[];
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       productName: '',
       productCategoryName: ''
-    });  
+    });
+
+    this.productCategoryService.getProductCategories()
+    .subscribe(productCategories => this.productCategories = productCategories);
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){

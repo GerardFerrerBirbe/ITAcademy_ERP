@@ -83,7 +83,6 @@ import { PersonLastIdService } from './services/person-last-id.service';
   providers: [
     EmployeeService,
     PersonService,
-    PersonLastIdService,
     ClientService,
     AddressService,
     ProductService,

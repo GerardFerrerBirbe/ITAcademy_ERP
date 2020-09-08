@@ -14,11 +14,13 @@
       <div class="form-group">
         <label for="categoryNameId">Categoria</label>
         <div>
-          <input class="form-control"
+          <select
+          class="form-control"
           id="categoryNameId"
-          type="text"
-          required
-          formControlName="productCategoryName"/>
+          formControlName="productCategoryName"
+          size="1">
+          <option *ngFor="let productCategory of productCategories">{{ productCategory.productCategoryName }}</option>
+        </select>
         </div>
       </div>      
       <div class="form-group">
