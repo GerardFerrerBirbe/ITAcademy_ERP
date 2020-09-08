@@ -1,9 +1,4 @@
 import { OrderLine } from '../order-line/order-line';
-import { Address } from '../address/address';
-import { Employee } from '../employee/employee';
-import { Client } from '../client/client';
-import { OrderState } from '../order-state/order-state';
-import { OrderPriority } from '../order-priority/order-priority';
 
 export interface OrderHeader {
   id: number;
@@ -11,11 +6,9 @@ export interface OrderHeader {
   addressId: number;
   address: string;
   clientId: number;
-  clientFirstName: string;
-  clientLastName: string;
+  client: string;
   employeeId: number;
-  employeeFirstName: string;
-  employeeLastName: string;
+  employee: string;
   orderStateId: number;
   orderState: string;
   orderPriorityId: number;
