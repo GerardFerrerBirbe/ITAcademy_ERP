@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderHeader } from './order-header';
 import { OrderHeaderService } from 'src/app/services/order-header.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -12,7 +13,10 @@ export class OrderHeaderComponent implements OnInit {
 
   public orderHeaders: OrderHeader[];
   
-  constructor(private orderHeaderService: OrderHeaderService) { }
+  constructor(
+    private orderHeaderService: OrderHeaderService,
+    private datePipe: DatePipe
+    ) { }
 
   ngOnInit(): void {
     this.getOrderHeaders();

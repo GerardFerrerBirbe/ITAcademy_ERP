@@ -24,7 +24,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeader()
         {
-            return await _context.OrderHeader
+            var output = _context.OrderHeader
                     .Include(o => o.DeliveryAddress)
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
@@ -34,6 +34,10 @@ namespace ITAcademyERP.Controllers
                     .Include(o => o.OrderPriority)
                     .Select(o => OrderHeaderToDTO(o))
                     .ToListAsync();
+
+            
+
+            return await output;
         }
 
         //GET: api/OrderHeaders/5
@@ -101,9 +105,9 @@ namespace ITAcademyERP.Controllers
             }
 
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
-            orderHeader.CreationDate = orderHeaderDTO.CreationDate;
-            orderHeader.AssignToEmployeeDate = orderHeaderDTO.AssignToEmployeeDate;
-            orderHeader.FinalisationDate = orderHeaderDTO.FinalisationDate;
+            orderHeader.CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate);
+            orderHeader.AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate);
+            orderHeader.FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate);
 
             _context.Entry(orderHeader).State = EntityState.Modified;
 
@@ -251,9 +255,9 @@ namespace ITAcademyERP.Controllers
                 OrderState = orderHeader.OrderState.State,
                 OrderPriorityId = orderHeader.OrderPriorityId,
                 OrderPriority = orderHeader.OrderPriority.Priority,
-                CreationDate = orderHeader.CreationDate,
-                AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
-                FinalisationDate = orderHeader.FinalisationDate,
+                CreationDate = orderHeader.CreationDate.ToShortDateString(),
+                AssignToEmployeeDate = orderHeader.AssignToEmployeeDate.ToShortDateString(),
+                FinalisationDate = orderHeader.FinalisationDate.ToShortDateString(),
                 OrderLines = orderHeader.OrderLines.Select(o => new OrderLineDTO
                     {
                         Id = o.Id,

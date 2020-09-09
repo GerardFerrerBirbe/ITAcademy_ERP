@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderHeader } from '../order-header';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { OrderHeaderService }  from '../../../services/order-header.service';
 import { OrderLineService } from '../../../services/order-line.service';
 import { OrderStateService } from '../../../services/order-state.service';
@@ -24,6 +24,7 @@ export class OrderDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private datePipe: DatePipe,
     private orderHeaderService: OrderHeaderService,
     private orderLineService: OrderLineService,
     private orderStateService: OrderStateService,
@@ -130,9 +131,9 @@ export class OrderDetailComponent implements OnInit {
       orderStateId: orderHeader.orderStateId,
       orderPriority: orderHeader.orderPriority,
       orderPriorityId: orderHeader.orderPriorityId,
-      creationDate: orderHeader.creationDate,
-      assignToEmployeeDate: orderHeader.assignToEmployeeDate,
-      finalisationDate: orderHeader.finalisationDate
+      creationDate: this.datePipe.transform(orderHeader.creationDate, "yyyy-MM-dd"),
+      assignToEmployeeDate: this.datePipe.transform(orderHeader.assignToEmployeeDate, "yyyy-MM-dd"),
+      finalisationDate: this.datePipe.transform(orderHeader.finalisationDate, "yyyy-MM-dd")
     });
 
     orderHeader.orderLines.forEach(orderLine => {

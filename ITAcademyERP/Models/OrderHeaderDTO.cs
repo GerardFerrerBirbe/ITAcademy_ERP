@@ -21,9 +21,9 @@ namespace ITAcademyERP.Models
         public string OrderState { get; set; }  
         public int OrderPriorityId { get; set; }
         public string OrderPriority { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime AssignToEmployeeDate { get; set; }
-        public DateTime FinalisationDate { get; set; }
+        public string CreationDate { get; set; }
+        public string AssignToEmployeeDate { get; set; }
+        public string FinalisationDate { get; set; }
         public ICollection<OrderLineDTO> OrderLines { get; set; }
     }
 }
