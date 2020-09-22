@@ -20,7 +20,7 @@ export class OrderHeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOrderHeaders();
-  }
+  } 
 
   getOrderHeaders(): void {
     this.orderHeaderService.getOrderHeaders()

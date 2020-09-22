@@ -136,6 +136,14 @@
         </label>            
         <div class="col-md-8">
           <input class="form-control" [attr.id]="'productName' + i" type="text" formControlName="productName" />
+        
+          <!-- <select
+          class="form-control"
+          [attr.id]="'productName' + i"
+          formControlName="productName"
+          size="1">
+            <option *ngFor="let product of products">{{ product.productName }}</option>
+          </select> -->
         </div>
       </div>    
       <div class="form-group">  

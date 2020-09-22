@@ -13,6 +13,8 @@ import { OrderState } from '../../order-state/order-state';
 import { OrderPriority } from '../../order-priority/order-priority';
 import { Employee } from '../../employee/employee';
 import { Client } from '../../client/client';
+import { Product } from '../../product/product';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -31,6 +33,7 @@ export class OrderDetailComponent implements OnInit {
     private orderPriorityService: OrderPriorityService,
     private employeeService: EmployeeService,
     private clientService: ClientService,
+    private productService: ProductService,
     private location: Location
   ) { }
 
@@ -45,6 +48,7 @@ export class OrderDetailComponent implements OnInit {
   orderPriorities: OrderPriority[];
   employees: Employee[];
   clients: Client[];
+  products: Product[];
 
   get orderLines(): FormArray {
     return this.formGroup.get('orderLines') as FormArray;
@@ -54,15 +58,10 @@ export class OrderDetailComponent implements OnInit {
     this.formGroup = this.fb.group({
       orderNumber: '',
       address: '',
-      addressId: '',
       client: '',
-      clientId: '',
       employee: '',
-      employeeId: '',
       orderState: '',
-      orderStateId: '',
       orderPriority: '',
-      orderPriorityId: '',
       creationDate: '',
       assignToEmployeeDate: '',
       finalisationDate: '',
@@ -81,6 +80,9 @@ export class OrderDetailComponent implements OnInit {
     this.clientService.getClients()
     .subscribe(clients => this.clients = clients);
 
+    this.productService.getProducts()
+    .subscribe(products => this.products = products);
+
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
         return;
@@ -88,7 +90,7 @@ export class OrderDetailComponent implements OnInit {
       this.editionMode = true;
 
       this.orderHeaderId = params["id"];
-
+      
       this.orderHeaderService.getOrderHeader(this.orderHeaderId.toString())
       .subscribe(orderHeader => this.loadForm(orderHeader));
     });
@@ -103,7 +105,7 @@ export class OrderDetailComponent implements OnInit {
     return this.fb.group({
       id: 0,
       orderHeaderId: this.orderHeaderId != null ? parseInt(this.orderHeaderId) : 0,
-      productName: '0',
+      productName: '',
       unitPrice: 0,
       vat: 0,
       quantity: 0
@@ -122,26 +124,20 @@ export class OrderDetailComponent implements OnInit {
     this.formGroup.patchValue({
       orderNumber: orderHeader.orderNumber,
       address: orderHeader.address,
-      addressId: orderHeader.addressId,
       client: orderHeader.client,
-      clientId: orderHeader.clientId,
       employee: orderHeader.employee,
-      employeeId: orderHeader.employeeId,
       orderState: orderHeader.orderState,
-      orderStateId: orderHeader.orderStateId,
       orderPriority: orderHeader.orderPriority,
-      orderPriorityId: orderHeader.orderPriorityId,
       creationDate: this.datePipe.transform(orderHeader.creationDate, "yyyy-MM-dd"),
       assignToEmployeeDate: this.datePipe.transform(orderHeader.assignToEmployeeDate, "yyyy-MM-dd"),
       finalisationDate: this.datePipe.transform(orderHeader.finalisationDate, "yyyy-MM-dd")
     });
-
-    orderHeader.orderLines.forEach(orderLine => {
+        
+      orderHeader.orderLines.forEach(orderLine => {
       let orderLineFG = this.buildOrderLine();
       orderLineFG.patchValue(orderLine);
       this.orderLines.push(orderLineFG);
-    });
-    
+      });   
   }
 
   save() {
@@ -153,7 +149,7 @@ export class OrderDetailComponent implements OnInit {
       this.orderHeaderId = parseInt(this.orderHeaderId);
       orderHeader.id = this.orderHeaderId;      
       this.orderHeaderService.updateOrderHeader(orderHeader)
-      .subscribe(orderHeader => this.deleteOrderLines());
+      .subscribe(() => this.deleteOrderLines());
     } else {
       //add order
       this.orderHeaderService.addOrderHeader(orderHeader)
@@ -163,13 +159,11 @@ export class OrderDetailComponent implements OnInit {
 
   deleteOrderLines(){
     if(this.orderLinesToDelete.length === 0){
-      this.goBack();
       return;
     }
 
     this.orderLineService.deleteOrderLines(this.orderLinesToDelete)
       .subscribe();
-
   }
 
   goBack(): void {

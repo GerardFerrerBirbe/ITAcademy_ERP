@@ -33,9 +33,7 @@ namespace ITAcademyERP.Controllers
                     .Include(o => o.OrderState)
                     .Include(o => o.OrderPriority)
                     .Select(o => OrderHeaderToDTO(o))
-                    .ToListAsync();
-
-            
+                    .ToListAsync();           
 
             return await output;
         }
@@ -104,73 +102,49 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
+            var deliveryAddressId = _context.Address
+                            .FirstOrDefault(x => x.AddressName == orderHeaderDTO.Address)
+                            .Id;
+
+            var personClientId = _context.Person
+                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Client)
+                            .Id;
+
+            var clientId = _context.Client
+                            .FirstOrDefault(x => x.PersonId == personClientId)
+                            .Id;
+
+            var personEmployeeId = _context.Person
+                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Employee)
+                            .Id;
+
+            var employeeId = _context.Employee
+                            .FirstOrDefault(x => x.PersonId == personEmployeeId)
+                            .Id;
+
+            var orderStateId = _context.OrderState
+                            .FirstOrDefault(x => x.State == orderHeaderDTO.OrderState)
+                            .Id;
+
+            var orderPriorityId = _context.OrderPriority
+                            .FirstOrDefault(x => x.Priority == orderHeaderDTO.OrderPriority)
+                            .Id;           
+
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
+            orderHeader.DeliveryAddressId = deliveryAddressId;
+            orderHeader.ClientId = clientId;
+            orderHeader.EmployeeId = employeeId;
+            orderHeader.OrderStateId = orderStateId;
+            orderHeader.OrderPriorityId = orderPriorityId;
             orderHeader.CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate);
             orderHeader.AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate);
             orderHeader.FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate);
 
-            _context.Entry(orderHeader).State = EntityState.Modified;
-
-           var address = await _context.Address.FindAsync(orderHeaderDTO.AddressId);
-
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            address.AddressName = orderHeaderDTO.Address;
-
-            _context.Entry(address).State = EntityState.Modified;
-
-            var client = await _context.Person.FindAsync(orderHeaderDTO.ClientId);
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-            
-            client.FirstName = orderHeaderDTO.ClientFirstName;
-            client.LastName = orderHeaderDTO.ClientLastName;
-
-            _context.Entry(client).State = EntityState.Modified;
-
-            var employee = await _context.Person.FindAsync(orderHeaderDTO.EmployeeId);
-
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            employee.FirstName = orderHeaderDTO.EmployeeFirstName;
-            employee.LastName = orderHeaderDTO.EmployeeLastName;
-
-            _context.Entry(employee).State = EntityState.Modified;
-
-            var orderState = await _context.OrderState.FindAsync(orderHeaderDTO.OrderStateId);
-
-            if (orderState == null)
-            {
-                return NotFound();
-            }
-
-            orderState.State = orderHeaderDTO.OrderState;
-
-            _context.Entry(orderState).State = EntityState.Modified;
-
-            var orderPriority = await _context.OrderPriority.FindAsync(orderHeaderDTO.OrderPriorityId);
-
-            if (orderPriority == null)
-            {
-                return NotFound();
-            }
-
-            orderPriority.Priority = orderHeaderDTO.OrderPriority;
-
-            _context.Entry(orderPriority).State = EntityState.Modified;
+            _context.Entry(orderHeader).State = EntityState.Modified;                   
 
             try
             {
-                await CreateOrEditOrderLines(orderHeader.OrderLines);
+                await CreateOrEditOrderLines(orderHeaderDTO.OrderLines);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -188,19 +162,53 @@ namespace ITAcademyERP.Controllers
             return NoContent();
         }
 
-        private async Task CreateOrEditOrderLines(ICollection<OrderLine> orderLines)
+        private async Task CreateOrEditOrderLines(ICollection<OrderLineDTO> orderLinesDTO)
         {
-            ICollection<OrderLine> orderLinesToCreate = orderLines.Where(x => x.Id == 0).ToList();
-            ICollection<OrderLine> orderLinesToEdit = orderLines.Where(x => x.Id != 0).ToList();
+            ICollection<OrderLineDTO> orderLinesToCreate = orderLinesDTO.Where(x => x.Id == 0).ToList();
+            ICollection<OrderLineDTO> orderLinesToEdit = orderLinesDTO.Where(x => x.Id != 0).ToList();
 
             if (orderLinesToCreate.Any())
-            {
-                await _context.AddRangeAsync(orderLinesToCreate);
+            {               
+                foreach (var orderLineDTO in orderLinesToCreate)
+                {
+                    if (orderLineDTO.ProductName == "")
+                        return;
+
+                    var productId = _context.Product.FirstOrDefault(x => x.ProductName == orderLineDTO.ProductName).Id;
+
+                    var orderLine = new OrderLine
+                    {
+                        Id = orderLineDTO.Id,
+                        OrderHeaderId = orderLineDTO.OrderHeaderId,
+                        ProductId = productId,
+                        UnitPrice = orderLineDTO.UnitPrice,
+                        Vat = orderLineDTO.Vat,
+                        Quantity = orderLineDTO.Quantity
+                    };
+
+                    _context.OrderLine.Add(orderLine);
+                    await _context.SaveChangesAsync();
+
+                    CreatedAtAction("GetOrderLine", new { id = orderLine.Id }, OrderLineToDTO(orderLine));
+                }                
             }
 
             if (orderLinesToEdit.Any())
             {
-                _context.UpdateRange(orderLinesToEdit);
+                foreach (var orderLineDTO in orderLinesToEdit)
+                {
+                    var orderLine = _context.OrderLine.FirstOrDefault(x => x.Id == orderLineDTO.Id);
+
+                    var productId = _context.Product.FirstOrDefault(x => x.ProductName == orderLineDTO.ProductName).Id;
+
+                    orderLine.OrderHeaderId = orderLineDTO.OrderHeaderId;
+                    orderLine.ProductId = productId;
+                    orderLine.UnitPrice = orderLineDTO.UnitPrice;
+                    orderLine.Vat = orderLineDTO.Vat;
+                    orderLine.Quantity = orderLineDTO.Quantity;
+                    
+                    _context.Entry(orderLine).State = EntityState.Modified;
+                }
             }
         }
 
@@ -208,12 +216,53 @@ namespace ITAcademyERP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<OrderHeader>> PostOrderHeader(OrderHeader orderHeader)
+        public async Task<ActionResult<OrderHeader>> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
         {
+            var deliveryAddressId = _context.Address
+                            .FirstOrDefault(x => x.AddressName == orderHeaderDTO.Address)
+                            .Id;
+
+            var personClientId = _context.Person
+                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Client)
+                            .Id;
+
+            var clientId = _context.Client
+                            .FirstOrDefault(x => x.PersonId == personClientId)
+                            .Id;
+
+            var personEmployeeId = _context.Person
+                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Employee)
+                            .Id;
+
+            var employeeId = _context.Employee
+                            .FirstOrDefault(x => x.PersonId == personEmployeeId)
+                            .Id;
+
+            var orderStateId = _context.OrderState
+                            .FirstOrDefault(x => x.State == orderHeaderDTO.OrderState)
+                            .Id;
+
+            var orderPriorityId = _context.OrderPriority
+                            .FirstOrDefault(x => x.Priority == orderHeaderDTO.OrderPriority)
+                            .Id;
+            
+            var orderHeader = new OrderHeader
+            {
+                OrderNumber = orderHeaderDTO.OrderNumber,
+                DeliveryAddressId = deliveryAddressId,
+                ClientId = clientId,
+                EmployeeId = employeeId,
+                OrderStateId = orderStateId,
+                OrderPriorityId = orderPriorityId,
+                CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate),
+                AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate),
+                FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate)
+            };
+
             _context.OrderHeader.Add(orderHeader);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOrderHeader", new { id = orderHeader.Id }, orderHeader);
+            return CreatedAtAction("GetOrderHeader", new { id = orderHeader.Id }, OrderHeaderToDTO(orderHeader));
         }
 
         // DELETE: api/OrderHeaders/5
@@ -237,41 +286,41 @@ namespace ITAcademyERP.Controllers
             return _context.OrderHeader.Any(e => e.Id == id);
         }
 
-        private static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {                      
-            
-            var orderheader = new OrderHeaderDTO
+        private static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
+
+            var orderHeaderDTO = new OrderHeaderDTO
             {
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
-                AddressId = orderHeader.DeliveryAddressId,
                 Address = orderHeader.DeliveryAddress.AddressName,
-                ClientId = orderHeader.ClientId,
-                ClientFirstName = orderHeader.Client.Person.FirstName,
-                ClientLastName = orderHeader.Client.Person.LastName,
-                EmployeeId = orderHeader.EmployeeId,
-                EmployeeFirstName = orderHeader.Employee.Person.FirstName,
-                EmployeeLastName = orderHeader.Employee.Person.LastName,
-                OrderStateId = orderHeader.OrderStateId,
+                Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
+                Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
                 OrderState = orderHeader.OrderState.State,
-                OrderPriorityId = orderHeader.OrderPriorityId,
                 OrderPriority = orderHeader.OrderPriority.Priority,
-                CreationDate = orderHeader.CreationDate.ToShortDateString(),
-                AssignToEmployeeDate = orderHeader.AssignToEmployeeDate.ToShortDateString(),
-                FinalisationDate = orderHeader.FinalisationDate.ToShortDateString(),
-                OrderLines = orderHeader.OrderLines.Select(o => new OrderLineDTO
-                    {
-                        Id = o.Id,
-                        OrderHeaderId = o.OrderHeaderId,
-                        ProductName = o.Product.ProductName,
-                        UnitPrice = o.UnitPrice,
-                        Vat = o.Vat,
-                        Quantity = o.Quantity
-                    }).ToList()
+                CreationDate = orderHeader.CreationDate,
+                AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
+                FinalisationDate = orderHeader.FinalisationDate,
+                OrderLines = orderHeader.OrderLines.Select(o => OrderLineToDTO(o)).ToList()
             };
 
-            return orderheader;
+            return orderHeaderDTO;
         }
 
-       
+        private static OrderLineDTO OrderLineToDTO(OrderLine orderLine)
+        {
+
+            var orderLineDTO = new OrderLineDTO
+            {
+                Id = orderLine.Id,
+                OrderHeaderId = orderLine.OrderHeaderId,
+                ProductName = orderLine.Product.ProductName,
+                UnitPrice = orderLine.UnitPrice,
+                Vat = orderLine.Vat,
+                Quantity = orderLine.Quantity
+            };
+
+            return orderLineDTO;
+        }
+
     }
 }

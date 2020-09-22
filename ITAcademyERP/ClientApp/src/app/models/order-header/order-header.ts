@@ -3,9 +3,7 @@ import { OrderLine } from '../order-line/order-line';
 export interface OrderHeader {
   id: number;
   orderNumber: string;
-  addressId: number;
   address: string;
-  clientId: number;
   client: string;
   employeeId: number;
   employee: string;

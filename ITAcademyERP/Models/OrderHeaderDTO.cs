@@ -9,21 +9,15 @@ namespace ITAcademyERP.Models
     {        
         public int Id { get; set; }
         public string OrderNumber { get; set; }
-        public int AddressId { get; set; }
         public string Address { get; set; }
-        public int ClientId { get; set; }
-        public string ClientFirstName { get; set; }
-        public string ClientLastName { get; set; }
-        public int EmployeeId { get; set; }
-        public string EmployeeFirstName { get; set; }
-        public string EmployeeLastName { get; set; }
-        public int OrderStateId { get; set; }
-        public string OrderState { get; set; }  
-        public int OrderPriorityId { get; set; }
+        public string Client { get; set; }
+        public string Employee { get; set; }
+        public string OrderState { get; set; }
         public string OrderPriority { get; set; }
-        public string CreationDate { get; set; }
-        public string AssignToEmployeeDate { get; set; }
-        public string FinalisationDate { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime AssignToEmployeeDate { get; set; }
+        public DateTime FinalisationDate { get; set; }
+
         public ICollection<OrderLineDTO> OrderLines { get; set; }
     }
 }

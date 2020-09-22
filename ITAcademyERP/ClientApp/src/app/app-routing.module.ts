@@ -31,7 +31,7 @@ const routes: Routes = [
   { path: 'hhrr', component: HhrrComponent },
   { path: 'sales', component: SalesComponent },
   { path: 'statistics', component: StatisticsComponent },
-  { path: 'employee', component: EmployeeComponent/*, canActivate: [AuthGuardService]*/ },
+  { path: 'employee', component: EmployeeComponent, canActivate: [AuthGuardService] },
   { path: 'employee-detail', component: EmployeeDetailComponent },
   { path: 'employee-detail/:id', component: EmployeeDetailComponent },
   { path: 'client', component: ClientComponent },

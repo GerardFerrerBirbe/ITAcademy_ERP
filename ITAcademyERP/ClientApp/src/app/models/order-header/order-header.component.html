@@ -24,13 +24,13 @@
       <td>{{ orderHeader.id }}</td>
       <td>{{ orderHeader.orderNumber }}</td>
       <td>{{ orderHeader.address }}</td>
-      <td>{{ orderHeader.clientFirstName }} {{ orderHeader.clientLastName }}</td>
-      <td>{{ orderHeader.employeeFirstName }} {{ orderHeader.employeeLastName }}</td>
+      <td>{{ orderHeader.client }}</td>
+      <td>{{ orderHeader.employee }}</td>
       <td>{{ orderHeader.orderState }}</td>
       <td>{{ orderHeader.orderPriority }}</td>
-      <td>{{ orderHeader.creationDate }}</td>
-      <td>{{ orderHeader.assignToEmployeeDate }}</td>
-      <td>{{ orderHeader.finalisationDate }}</td>     
+      <td>{{ orderHeader.creationDate | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ orderHeader.finalisationDate | date: 'dd/MM/yyyy' }}</td>     
       <td><button routerLink="/order-detail/{{orderHeader.id}}"
         class="btn-update" title="update orderHeader">Seleccionar</button></td>
       <td><button class="btn-delete" title="delete orderHeader"
