@@ -27,12 +27,11 @@ export class EmployeeDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
+      email:'',
       firstName: '',
       lastName: '',
       position: '',
-      salary: '',
-      userName: '',
-      password: ''
+      salary: ''
     });  
 
     this.route.params.subscribe(params => {
@@ -50,12 +49,11 @@ export class EmployeeDetailComponent implements OnInit {
 
   loadForm(employee: Employee){
     this.formGroup.patchValue({
+      email: employee.email,
       firstName: employee.firstName,
       lastName: employee.lastName,
       position: employee.position,
-      salary: employee.salary,
-      userName: employee.userName,
-      password: employee.password
+      salary: employee.salary
     })
   }
 

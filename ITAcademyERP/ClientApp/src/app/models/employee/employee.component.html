@@ -8,23 +8,21 @@
   <thead>
     <tr>
       <th>Id</th>
+      <th>Email</th>
       <th>Nom</th>
       <th>Cognoms</th>
       <th>Càrrec</th>
       <th>Salari</th>
-      <th>Usuari</th>
-      <th>Contrasenya</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let employee of employees">
       <td>{{ employee.id }}</td>
+      <td>{{ employee.email }}</td>
       <td>{{ employee.firstName }}</td>
       <td>{{ employee.lastName }}</td>
       <td>{{ employee.position }}</td>
-      <td>{{ employee.salary }}</td>
-      <td>{{ employee.userName }}</td>
-      <td>{{ employee.password }}</td>        
+      <td>{{ employee.salary }}</td>        
       <td><button routerLink="/employee-detail/{{employee.id}}"
         class="btn-update" title="update employee">Seleccionar</button></td>
       <td><button class="btn-delete" title="delete employee"

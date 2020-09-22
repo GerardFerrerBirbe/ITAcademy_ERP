@@ -2,6 +2,16 @@
 <form class="form-horizontal" novalidate
     (ngSubmit)="save()" [formGroup]="formGroup">
       <div class="form-group">
+        <label for="emailId">Email</label>
+        <div>
+          <input class="form-control"
+          id="emailId"
+          type="string"
+          required
+          formControlName="email"/>
+        </div>
+      </div>
+      <div class="form-group">
         <label for="firstNameId">Nom</label>
         <div>
           <input class="form-control"
@@ -40,27 +50,7 @@
           required
           formControlName="salary"/>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="userNameId">Usuari</label>
-        <div>
-          <input class="form-control"
-          id="userNameId"
-          type="text"
-          required
-          formControlName="userName"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="passwordId">Contrasenya</label>
-        <div>
-          <input class="form-control"
-          id="passwordId"
-          type="text"
-          required
-          formControlName="password"/>
-        </div>
-      </div>
+      </div>      
       <div class="form-group">
         <div>
           <button type="submit">Guardar</button>

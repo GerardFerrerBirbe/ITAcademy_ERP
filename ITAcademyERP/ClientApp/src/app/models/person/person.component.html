@@ -1,29 +1,2 @@
-<h2 id="tableLabel">Dades personals</h2>
 
-<button [routerLink]='["/person-detail"]' class="btn-add">Nou empleat</button>
-
-<p *ngIf="!people"><em>Loading...</em></p>
-
-<table *ngIf="people">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Nom</th>
-      <th>Cognoms</th>
-      <th>Adreça</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let person of people">
-      <td>{{ person.id }}</td>
-      <td>{{ person.firstName }}</td>
-      <td>{{ person.lastName }}</td>
-      <td>{{ person.addressId }}</td>       
-      <td><button routerLink="/person-detail/{{person.id}}"
-        class="btn-update" title="update person">Seleccionar</button></td>
-      <td><button class="btn-delete" title="delete person"
-        (click)="delete(person)">Borrar</button></td>
-    </tr>
-  </tbody>
-</table>
 

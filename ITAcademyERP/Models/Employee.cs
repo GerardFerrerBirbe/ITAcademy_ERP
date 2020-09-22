@@ -15,8 +15,6 @@ namespace ITAcademyERP.Models
         public int PersonId { get; set; }
         public string Position { get; set; }
         public double Salary { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
 
         public virtual Person Person { get; set; }
         public virtual ICollection<OrderHeader> OrderHeader { get; set; }

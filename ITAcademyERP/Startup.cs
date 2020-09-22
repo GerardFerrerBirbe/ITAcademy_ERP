@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using ITAcademyERP.Data;
 
 namespace ITAcademyERP
 {
@@ -112,6 +113,8 @@ namespace ITAcademyERP
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            DummyData.Initialize(app);
         }
     }
 }

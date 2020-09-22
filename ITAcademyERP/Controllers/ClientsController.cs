@@ -21,7 +21,7 @@ namespace ITAcademyERP.Models
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClientDTO>>> GetClient()
+        public async Task<ActionResult<IEnumerable<ClientDTO>>> GetClients()
         {
             return await _context.Client
                 .Include(c => c.Person)
@@ -100,19 +100,26 @@ namespace ITAcademyERP.Models
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
         {
-            var person = new Person
+            var personExists = _context.Person.FirstOrDefault(p => p.FirstName + ' ' + p.LastName == clientDTO.FirstName + ' ' + clientDTO.LastName);
+
+            if (personExists == default)
             {
-                FirstName = clientDTO.FirstName,
-                LastName = clientDTO.LastName
-            };
+                var person = new Person
+                {
+                    FirstName = clientDTO.FirstName,
+                    LastName = clientDTO.LastName
+                };
 
-            _context.Person.Add(person);
+                _context.Person.Add(person);
 
-            await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            }
+
+            var personId = personExists.Id;
 
             var client = new Client
             {
-                PersonId = clientDTO.PersonId
+                PersonId = personId
             };
 
             _context.Client.Add(client);            
@@ -148,7 +155,6 @@ namespace ITAcademyERP.Models
             new ClientDTO
             {
                 Id = client.Id,
-                PersonId = client.PersonId,
                 FirstName = client.Person.FirstName,
                 LastName = client.Person.LastName
             };

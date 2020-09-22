@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ITAcademyERP.Migrations
+namespace ITAcademyERP.Data.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -104,6 +104,7 @@ namespace ITAcademyERP.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     PersonalAddressId = table.Column<int>(nullable: true)
@@ -272,9 +273,7 @@ namespace ITAcademyERP.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PersonId = table.Column<int>(nullable: false),
                     Position = table.Column<string>(nullable: true),
-                    Salary = table.Column<double>(nullable: false),
-                    UserName = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    Salary = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {

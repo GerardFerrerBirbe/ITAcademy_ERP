@@ -26,7 +26,7 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetEmployee()
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetEmployees()
         {            
             return await _context.Employee
                 .Include(e => e.Person)
@@ -63,27 +63,26 @@ namespace ITAcademyERP.Controllers
 
             var employee = await _context.Employee.FindAsync(id);
 
-            if(employee == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            var person = await _context.Person.FindAsync(employeeDTO.PersonId);
+            employee.Position = employeeDTO.Position;
+            employee.Salary = employeeDTO.Salary;
 
+            _context.Entry(employee).State = EntityState.Modified;
+
+            var person = await _context.Person.FindAsync(employee.PersonId);
+            
             if (person == null)
             {
                 return NotFound();
             }
             
-            employee.Position = employeeDTO.Position;
-            employee.Salary = employeeDTO.Salary;
-            employee.UserName = employeeDTO.UserName;
-            employee.Password = employeeDTO.Password;
-            
             person.FirstName = employeeDTO.FirstName;
             person.LastName = employeeDTO.LastName;
-
-            _context.Entry(employee).State = EntityState.Modified;
+            
             _context.Entry(person).State = EntityState.Modified;
 
             try
@@ -111,25 +110,31 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
         {
-            var person = new Person
+            var personExists = _context.Person.FirstOrDefault(p => p.Email == employeeDTO.Email);
+
+            if (personExists == default)
             {
-                FirstName = employeeDTO.FirstName,
-                LastName = employeeDTO.LastName
-            };
+                var person = new Person
+                {
+                    Email = employeeDTO.Email,
+                    FirstName = employeeDTO.FirstName,
+                    LastName = employeeDTO.LastName
+                };
 
-            _context.Person.Add(person);
+                _context.Person.Add(person);
 
-            await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            }            
+
+            var personId = personExists.Id;
 
             var employee = new Employee
             {
-                PersonId = employeeDTO.PersonId,
+                PersonId = personId,
                 Position = employeeDTO.Position,
-                Salary = employeeDTO.Salary,
-                UserName = employeeDTO.UserName,
-                Password = employeeDTO.Password
-            };            
-            
+                Salary = employeeDTO.Salary
+            };
+
             _context.Employee.Add(employee);
 
             await _context.SaveChangesAsync();
@@ -163,13 +168,11 @@ namespace ITAcademyERP.Controllers
             new EmployeeDTO
             {
                 Id = employee.Id,
-                PersonId = employee.PersonId,
+                Email = employee.Person.Email,
                 FirstName = employee.Person.FirstName,
                 LastName = employee.Person.LastName,
                 Position = employee.Position,
-                Salary = employee.Salary,
-                UserName = employee.UserName,
-                Password = employee.Password
+                Salary = employee.Salary
             };
     }
 }
