@@ -30,6 +30,7 @@ namespace ITAcademyERP.Controllers
         {            
             return await _context.Employee
                 .Include(e => e.Person)
+                .ThenInclude(p => p.PersonalAddress)
                 .Select(e => EmployeeToDTO(e))
                 .ToListAsync();
         }
@@ -40,6 +41,7 @@ namespace ITAcademyERP.Controllers
         {              
             var employee = await _context.Employee
                 .Include(e => e.Person)
+                .ThenInclude(p => p.PersonalAddress)
                 .SingleOrDefaultAsync(e => e.Id == id);
 
             if (employee == null)
@@ -79,11 +81,23 @@ namespace ITAcademyERP.Controllers
             {
                 return NotFound();
             }
-            
+
+            person.Email = employeeDTO.Email;
             person.FirstName = employeeDTO.FirstName;
             person.LastName = employeeDTO.LastName;
             
             _context.Entry(person).State = EntityState.Modified;
+
+            var address = await _context.Address.FindAsync(person.PersonalAddressId);
+
+            if (address == null)
+            {
+                return NotFound();
+            }
+
+            address.AddressName = employeeDTO.Address;
+
+            _context.Entry(address).State = EntityState.Modified;
 
             try
             {
@@ -110,6 +124,22 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
         {
+            var addressExists = _context.Address.FirstOrDefault(a => a.AddressName == employeeDTO.Address);
+
+            if (addressExists == default)
+            {
+                var address = new Address
+                {
+                    AddressName = employeeDTO.Address
+                };
+
+                _context.Address.Add(address);
+
+                _context.SaveChanges();
+            }
+
+            var addressId = _context.Address.FirstOrDefault(a => a.AddressName == employeeDTO.Address).Id;            
+
             var personExists = _context.Person.FirstOrDefault(p => p.Email == employeeDTO.Email);
 
             if (personExists == default)
@@ -118,7 +148,8 @@ namespace ITAcademyERP.Controllers
                 {
                     Email = employeeDTO.Email,
                     FirstName = employeeDTO.FirstName,
-                    LastName = employeeDTO.LastName
+                    LastName = employeeDTO.LastName,
+                    PersonalAddressId = addressId
                 };
 
                 _context.Person.Add(person);
@@ -126,7 +157,7 @@ namespace ITAcademyERP.Controllers
                 _context.SaveChanges();
             }            
 
-            var personId = personExists.Id;
+            var personId = _context.Person.FirstOrDefault(p => p.Email == employeeDTO.Email).Id;
 
             var employee = new Employee
             {
@@ -171,6 +202,7 @@ namespace ITAcademyERP.Controllers
                 Email = employee.Person.Email,
                 FirstName = employee.Person.FirstName,
                 LastName = employee.Person.LastName,
+                Address = employee.Person.PersonalAddress.AddressName,
                 Position = employee.Position,
                 Salary = employee.Salary
             };

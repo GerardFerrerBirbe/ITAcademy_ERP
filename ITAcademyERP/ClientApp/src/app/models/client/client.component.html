@@ -8,6 +8,7 @@
   <thead>
     <tr>
       <th>Id</th>
+      <th>Email</th>
       <th>Nom</th>
       <th>Cognoms</th>
     </tr>
@@ -15,6 +16,7 @@
   <tbody>
     <tr *ngFor="let client of clients">
       <td>{{ client.id }}</td>
+      <td>{{ client.email }}</td>
       <td>{{ client.firstName }}</td>
       <td>{{ client.lastName }}</td>        
       <td><button routerLink="/client-detail/{{client.id}}"

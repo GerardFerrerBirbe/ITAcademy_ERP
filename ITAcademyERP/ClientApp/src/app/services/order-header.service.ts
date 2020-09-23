@@ -19,7 +19,7 @@ export class OrderHeaderService {
   getOrderHeaders(): Observable<OrderHeader[]>{
     return this.http.get<OrderHeader[]>(this.apiUrl);
   }
-
+  
   getOrderHeader(id: string): Observable<OrderHeader> {
     let params = new HttpParams().set('includeOrderLines', "true");
     const url = `${this.apiUrl}/${id}`;

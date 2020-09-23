@@ -32,6 +32,16 @@
         </div>
       </div>
       <div class="form-group">
+        <label for="positionId">Direcció</label>
+        <div>
+          <input class="form-control"
+          id="addressId"
+          type="text"
+          required
+          formControlName="address"/>
+        </div>
+      </div>
+      <div class="form-group">
         <label for="positionId">Càrrec</label>
         <div>
           <input class="form-control"
@@ -59,3 +69,69 @@
 </form>
 
 <button (click)="goBack()">Tornar</button>
+
+<fieldset>Comandes actuals
+  <table *ngIf="currentOhs">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Número Comanda</th>
+        <th>Adreça</th>
+        <th>Client</th>
+        <th>Empleat</th>
+        <th>Estat Ordre</th>
+        <th>Prioritat</th>
+        <th>Data Creació</th> 
+        <th>Data Assignació Empleat</th> 
+        <th>Data Finalització</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let currentOh of currentOhs">
+        <td>{{ currentOh.id }}</td>
+        <td>{{ currentOh.orderNumber }}</td>
+        <td>{{ currentOh.address }}</td>
+        <td>{{ currentOh.client }}</td>
+        <td>{{ currentOh.employee }}</td>
+        <td>{{ currentOh.orderState }}</td>
+        <td>{{ currentOh.orderPriority }}</td>
+        <td>{{ currentOh.creationDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ currentOh.assignToEmployeeDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ currentOh.finalisationDate | date: 'dd/MM/yyyy' }}</td>     
+      </tr>
+    </tbody>
+  </table>
+</fieldset>
+
+<fieldset>Històric de comandes
+  <table *ngIf="oldOhs">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Número Comanda</th>
+        <th>Adreça</th>
+        <th>Client</th>
+        <th>Empleat</th>
+        <th>Estat Ordre</th>
+        <th>Prioritat</th>
+        <th>Data Creació</th> 
+        <th>Data Assignació Empleat</th> 
+        <th>Data Finalització</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let oldOh of oldOhs">
+        <td>{{ oldOh.id }}</td>
+        <td>{{ oldOh.orderNumber }}</td>
+        <td>{{ oldOh.address }}</td>
+        <td>{{ oldOh.client }}</td>
+        <td>{{ oldOh.employee }}</td>
+        <td>{{ oldOh.orderState }}</td>
+        <td>{{ oldOh.orderPriority }}</td>
+        <td>{{ oldOh.creationDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ oldOh.assignToEmployeeDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ oldOh.finalisationDate | date: 'dd/MM/yyyy' }}</td>     
+      </tr>
+    </tbody>
+  </table>
+</fieldset>

@@ -5,11 +5,8 @@ export interface OrderHeader {
   orderNumber: string;
   address: string;
   client: string;
-  employeeId: number;
   employee: string;
-  orderStateId: number;
   orderState: string;
-  orderPriorityId: number;
   orderPriority: string;
   creationDate: string;
   assignToEmployeeDate: string;

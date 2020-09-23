@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ClientService }  from '../../../services/client.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { PersonLastIdService } from '../../../services/person-last-id.service';
+import { OhByClientService } from 'src/app/services/oh-by-client.service';
+import { OrderHeader } from '../../order-header/order-header';
 
 @Component({
   selector: 'app-client-detail',
@@ -17,7 +18,7 @@ export class ClientDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private clientService: ClientService,
-    private personLastIdService: PersonLastIdService,    
+    private ohByClientService: OhByClientService,    
     private location: Location
   ) { }
 
@@ -27,18 +28,19 @@ export class ClientDetailComponent implements OnInit {
   personId: any;
 
   clients: Client[];
+  currentOhs: OrderHeader[];
+  oldOhs: OrderHeader[];
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
-      personId: '',
+      email: '',
       firstName: '',
-      lastName: ''
+      lastName: '',
+      address:''
     });  
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
-        this.personId = this.personLastIdService.getPeopleLastId()
-        .subscribe(lastId => this.personId = lastId + 1);
         return;
       }
       this.editionMode = true;
@@ -47,14 +49,23 @@ export class ClientDetailComponent implements OnInit {
 
       this.clientService.getClient(this.clientId.toString())
       .subscribe(client => this.loadForm(client));
+
+      this.ohByClientService.getOHByClient(this.clientId)
+      .subscribe(orderHeaders => {
+        this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet" || oh.orderState == "Cancel·lat");
+      
+      }
+      );
     });
   }
 
   loadForm(client: Client){
     this.formGroup.patchValue({
-      personId: client.personId,
+      email: client.email,
       firstName: client.firstName,
-      lastName: client.lastName
+      lastName: client.lastName,
+      address: client.address
     })
   }
 
@@ -70,7 +81,6 @@ export class ClientDetailComponent implements OnInit {
       .subscribe();
     } else {
       //add client
-      client.personId = this.personId;
       this.clientService.addClient(client)
       .subscribe();
     }    

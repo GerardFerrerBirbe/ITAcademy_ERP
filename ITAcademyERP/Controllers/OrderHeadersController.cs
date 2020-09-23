@@ -22,7 +22,7 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/OrderHeaders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeader()
+        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeaders()
         {
             var output = _context.OrderHeader
                     .Include(o => o.DeliveryAddress)
@@ -36,7 +36,7 @@ namespace ITAcademyERP.Controllers
                     .ToListAsync();           
 
             return await output;
-        }
+        }       
 
         //GET: api/OrderHeaders/5
         [HttpGet("{id}")]
@@ -286,7 +286,7 @@ namespace ITAcademyERP.Controllers
             return _context.OrderHeader.Any(e => e.Id == id);
         }
 
-        private static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
+        public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
 
             var orderHeaderDTO = new OrderHeaderDTO
             {

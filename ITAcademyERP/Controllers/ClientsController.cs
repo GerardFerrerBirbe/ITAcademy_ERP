@@ -25,6 +25,7 @@ namespace ITAcademyERP.Models
         {
             return await _context.Client
                 .Include(c => c.Person)
+                .ThenInclude(p => p.PersonalAddress)
                 .Select(c => ClientToDTO(c))
                 .ToListAsync();
         }
@@ -35,6 +36,7 @@ namespace ITAcademyERP.Models
         {
             var client = await _context.Client
                 .Include(c => c.Person)
+                .ThenInclude(p => p.PersonalAddress)
                 .SingleOrDefaultAsync(c => c.Id == id);
 
             if (client == null)
@@ -69,11 +71,23 @@ namespace ITAcademyERP.Models
             {
                 return NotFound();
             }
-            
+
+            person.Email = clientDTO.Email;
             person.FirstName = clientDTO.FirstName;
             person.LastName = clientDTO.LastName;
 
             _context.Entry(person).State = EntityState.Modified;
+
+            var address = await _context.Address.FindAsync(person.PersonalAddress);
+
+            if (address == null)
+            {
+                return NotFound();
+            }
+
+            address.AddressName = clientDTO.Address;
+
+            _context.Entry(address).State = EntityState.Modified;
 
             try
             {
@@ -100,14 +114,32 @@ namespace ITAcademyERP.Models
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
         {
+            var addressExists = _context.Address.FirstOrDefault(a => a.AddressName == clientDTO.Address);
+
+            if (addressExists == default)
+            {
+                var address = new Address
+                {
+                    AddressName = clientDTO.Address
+                };
+
+                _context.Address.Add(address);
+
+                _context.SaveChanges();
+            }
+
+            var addressId = _context.Address.FirstOrDefault(a => a.AddressName == clientDTO.Address).Id;
+
             var personExists = _context.Person.FirstOrDefault(p => p.FirstName + ' ' + p.LastName == clientDTO.FirstName + ' ' + clientDTO.LastName);
 
             if (personExists == default)
             {
                 var person = new Person
                 {
+                    Email = clientDTO.Email,
                     FirstName = clientDTO.FirstName,
-                    LastName = clientDTO.LastName
+                    LastName = clientDTO.LastName,
+                    PersonalAddressId = addressId
                 };
 
                 _context.Person.Add(person);
@@ -115,7 +147,7 @@ namespace ITAcademyERP.Models
                 _context.SaveChanges();
             }
 
-            var personId = personExists.Id;
+            var personId = _context.Person.FirstOrDefault(p => p.Email == clientDTO.Email).Id;
 
             var client = new Client
             {
@@ -155,8 +187,10 @@ namespace ITAcademyERP.Models
             new ClientDTO
             {
                 Id = client.Id,
+                Email = client.Person.Email,
                 FirstName = client.Person.FirstName,
-                LastName = client.Person.LastName
+                LastName = client.Person.LastName,
+                Address = client.Person.PersonalAddress.AddressName
             };
     }
 }

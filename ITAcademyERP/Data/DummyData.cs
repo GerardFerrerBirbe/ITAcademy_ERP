@@ -68,7 +68,8 @@ namespace ITAcademyERP.Data
             {
                 new Address{AddressName = "C/ Montjuic, 127"},
                 new Address{AddressName = "C/ Barcelona, 328"},
-                new Address{AddressName = "C/ Perill, 12"}
+                new Address{AddressName = "C/ Perill, 12"},
+                new Address{AddressName = "C/ Girona, 124"}
             };
             return addresses;
         }
@@ -99,10 +100,10 @@ namespace ITAcademyERP.Data
         {
             List<Person> people = new List<Person>()
             {
-                new Person{Email = "gf@example.com", FirstName = "Gerard", LastName = "Ferrer Birbe"},
-                new Person{Email = "mg@example.com", FirstName = "Maria", LastName = "Gonzalez Martí"},
-                new Person{Email = "js@example.com", FirstName = "Joanna", LastName = "Solé Carrasco"},
-                new Person{Email = "jm@example.com", FirstName = "Josep", LastName = "Martinez Teixidó"}
+                new Person{Email = "gf@example.com", FirstName = "Gerard", LastName = "Ferrer Birbe", PersonalAddressId = 1 },
+                new Person{Email = "mg@example.com", FirstName = "Maria", LastName = "Gonzalez Martí", PersonalAddressId = 2 },
+                new Person{Email = "js@example.com", FirstName = "Joanna", LastName = "Solé Carrasco", PersonalAddressId = 3 },
+                new Person{Email = "jm@example.com", FirstName = "Josep", LastName = "Martinez Teixidó", PersonalAddressId = 4 }
             };
             return people;
         }
@@ -131,7 +132,9 @@ namespace ITAcademyERP.Data
             {
                 new OrderState{State = "Pendent de tractar"},
                 new OrderState{State = "En tractament"},
-                new OrderState{State = "En repartiment"}
+                new OrderState{State = "En repartiment"},
+                new OrderState{State = "Complet"},
+                new OrderState{State = "Cancel·lat"}
             };
             return orderStates;
         }

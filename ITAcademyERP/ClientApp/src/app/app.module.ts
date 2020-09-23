@@ -45,7 +45,6 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { AccountService } from './services/account.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
-import { PersonLastIdService } from './services/person-last-id.service';
 import { DatePipe } from '@angular/common';
 
 @NgModule({

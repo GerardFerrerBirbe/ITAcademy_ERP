@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { EmployeeService }  from '../../../services/employee.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { OhByEmployeeService } from 'src/app/services/oh-by-employee.service';
+import { OrderHeader } from '../../order-header/order-header';
 
 @Component({
   selector: 'app-employee-detail',
@@ -16,6 +18,7 @@ export class EmployeeDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
+    private ohByEmployeeService: OhByEmployeeService,
     private location: Location
   ) { }
 
@@ -23,13 +26,16 @@ export class EmployeeDetailComponent implements OnInit {
   formGroup: FormGroup;
   employeeId: any;
 
-  employees: Employee[];
+  employees: Employee[];  
+  currentOhs: OrderHeader[];
+  oldOhs: OrderHeader[];
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       email:'',
       firstName: '',
       lastName: '',
+      address: '',
       position: '',
       salary: ''
     });  
@@ -44,7 +50,22 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.employeeService.getEmployee(this.employeeId.toString())
       .subscribe(employee => this.loadForm(employee));
+
+      this.ohByEmployeeService.getOHByEmployee(this.employeeId)
+      .subscribe(orderHeaders => {
+        this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet" || oh.orderState == "Cancel·lat");
+      }
+      );   
     });
+  }
+
+  getCurrentOhs(orderHeaders: OrderHeader[]){
+    this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment"); 
+  }
+
+  getOldOhs(orderHeaders: OrderHeader[]){
+    this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet"); 
   }
 
   loadForm(employee: Employee){
@@ -52,6 +73,7 @@ export class EmployeeDetailComponent implements OnInit {
       email: employee.email,
       firstName: employee.firstName,
       lastName: employee.lastName,
+      address: employee.address,
       position: employee.position,
       salary: employee.salary
     })
