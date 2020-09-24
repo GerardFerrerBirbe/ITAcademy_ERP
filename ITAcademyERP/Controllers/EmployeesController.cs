@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {

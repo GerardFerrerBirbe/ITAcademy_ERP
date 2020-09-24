@@ -19,6 +19,16 @@ export class OrderHeaderService {
   getOrderHeaders(): Observable<OrderHeader[]>{
     return this.http.get<OrderHeader[]>(this.apiUrl);
   }
+
+  getOHByEmployee(employeeId: number): Observable<OrderHeader[]>{
+    let params = new HttpParams().set('employeeId', employeeId.toString());    
+    return this.http.get<OrderHeader[]>(this.apiUrl + "/Employee", {params: params});
+  }
+
+  getOHByClient(clientId: number): Observable<OrderHeader[]>{
+    let params = new HttpParams().set('clientId', clientId.toString());    
+    return this.http.get<OrderHeader[]>(this.apiUrl + "/Client", {params: params});
+  }
   
   getOrderHeader(id: string): Observable<OrderHeader> {
     let params = new HttpParams().set('includeOrderLines', "true");

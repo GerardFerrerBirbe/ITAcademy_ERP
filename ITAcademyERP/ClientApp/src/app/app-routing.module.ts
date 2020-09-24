@@ -13,6 +13,7 @@ import { ProductComponent } from './models/product/product.component';
 import { ProductCategoryComponent } from './models/product-category/product-category.component';
 import { PersonComponent } from './models/person/person.component';
 import { OrderHeaderComponent } from './models/order-header/order-header.component';
+import { RoleComponent } from './models/role/role.component';
 
 import { AddressDetailComponent } from './models/address/address-detail/address-detail.component';
 import { EmployeeDetailComponent } from './models/employee/employee-detail/employee-detail.component';
@@ -52,7 +53,8 @@ const routes: Routes = [
   { path: 'product-cat', component: ProductCategoryComponent },
   { path: 'product-cat-detail', component: ProductCategoryDetailComponent },
   { path: 'product-cat-detail/:id', component: ProductCategoryDetailComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'role', component: RoleComponent }
 ];
 
 @NgModule({

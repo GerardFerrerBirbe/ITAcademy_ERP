@@ -46,6 +46,7 @@ import { AccountService } from './services/account.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
 import { DatePipe } from '@angular/common';
+import { RoleComponent } from './models/role/role.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { DatePipe } from '@angular/common';
     ProductDetailComponent,
     ProductCategoryDetailComponent,
     OrderDetailComponent,
-    LoginComponent
+    LoginComponent,
+    RoleComponent
   ],
   imports: [
     BrowserModule,

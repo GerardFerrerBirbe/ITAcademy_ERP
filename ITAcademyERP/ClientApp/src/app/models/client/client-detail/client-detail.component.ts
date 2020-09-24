@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ClientService }  from '../../../services/client.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { OhByClientService } from 'src/app/services/oh-by-client.service';
+import { OrderHeaderService } from 'src/app/services/order-header.service';
 import { OrderHeader } from '../../order-header/order-header';
 
 @Component({
@@ -18,7 +18,7 @@ export class ClientDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private clientService: ClientService,
-    private ohByClientService: OhByClientService,    
+    private orderHeaderService: OrderHeaderService,    
     private location: Location
   ) { }
 
@@ -50,7 +50,7 @@ export class ClientDetailComponent implements OnInit {
       this.clientService.getClient(this.clientId.toString())
       .subscribe(client => this.loadForm(client));
 
-      this.ohByClientService.getOHByClient(this.clientId)
+      this.orderHeaderService.getOHByClient(this.clientId)
       .subscribe(orderHeaders => {
         this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
         this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet" || oh.orderState == "Cancel·lat");

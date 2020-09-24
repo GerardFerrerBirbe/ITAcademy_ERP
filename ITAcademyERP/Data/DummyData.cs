@@ -1,5 +1,7 @@
 ﻿using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,13 @@ namespace ITAcademyERP.Data
 {
     public class DummyData
     {
-        public static void Initialize(IApplicationBuilder app)
+        public static void Initialize(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetService<ITAcademyERPContext>();
-            context.Database.EnsureCreated();
-
+            context.Database.EnsureCreated();    
+            
+            
             // Look for any users
             if (context.ProductCategory.Count() != 0)
                 return;
@@ -27,7 +30,7 @@ namespace ITAcademyERP.Data
             var productCategories = GetProductCategories().ToArray();
             context.ProductCategory.AddRange(productCategories);
             context.SaveChanges();
-            
+
             var products = GetProducts().ToArray();
             context.Product.AddRange(products);
             context.SaveChanges();
@@ -56,10 +59,51 @@ namespace ITAcademyERP.Data
             context.OrderHeader.AddRange(orderHeaders);
             context.SaveChanges();
 
-            var orderLines =GetOrderLines().ToArray();
+            var orderLines = GetOrderLines().ToArray();
             context.OrderLine.AddRange(orderLines);
             context.SaveChanges();
 
+            var role = "Admin";
+            var roleStore = new RoleStore<IdentityRole>(context);
+            roleStore.CreateAsync(new IdentityRole(role));
+
+            var user = new ApplicationUser
+            {
+                Email = "xxxx@example.com",
+                NormalizedEmail = "XXXX@EXAMPLE.COM",
+                UserName = "Owner",
+                NormalizedUserName = "OWNER",
+                PhoneNumber = "+111111111111",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+
+            if (!context.Users.Any(u => u.UserName == user.UserName))
+            {
+                var password = new PasswordHasher<ApplicationUser>();
+                var hashed = password.HashPassword(user, "Aa111111!");
+                user.PasswordHash = hashed;
+
+                var userStore = new UserStore<ApplicationUser>(context);
+                var result = userStore.CreateAsync(user);
+            }
+
+            AssignRoles(serviceProvider, user.Email, role).Wait();
+
+            context.SaveChangesAsync();
+
+
+
+        }
+
+        public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string role)
+        {
+            UserManager<ApplicationUser> _userManager = services.GetService<UserManager<ApplicationUser>>();
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+            var result = await _userManager.AddToRoleAsync(user, role);
+
+            return result;
         }
 
         public static List<Address> GetAddresses()
@@ -73,7 +117,6 @@ namespace ITAcademyERP.Data
             };
             return addresses;
         }
-
         public static List<ProductCategory> GetProductCategories()
         {
             List<ProductCategory> productCategories = new List<ProductCategory>()
@@ -84,7 +127,6 @@ namespace ITAcademyERP.Data
             };
             return productCategories;
         }
-
         public static List<Product> GetProducts()
         {
             List<Product> products = new List<Product>()
@@ -95,7 +137,6 @@ namespace ITAcademyERP.Data
             };
             return products;
         }
-
         public static List<Person> GetPeople()
         {
             List<Person> people = new List<Person>()
@@ -107,7 +148,6 @@ namespace ITAcademyERP.Data
             };
             return people;
         }
-
         public static List<Client> GetClients()
         {
             List<Client> clients = new List<Client>()
@@ -174,7 +214,7 @@ namespace ITAcademyERP.Data
                     DeliveryAddressId = 3,
                     CreationDate = new DateTime(2020,09,09),
                     AssignToEmployeeDate = new DateTime(2020,09,09),
-                    FinalisationDate = new DateTime(2020,09,09)                    
+                    FinalisationDate = new DateTime(2020,09,09)
                 },
                 new OrderHeader
                 {
@@ -202,5 +242,5 @@ namespace ITAcademyERP.Data
             return orderLines;
         }
 
-    }
+    }        
 }

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { OhByEmployeeService } from './oh-by-employee.service';
+import { RoleService } from './role.service';
 
-describe('OhByEmployeeService', () => {
-  let service: OhByEmployeeService;
+describe('RoleService', () => {
+  let service: RoleService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(OhByEmployeeService);
+    service = TestBed.inject(RoleService);
   });
 
   it('should be created', () => {

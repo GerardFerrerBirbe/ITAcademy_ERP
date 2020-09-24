@@ -36,7 +36,45 @@ namespace ITAcademyERP.Controllers
                     .ToListAsync();           
 
             return await output;
-        }       
+        }
+
+        [Route("Employee")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByEmployee(int employeeId)
+        {
+            var output = _context.OrderHeader
+                    .Include(o => o.DeliveryAddress)
+                    .Include(o => o.Client)
+                    .ThenInclude(c => c.Person)
+                    .Include(o => o.Employee)
+                    .ThenInclude(e => e.Person)
+                    .Include(o => o.OrderState)
+                    .Include(o => o.OrderPriority)
+                    .Where(o => o.EmployeeId == employeeId)
+                    .Select(o => OrderHeaderToDTO(o))
+                    .ToListAsync();
+
+            return await output;
+        }
+
+        [Route("Client")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByClient(int clientId)
+        {
+            var output = _context.OrderHeader
+                    .Include(o => o.DeliveryAddress)
+                    .Include(o => o.Client)
+                    .ThenInclude(c => c.Person)
+                    .Include(o => o.Employee)
+                    .ThenInclude(e => e.Person)
+                    .Include(o => o.OrderState)
+                    .Include(o => o.OrderPriority)
+                    .Where(o => o.ClientId == clientId)
+                    .Select(o => OrderHeaderToDTO(o))
+                    .ToListAsync();
+
+            return await output;
+        }
 
         //GET: api/OrderHeaders/5
         [HttpGet("{id}")]

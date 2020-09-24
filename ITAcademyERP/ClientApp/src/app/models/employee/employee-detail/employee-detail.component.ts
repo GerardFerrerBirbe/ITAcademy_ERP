@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { EmployeeService }  from '../../../services/employee.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { OhByEmployeeService } from 'src/app/services/oh-by-employee.service';
+import { OrderHeaderService } from 'src/app/services/order-header.service';
 import { OrderHeader } from '../../order-header/order-header';
 
 @Component({
@@ -18,7 +18,7 @@ export class EmployeeDetailComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
-    private ohByEmployeeService: OhByEmployeeService,
+    private orderHeaderService: OrderHeaderService,
     private location: Location
   ) { }
 
@@ -51,7 +51,7 @@ export class EmployeeDetailComponent implements OnInit {
       this.employeeService.getEmployee(this.employeeId.toString())
       .subscribe(employee => this.loadForm(employee));
 
-      this.ohByEmployeeService.getOHByEmployee(this.employeeId)
+      this.orderHeaderService.getOHByEmployee(this.employeeId)
       .subscribe(orderHeaders => {
         this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
         this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet" || oh.orderState == "Cancel·lat");

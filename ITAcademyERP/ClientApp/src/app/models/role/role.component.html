@@ -1,0 +1,22 @@
+<h2 id="tableLabel">Rols</h2>
+
+<button [routerLink]='["/role-detail"]' class="btn-add">Nou rol</button>
+
+<p *ngIf="!roles"><em>Loading...</em></p>
+
+<table *ngIf="roles">
+  <thead>
+    <tr>
+      <th>Rol</th>      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let role of roles">
+      <td>{{ role.name }}</td>      
+      <td><button routerLink="/role-detail/{{role.id}}"
+        class="btn-update" title="update role">Seleccionar</button></td>
+      <td><button class="btn-delete" title="delete role"
+        (click)="delete(role)">Borrar</button></td>
+    </tr>
+  </tbody>
+</table>
