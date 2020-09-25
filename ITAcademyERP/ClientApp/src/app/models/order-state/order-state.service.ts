@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { OrderPriority } from '../models/order-priority/order-priority';
+import { OrderState } from './order-state';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderPriorityService {
+export class OrderStateService {
 
-  private apiUrl = 'api/orderpriorities';
+  private apiUrl = 'api/orderStates';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -16,7 +16,7 @@ export class OrderPriorityService {
 
   constructor(private http: HttpClient) { }
 
-  getOrderPriorities(): Observable<OrderPriority[]>{
-    return this.http.get<OrderPriority[]>(this.apiUrl);
+  getOrderStates(): Observable<OrderState[]>{
+    return this.http.get<OrderState[]>(this.apiUrl);
   }
 }

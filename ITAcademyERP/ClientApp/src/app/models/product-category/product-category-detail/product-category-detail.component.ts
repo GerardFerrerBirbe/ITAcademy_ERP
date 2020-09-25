@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductCategory } from '../product-category';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { ProductCategoryService }  from '../../../services/product-category.service';
+import { ProductCategoryService }  from '../../product-category/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({

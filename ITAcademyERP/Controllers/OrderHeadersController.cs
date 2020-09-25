@@ -14,10 +14,29 @@ namespace ITAcademyERP.Controllers
     public class OrderHeadersController : ControllerBase
     {
         private readonly ITAcademyERPContext _context;
+        private readonly AddressesController _addressesController;
+        private readonly ClientsController _clientsController;
+        private readonly EmployeesController _employeesController;
+        private readonly OrderPrioritiesController _orderPrioritiesController;
+        private readonly OrderStatesController _orderStatesController;
+        private readonly ProductsController _productsController;
 
-        public OrderHeadersController(ITAcademyERPContext context)
+        public OrderHeadersController(
+            ITAcademyERPContext context,
+            AddressesController addressesController,
+            ClientsController clientsController,
+            EmployeesController employeesController,
+            OrderPrioritiesController orderPrioritiesController,
+            OrderStatesController orderStatesController,
+            ProductsController productsController)
         {
             _context = context;
+            _addressesController = addressesController;
+            _clientsController = clientsController;
+            _employeesController = employeesController;
+            _orderPrioritiesController = orderPrioritiesController;
+            _orderStatesController = orderStatesController;
+            _productsController = productsController;
         }
 
         // GET: api/OrderHeaders
@@ -138,42 +157,14 @@ namespace ITAcademyERP.Controllers
             if (orderHeader == null)
             {
                 return NotFound();
-            }
-
-            var deliveryAddressId = _context.Address
-                            .FirstOrDefault(x => x.AddressName == orderHeaderDTO.Address)
-                            .Id;
-
-            var personClientId = _context.Person
-                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Client)
-                            .Id;
-
-            var clientId = _context.Client
-                            .FirstOrDefault(x => x.PersonId == personClientId)
-                            .Id;
-
-            var personEmployeeId = _context.Person
-                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Employee)
-                            .Id;
-
-            var employeeId = _context.Employee
-                            .FirstOrDefault(x => x.PersonId == personEmployeeId)
-                            .Id;
-
-            var orderStateId = _context.OrderState
-                            .FirstOrDefault(x => x.State == orderHeaderDTO.OrderState)
-                            .Id;
-
-            var orderPriorityId = _context.OrderPriority
-                            .FirstOrDefault(x => x.Priority == orderHeaderDTO.OrderPriority)
-                            .Id;           
+            }          
 
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
-            orderHeader.DeliveryAddressId = deliveryAddressId;
-            orderHeader.ClientId = clientId;
-            orderHeader.EmployeeId = employeeId;
-            orderHeader.OrderStateId = orderStateId;
-            orderHeader.OrderPriorityId = orderPriorityId;
+            orderHeader.DeliveryAddressId = _addressesController.GetAddressId(orderHeaderDTO.Address);
+            orderHeader.ClientId = _clientsController.GetClientId(orderHeaderDTO.Client);
+            orderHeader.EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee);
+            orderHeader.OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState);
+            orderHeader.OrderPriorityId = _orderPrioritiesController.GetOrderPriorityId(orderHeaderDTO.OrderPriority);
             orderHeader.CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate);
             orderHeader.AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate);
             orderHeader.FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate);
@@ -211,14 +202,12 @@ namespace ITAcademyERP.Controllers
                 {
                     if (orderLineDTO.ProductName == "")
                         return;
-
-                    var productId = _context.Product.FirstOrDefault(x => x.ProductName == orderLineDTO.ProductName).Id;
-
+                    
                     var orderLine = new OrderLine
                     {
                         Id = orderLineDTO.Id,
                         OrderHeaderId = orderLineDTO.OrderHeaderId,
-                        ProductId = productId,
+                        ProductId = _productsController.GetProductId(orderLineDTO.ProductName),
                         UnitPrice = orderLineDTO.UnitPrice,
                         Vat = orderLineDTO.Vat,
                         Quantity = orderLineDTO.Quantity
@@ -237,10 +226,8 @@ namespace ITAcademyERP.Controllers
                 {
                     var orderLine = _context.OrderLine.FirstOrDefault(x => x.Id == orderLineDTO.Id);
 
-                    var productId = _context.Product.FirstOrDefault(x => x.ProductName == orderLineDTO.ProductName).Id;
-
                     orderLine.OrderHeaderId = orderLineDTO.OrderHeaderId;
-                    orderLine.ProductId = productId;
+                    orderLine.ProductId = _productsController.GetProductId(orderLineDTO.ProductName);
                     orderLine.UnitPrice = orderLineDTO.UnitPrice;
                     orderLine.Vat = orderLineDTO.Vat;
                     orderLine.Quantity = orderLineDTO.Quantity;
@@ -255,43 +242,16 @@ namespace ITAcademyERP.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<OrderHeader>> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
-        {
-            var deliveryAddressId = _context.Address
-                            .FirstOrDefault(x => x.AddressName == orderHeaderDTO.Address)
-                            .Id;
-
-            var personClientId = _context.Person
-                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Client)
-                            .Id;
-
-            var clientId = _context.Client
-                            .FirstOrDefault(x => x.PersonId == personClientId)
-                            .Id;
-
-            var personEmployeeId = _context.Person
-                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == orderHeaderDTO.Employee)
-                            .Id;
-
-            var employeeId = _context.Employee
-                            .FirstOrDefault(x => x.PersonId == personEmployeeId)
-                            .Id;
-
-            var orderStateId = _context.OrderState
-                            .FirstOrDefault(x => x.State == orderHeaderDTO.OrderState)
-                            .Id;
-
-            var orderPriorityId = _context.OrderPriority
-                            .FirstOrDefault(x => x.Priority == orderHeaderDTO.OrderPriority)
-                            .Id;
+        {            
             
             var orderHeader = new OrderHeader
             {
                 OrderNumber = orderHeaderDTO.OrderNumber,
-                DeliveryAddressId = deliveryAddressId,
-                ClientId = clientId,
-                EmployeeId = employeeId,
-                OrderStateId = orderStateId,
-                OrderPriorityId = orderPriorityId,
+                DeliveryAddressId = _addressesController.GetAddressId(orderHeaderDTO.Address),
+                ClientId = _clientsController.GetClientId(orderHeaderDTO.Client),
+                EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee),
+                OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState),
+                OrderPriorityId = _orderPrioritiesController.GetOrderPriorityId(orderHeaderDTO.OrderPriority),
                 CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate),
                 AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate),
                 FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate)

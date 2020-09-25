@@ -62,14 +62,13 @@ namespace ITAcademyERP.Controllers
             if (product == null)
             {
                 return NotFound();
-            }
-
-            product.ProductName = productDTO.ProductName;
+            }            
 
             var productCategoryId = _context.ProductCategory
                             .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
                             .Id;
-            
+
+            product.ProductName = productDTO.ProductName;
             product.ProductCategoryId = productCategoryId;
             
             _context.Entry(product).State = EntityState.Modified;
@@ -144,5 +143,12 @@ namespace ITAcademyERP.Controllers
                 ProductName = product.ProductName,
                 ProductCategoryName = product.ProductCategory.ProductCategoryName
             };
+
+        public int GetProductId (string productName)
+        {
+            var productId = _context.Product.FirstOrDefault(x => x.ProductName == productName).Id;
+
+            return productId;
+        }
     }
 }

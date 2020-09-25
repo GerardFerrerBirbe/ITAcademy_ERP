@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpSentEvent, HttpHeaderResponse, HttpProgressEvent, HttpUserEvent } from '@angular/common/http';
-import { AccountService } from '../services/account.service';
+import { AccountService } from '../login/account.service';
 import { Observable } from 'rxjs';
 
 @Injectable()

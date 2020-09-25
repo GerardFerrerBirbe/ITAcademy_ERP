@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { ProductCategory } from '../models/product-category/product-category';
+import { ProductCategory } from './product-category';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +21,8 @@ export class ProductCategoryService {
   }
 
   getProductCategory(id: string): Observable<ProductCategory> {
-    let params = new HttpParams().set('includeProducts', "true");
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<ProductCategory>(url, {params: params});
+    return this.http.get<ProductCategory>(url);
   }
 
   updateProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {

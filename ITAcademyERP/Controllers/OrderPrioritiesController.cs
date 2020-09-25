@@ -26,5 +26,14 @@ namespace ITAcademyERP.Controllers
         {
             return await _context.OrderPriority.ToListAsync();
         }
+
+        public int GetOrderPriorityId(string orderPriorityName)
+        {
+            var orderPriorityId = _context.OrderPriority
+                            .FirstOrDefault(x => x.Priority == orderPriorityName)
+                            .Id;
+
+            return orderPriorityId;
+        }
     }
 }

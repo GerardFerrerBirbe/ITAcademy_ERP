@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderHeader } from './order-header';
-import { OrderHeaderService } from 'src/app/services/order-header.service';
+import { OrderHeaderService } from './order-header.service';
 import { DatePipe } from '@angular/common';
 
 

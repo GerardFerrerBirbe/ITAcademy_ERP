@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Client } from '../client';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { ClientService }  from '../../../services/client.service';
+import { ClientService }  from '../client.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { OrderHeaderService } from 'src/app/services/order-header.service';
+import { OrderHeaderService } from 'src/app/models/order-header/order-header.service';
 import { OrderHeader } from '../../order-header/order-header';
 
 @Component({

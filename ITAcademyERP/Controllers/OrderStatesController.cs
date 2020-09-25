@@ -26,5 +26,14 @@ namespace ITAcademyERP.Controllers
         {
             return await _context.OrderState.ToListAsync();
         }
+
+        public int GetOrderStateId (string orderStateName)
+        {
+            var orderStateId = _context.OrderState
+                            .FirstOrDefault(x => x.State == orderStateName)
+                            .Id;
+
+            return orderStateId;
+        }
     }
 }

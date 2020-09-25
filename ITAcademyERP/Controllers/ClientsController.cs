@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITAcademyERP.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,14 @@ namespace ITAcademyERP.Models
     public class ClientsController : ControllerBase
     {
         private readonly ITAcademyERPContext _context;
+        private readonly PeopleController _peopleController;
 
-        public ClientsController(ITAcademyERPContext context)
+        public ClientsController(
+            ITAcademyERPContext context,
+            PeopleController peopleController)
         {
             _context = context;
+            _peopleController = peopleController;
         }
 
         // GET: api/Clients
@@ -65,29 +70,15 @@ namespace ITAcademyERP.Models
                 return NotFound();
             }
 
-            var person = await _context.Person.FindAsync(client.PersonId);
-
-            if (person == null)
+            var personDTO = new PersonDTO
             {
-                return NotFound();
-            }
+                Email = clientDTO.Email,
+                FirstName = clientDTO.FirstName,
+                LastName = clientDTO.LastName,
+                Address = clientDTO.Address
+            };
 
-            person.Email = clientDTO.Email;
-            person.FirstName = clientDTO.FirstName;
-            person.LastName = clientDTO.LastName;
-
-            _context.Entry(person).State = EntityState.Modified;
-
-            var address = await _context.Address.FindAsync(person.PersonalAddress);
-
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            address.AddressName = clientDTO.Address;
-
-            _context.Entry(address).State = EntityState.Modified;
+            await _peopleController.UpdatePerson(client.PersonId, personDTO);
 
             try
             {
@@ -192,5 +183,18 @@ namespace ITAcademyERP.Models
                 LastName = client.Person.LastName,
                 Address = client.Person.PersonalAddress.AddressName
             };
+
+        public int GetClientId (string clientName)
+        {
+            var personClientId = _context.Person
+                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == clientName)
+                            .Id;
+
+            var clientId = _context.Client
+                            .FirstOrDefault(x => x.PersonId == personClientId)
+                            .Id;
+
+            return clientId;
+        }
     }
 }

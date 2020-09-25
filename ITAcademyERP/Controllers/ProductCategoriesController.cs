@@ -29,19 +29,11 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/ProductCategories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductCategory>> GetProductCategory(int id, bool includeProducts = false)
-        {
-            ProductCategory productCategory;
-
-            if (includeProducts)
-            {
-                productCategory = await _context.ProductCategory.Include(p => p.Product).SingleOrDefaultAsync(p => p.Id == id);
-            }
-            else
-            {
-                productCategory = await _context.ProductCategory.FindAsync(id);
-            }
-
+        public async Task<ActionResult<ProductCategory>> GetProductCategory(int id)
+        {            
+            var productCategory = await _context.ProductCategory
+                    .SingleOrDefaultAsync(p => p.Id == id);
+            
             if (productCategory == null)
             {
                 return NotFound();

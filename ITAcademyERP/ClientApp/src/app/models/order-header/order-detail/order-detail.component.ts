@@ -2,19 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { OrderHeader } from '../order-header';
 import { ActivatedRoute } from '@angular/router';
 import { Location, DatePipe } from '@angular/common';
-import { OrderHeaderService }  from '../../../services/order-header.service';
-import { OrderLineService } from '../../../services/order-line.service';
-import { OrderStateService } from '../../../services/order-state.service';
-import { OrderPriorityService } from '../../../services/order-priority.service';
-import { EmployeeService } from '../../../services/employee.service';
-import { ClientService } from '../../../services/client.service';
+import { OrderHeaderService }  from '../../../models/order-header/order-header.service';
+import { OrderLineService } from '../../order-line/order-line.service';
+import { OrderStateService } from '../../order-state/order-state.service';
+import { OrderPriorityService } from '../../order-priority/order-priority.service';
+import { EmployeeService } from '../../employee/employee.service';
+import { ClientService } from '../../client/client.service';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { OrderState } from '../../order-state/order-state';
 import { OrderPriority } from '../../order-priority/order-priority';
 import { Employee } from '../../employee/employee';
 import { Client } from '../../client/client';
 import { Product } from '../../product/product';
-import { ProductService } from 'src/app/services/product.service';
+import { ProductService } from 'src/app/models/product/product.service';
 
 @Component({
   selector: 'app-order-detail',

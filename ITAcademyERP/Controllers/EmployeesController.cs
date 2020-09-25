@@ -18,10 +18,14 @@ namespace ITAcademyERP.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly ITAcademyERPContext _context;
+        private readonly PeopleController _peopleController;
 
-        public EmployeesController(ITAcademyERPContext context)
+        public EmployeesController(
+            ITAcademyERPContext context,
+            PeopleController peopleController)
         {
             _context = context;
+            _peopleController = peopleController;
         }
 
         // GET: api/Employees
@@ -75,29 +79,15 @@ namespace ITAcademyERP.Controllers
 
             _context.Entry(employee).State = EntityState.Modified;
 
-            var person = await _context.Person.FindAsync(employee.PersonId);
-            
-            if (person == null)
+            var personDTO = new PersonDTO
             {
-                return NotFound();
-            }
+                Email = employeeDTO.Email,
+                FirstName = employeeDTO.FirstName,
+                LastName = employeeDTO.LastName,
+                Address = employeeDTO.Address
+            };
 
-            person.Email = employeeDTO.Email;
-            person.FirstName = employeeDTO.FirstName;
-            person.LastName = employeeDTO.LastName;
-            
-            _context.Entry(person).State = EntityState.Modified;
-
-            var address = await _context.Address.FindAsync(person.PersonalAddressId);
-
-            if (address == null)
-            {
-                return NotFound();
-            }
-
-            address.AddressName = employeeDTO.Address;
-
-            _context.Entry(address).State = EntityState.Modified;
+            await _peopleController.UpdatePerson(employee.PersonId, personDTO);           
 
             try
             {
@@ -206,5 +196,18 @@ namespace ITAcademyERP.Controllers
                 Position = employee.Position,
                 Salary = employee.Salary
             };
+
+        public int GetEmployeeId (string employeeName)
+        {
+            var personEmployeeId = _context.Person
+                           .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == employeeName)
+                           .Id;
+
+            var employeeId = _context.Employee
+                            .FirstOrDefault(x => x.PersonId == personEmployeeId)
+                            .Id;
+
+            return employeeId;
+        }
     }
 }
