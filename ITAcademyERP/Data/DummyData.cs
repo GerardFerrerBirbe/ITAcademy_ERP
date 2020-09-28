@@ -15,86 +15,84 @@ namespace ITAcademyERP.Data
         public static void Initialize(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetService<ITAcademyERPContext>();
-            context.Database.EnsureCreated();    
+            var _context = serviceScope.ServiceProvider.GetService<ITAcademyERPContext>();
+            _context.Database.EnsureCreated();    
             
             
             // Look for any users
-            if (context.ProductCategory.Count() != 0)
+            if (_context.ProductCategories.Count() != 0)
                 return;
 
-            var addresses = GetAddresses().ToArray();
-            context.Address.AddRange(addresses);
-            context.SaveChanges();
-
-            var productCategories = GetProductCategories().ToArray();
-            context.ProductCategory.AddRange(productCategories);
-            context.SaveChanges();
-
-            var products = GetProducts().ToArray();
-            context.Product.AddRange(products);
-            context.SaveChanges();
-
             var people = GetPeople().ToArray();
-            context.Person.AddRange(people);
-            context.SaveChanges();
+            _context.People.AddRange(people);
+            _context.SaveChanges();
 
             var clients = GetClients().ToArray();
-            context.Client.AddRange(clients);
-            context.SaveChanges();
+            _context.Clients.AddRange(clients);
+            _context.SaveChanges();
 
             var employees = GetEmployees().ToArray();
-            context.Employee.AddRange(employees);
-            context.SaveChanges();
+            _context.Employees.AddRange(employees);
+            _context.SaveChanges();
 
+            var addresses = GetAddresses().ToArray();
+            _context.Addresses.AddRange(addresses);
+            _context.SaveChanges();
+
+            var productCategories = GetProductCategories().ToArray();
+            _context.ProductCategories.AddRange(productCategories);
+            _context.SaveChanges();
+
+            var products = GetProducts().ToArray();
+            _context.Products.AddRange(products);
+            _context.SaveChanges();
+            
             var orderStates = GetOrderStates().ToArray();
-            context.OrderState.AddRange(orderStates);
-            context.SaveChanges();
+            _context.OrderStates.AddRange(orderStates);
+            _context.SaveChanges();
 
             var orderPriorities = GetOrderPriorities().ToArray();
-            context.OrderPriority.AddRange(orderPriorities);
-            context.SaveChanges();
+            _context.OrderPriorities.AddRange(orderPriorities);
+            _context.SaveChanges();
 
             var orderHeaders = GetOrderHeaders().ToArray();
-            context.OrderHeader.AddRange(orderHeaders);
-            context.SaveChanges();
+            _context.OrderHeaders.AddRange(orderHeaders);
+            _context.SaveChanges();
 
             var orderLines = GetOrderLines().ToArray();
-            context.OrderLine.AddRange(orderLines);
-            context.SaveChanges();
+            _context.OrderLines.AddRange(orderLines);
+            _context.SaveChanges();
 
             var role = "Admin";
-            var roleStore = new RoleStore<IdentityRole>(context);
+            var roleStore = new RoleStore<IdentityRole>(_context);
             roleStore.CreateAsync(new IdentityRole(role));
 
             var user = new ApplicationUser
             {
-                Email = "xxxx@example.com",
-                NormalizedEmail = "XXXX@EXAMPLE.COM",
-                UserName = "Owner",
-                NormalizedUserName = "OWNER",
-                PhoneNumber = "+111111111111",
+                Email = "proves@e.com",
+                NormalizedEmail = "PROVES@E.COM",
+                UserName = "Admin",
+                NormalizedUserName = "ADMIN",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
-            if (!context.Users.Any(u => u.UserName == user.UserName))
+            if (!_context.Users.Any(u => u.UserName == user.UserName))
             {
                 var password = new PasswordHasher<ApplicationUser>();
                 var hashed = password.HashPassword(user, "Aa111111!");
                 user.PasswordHash = hashed;
 
-                var userStore = new UserStore<ApplicationUser>(context);
+                var userStore = new UserStore<ApplicationUser>(_context);
                 var result = userStore.CreateAsync(user);
             }
 
+            _context.SaveChangesAsync();
+
             AssignRoles(serviceProvider, user.Email, role).Wait();
 
-            context.SaveChangesAsync();
-
-
-
+            _context.SaveChangesAsync();
         }
 
         public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string role)
@@ -106,14 +104,25 @@ namespace ITAcademyERP.Data
             return result;
         }
 
+        public static List<Person> GetPeople()
+        {
+            List<Person> people = new List<Person>()
+            {
+                new Person{Email = "gf@example.com", FirstName = "Gerard", LastName = "Ferrer Birbe"},
+                new Person{Email = "mg@example.com", FirstName = "Maria", LastName = "Gonzalez Martí"},
+                new Person{Email = "js@example.com", FirstName = "Joanna", LastName = "Solé Carrasco"},
+                new Person{Email = "jm@example.com", FirstName = "Josep", LastName = "Martinez Teixidó"}
+            };
+            return people;
+        }
         public static List<Address> GetAddresses()
         {
             List<Address> addresses = new List<Address>()
             {
-                new Address{AddressName = "C/ Montjuic, 127"},
-                new Address{AddressName = "C/ Barcelona, 328"},
-                new Address{AddressName = "C/ Perill, 12"},
-                new Address{AddressName = "C/ Girona, 124"}
+                new Address{Name = "C/ Montjuic, 127", PersonId = 2, Type = "Personal"},
+                new Address{Name = "C/ Barcelona, 328", PersonId = 2, Type = "Delivery"},
+                new Address{Name = "C/ Perill, 12", PersonId = 1, Type = "Personal"},
+                new Address{Name = "C/ Girona, 124", PersonId = 1, Type = "Delivery"}
             };
             return addresses;
         }
@@ -137,17 +146,7 @@ namespace ITAcademyERP.Data
             };
             return products;
         }
-        public static List<Person> GetPeople()
-        {
-            List<Person> people = new List<Person>()
-            {
-                new Person{Email = "gf@example.com", FirstName = "Gerard", LastName = "Ferrer Birbe", PersonalAddressId = 1 },
-                new Person{Email = "mg@example.com", FirstName = "Maria", LastName = "Gonzalez Martí", PersonalAddressId = 2 },
-                new Person{Email = "js@example.com", FirstName = "Joanna", LastName = "Solé Carrasco", PersonalAddressId = 3 },
-                new Person{Email = "jm@example.com", FirstName = "Josep", LastName = "Martinez Teixidó", PersonalAddressId = 4 }
-            };
-            return people;
-        }
+        
         public static List<Client> GetClients()
         {
             List<Client> clients = new List<Client>()
@@ -199,7 +198,6 @@ namespace ITAcademyERP.Data
                     EmployeeId = 1,
                     OrderPriorityId = 1,
                     OrderStateId = 3,
-                    DeliveryAddressId = 1,
                     CreationDate = new DateTime(2020,09,09),
                     AssignToEmployeeDate = new DateTime(2020,09,09),
                     FinalisationDate = new DateTime(2020,09,09)
@@ -211,7 +209,6 @@ namespace ITAcademyERP.Data
                     EmployeeId = 1,
                     OrderPriorityId = 3,
                     OrderStateId = 2,
-                    DeliveryAddressId = 3,
                     CreationDate = new DateTime(2020,09,09),
                     AssignToEmployeeDate = new DateTime(2020,09,09),
                     FinalisationDate = new DateTime(2020,09,09)
@@ -223,7 +220,6 @@ namespace ITAcademyERP.Data
                     EmployeeId = 2,
                     OrderPriorityId = 2,
                     OrderStateId = 1,
-                    DeliveryAddressId = 2,
                     CreationDate = new DateTime(2020,09,09),
                     AssignToEmployeeDate = new DateTime(2020,09,09),
                     FinalisationDate = new DateTime(2020,09,09)

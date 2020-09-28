@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Models;
+using ITAcademyERP.Data;
 
 namespace ITAcademyERP.Controllers
 {
@@ -24,7 +25,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProduct()
         {
-            return await _context.Product
+            return await _context.Products
                 .Include(p => p.ProductCategory)
                 .Select(p => ProductToDTO(p))
                 .ToListAsync();
@@ -34,7 +35,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
-            var product = await _context.Product
+            var product = await _context.Products
                 .Include(p => p.ProductCategory)
                 .SingleOrDefaultAsync(p => p.Id == id);
 
@@ -57,14 +58,14 @@ namespace ITAcademyERP.Controllers
                 return BadRequest();
             }
 
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
 
             if (product == null)
             {
                 return NotFound();
             }            
 
-            var productCategoryId = _context.ProductCategory
+            var productCategoryId = _context.ProductCategories
                             .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
                             .Id;
 
@@ -98,7 +99,7 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
         {
-            var productCategoryId = _context.ProductCategory
+            var productCategoryId = _context.ProductCategories
                             .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
                             .Id;
 
@@ -108,7 +109,7 @@ namespace ITAcademyERP.Controllers
                 ProductCategoryId = productCategoryId
             };
             
-            _context.Product.Add(product);
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, ProductToDTO(product));
@@ -118,14 +119,14 @@ namespace ITAcademyERP.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
             
             if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Product.Remove(product);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             return product;
@@ -133,7 +134,7 @@ namespace ITAcademyERP.Controllers
 
         private bool ProductExists(int id)
         {
-            return _context.Product.Any(e => e.Id == id);
+            return _context.Products.Any(e => e.Id == id);
         }
 
         private static ProductDTO ProductToDTO(Product product) =>
@@ -146,7 +147,7 @@ namespace ITAcademyERP.Controllers
 
         public int GetProductId (string productName)
         {
-            var productId = _context.Product.FirstOrDefault(x => x.ProductName == productName).Id;
+            var productId = _context.Products.FirstOrDefault(x => x.ProductName == productName).Id;
 
             return productId;
         }

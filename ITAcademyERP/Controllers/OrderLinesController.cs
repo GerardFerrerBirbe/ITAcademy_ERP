@@ -9,6 +9,7 @@ using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using ITAcademyERP.Data;
 
 namespace ITAcademyERP.Controllers
 {

@@ -7,13 +7,13 @@ namespace ITAcademyERP.Models
     {
         public Client()
         {
-            OrderHeader = new HashSet<OrderHeader>();
+            OrderHeaders = new HashSet<OrderHeader>();
         }
 
         public int Id { get; set; }
         public int PersonId { get; set; }
 
         public virtual Person Person { get; set; }
-        public virtual ICollection<OrderHeader> OrderHeader { get; set; }
+        public virtual ICollection<OrderHeader> OrderHeaders { get; set; }
     }
 }

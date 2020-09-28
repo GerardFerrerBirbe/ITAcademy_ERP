@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITAcademyERP.Data;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +25,12 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderPriority>>> GetOrderPriority()
         {
-            return await _context.OrderPriority.ToListAsync();
+            return await _context.OrderPriorities.ToListAsync();
         }
 
         public int GetOrderPriorityId(string orderPriorityName)
         {
-            var orderPriorityId = _context.OrderPriority
+            var orderPriorityId = _context.OrderPriorities
                             .FirstOrDefault(x => x.Priority == orderPriorityName)
                             .Id;
 

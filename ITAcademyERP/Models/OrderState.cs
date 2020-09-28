@@ -9,12 +9,12 @@ namespace ITAcademyERP.Models
     {
         public OrderState()
         {
-            OrderHeader = new HashSet<OrderHeader>();
+            OrderHeaders = new HashSet<OrderHeader>();
 
         }
         public int Id { get; set; }
         public string State { get; set; }
 
-        public virtual ICollection<OrderHeader> OrderHeader { get; set; }
+        public virtual ICollection<OrderHeader> OrderHeaders { get; set; }
     }
 }

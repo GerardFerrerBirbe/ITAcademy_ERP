@@ -8,19 +8,6 @@ namespace ITAcademyERP.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Address",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Address", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -60,7 +47,7 @@ namespace ITAcademyERP.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderPriority",
+                name: "OrderPriorities",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -69,11 +56,11 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderPriority", x => x.Id);
+                    table.PrimaryKey("PK_OrderPriorities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderState",
+                name: "OrderStates",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -82,11 +69,26 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderState", x => x.Id);
+                    table.PrimaryKey("PK_OrderStates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCategory",
+                name: "People",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_People", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -95,29 +97,7 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCategory", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Person",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    PersonalAddressId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Person", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Person_Address_PersonalAddressId",
-                        column: x => x.PersonalAddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,27 +207,28 @@ namespace ITAcademyERP.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(nullable: true),
-                    ProductCategoryId = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true),
+                    PersonId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Product_ProductCategory_ProductCategoryId",
-                        column: x => x.ProductCategoryId,
-                        principalTable: "ProductCategory",
+                        name: "FK_Addresses_People_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Client",
+                name: "Clients",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -256,17 +237,17 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Client", x => x.Id);
+                    table.PrimaryKey("PK_Clients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Client_Person_PersonId",
+                        name: "FK_Clients_People_PersonId",
                         column: x => x.PersonId,
-                        principalTable: "Person",
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employee",
+                name: "Employees",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -277,23 +258,42 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employee", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employee_Person_PersonId",
+                        name: "FK_Employees_People_PersonId",
                         column: x => x.PersonId,
-                        principalTable: "Person",
+                        principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderHeader",
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductName = table.Column<string>(nullable: true),
+                    ProductCategoryId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_ProductCategories_ProductCategoryId",
+                        column: x => x.ProductCategoryId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderHeaders",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderNumber = table.Column<string>(nullable: true),
-                    DeliveryAddressId = table.Column<int>(nullable: false),
                     ClientId = table.Column<int>(nullable: false),
                     EmployeeId = table.Column<int>(nullable: false),
                     OrderStateId = table.Column<int>(nullable: false),
@@ -304,41 +304,35 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderHeader", x => x.Id);
+                    table.PrimaryKey("PK_OrderHeaders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderHeader_Client_ClientId",
+                        name: "FK_OrderHeaders_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalTable: "Client",
+                        principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderHeader_Address_DeliveryAddressId",
-                        column: x => x.DeliveryAddressId,
-                        principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderHeader_Employee_EmployeeId",
+                        name: "FK_OrderHeaders_Employees_EmployeeId",
                         column: x => x.EmployeeId,
-                        principalTable: "Employee",
+                        principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_OrderHeader_OrderPriority_OrderPriorityId",
+                        name: "FK_OrderHeaders_OrderPriorities_OrderPriorityId",
                         column: x => x.OrderPriorityId,
-                        principalTable: "OrderPriority",
+                        principalTable: "OrderPriorities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderHeader_OrderState_OrderStateId",
+                        name: "FK_OrderHeaders_OrderStates_OrderStateId",
                         column: x => x.OrderStateId,
-                        principalTable: "OrderState",
+                        principalTable: "OrderStates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderLine",
+                name: "OrderLines",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -351,20 +345,25 @@ namespace ITAcademyERP.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderLine", x => x.Id);
+                    table.PrimaryKey("PK_OrderLines", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderLine_OrderHeader_OrderHeaderId",
+                        name: "FK_OrderLines_OrderHeaders_OrderHeaderId",
                         column: x => x.OrderHeaderId,
-                        principalTable: "OrderHeader",
+                        principalTable: "OrderHeaders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderLine_Product_ProductId",
+                        name: "FK_OrderLines_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_PersonId",
+                table: "Addresses",
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -406,65 +405,58 @@ namespace ITAcademyERP.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Client_PersonId",
-                table: "Client",
+                name: "IX_Clients_PersonId",
+                table: "Clients",
                 column: "PersonId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employee_PersonId",
-                table: "Employee",
+                name: "IX_Employees_PersonId",
+                table: "Employees",
                 column: "PersonId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderHeader_ClientId",
-                table: "OrderHeader",
+                name: "IX_OrderHeaders_ClientId",
+                table: "OrderHeaders",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderHeader_DeliveryAddressId",
-                table: "OrderHeader",
-                column: "DeliveryAddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderHeader_EmployeeId",
-                table: "OrderHeader",
+                name: "IX_OrderHeaders_EmployeeId",
+                table: "OrderHeaders",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderHeader_OrderPriorityId",
-                table: "OrderHeader",
+                name: "IX_OrderHeaders_OrderPriorityId",
+                table: "OrderHeaders",
                 column: "OrderPriorityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderHeader_OrderStateId",
-                table: "OrderHeader",
+                name: "IX_OrderHeaders_OrderStateId",
+                table: "OrderHeaders",
                 column: "OrderStateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderLine_OrderHeaderId",
-                table: "OrderLine",
+                name: "IX_OrderLines_OrderHeaderId",
+                table: "OrderLines",
                 column: "OrderHeaderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderLine_ProductId",
-                table: "OrderLine",
+                name: "IX_OrderLines_ProductId",
+                table: "OrderLines",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Person_PersonalAddressId",
-                table: "Person",
-                column: "PersonalAddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Product_ProductCategoryId",
-                table: "Product",
+                name: "IX_Products_ProductCategoryId",
+                table: "Products",
                 column: "ProductCategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -481,7 +473,7 @@ namespace ITAcademyERP.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "OrderLine");
+                name: "OrderLines");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -490,31 +482,28 @@ namespace ITAcademyERP.Data.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "OrderHeader");
+                name: "OrderHeaders");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Client");
+                name: "Clients");
 
             migrationBuilder.DropTable(
-                name: "Employee");
+                name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "OrderPriority");
+                name: "OrderPriorities");
 
             migrationBuilder.DropTable(
-                name: "OrderState");
+                name: "OrderStates");
 
             migrationBuilder.DropTable(
-                name: "ProductCategory");
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
-                name: "Person");
-
-            migrationBuilder.DropTable(
-                name: "Address");
+                name: "People");
         }
     }
 }

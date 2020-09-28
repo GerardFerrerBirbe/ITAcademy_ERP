@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITAcademyERP.Data;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,13 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
         {
-            return await _context.Person
+            return await _context.People
                 .ToListAsync();
         }
 
         public async Task<IActionResult> UpdatePerson(int id, PersonDTO personDTO)
         {            
-            var person = await _context.Person.FindAsync(id);
+            var person = await _context.People.FindAsync(id);
 
             if (person == null)
             {
@@ -47,10 +48,9 @@ namespace ITAcademyERP.Controllers
 
             _context.Entry(person).State = EntityState.Modified;
 
-            await _addressesController.UpdateAddress(person.PersonalAddressId, personDTO);
-
             try
             {
+                await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -70,7 +70,7 @@ namespace ITAcademyERP.Controllers
 
         private bool PersonExists(int id)
         {
-            return _context.Person.Any(e => e.Id == id);
+            return _context.People.Any(e => e.Id == id);
         }
     }
 }

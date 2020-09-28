@@ -1,71 +1,94 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nou'}} Empleat</h2>
 <form class="form-horizontal" novalidate
-    (ngSubmit)="save()" [formGroup]="formGroup">
-      <div class="form-group">
-        <label for="emailId">Email</label>
-        <div>
-          <input class="form-control"
-          id="emailId"
-          type="string"
-          required
-          formControlName="email"/>
+  (ngSubmit)="save()" [formGroup]="formGroup">
+  <div class="form-group">
+    <label for="emailId">Email</label>
+    <div>
+      <input class="form-control"
+      id="emailId"
+      type="string"
+      required
+      formControlName="email"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="firstNameId">Nom</label>
+    <div>
+      <input class="form-control"
+      id="firstNameId"
+      type="string"
+      required
+      formControlName="firstName"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="lastNameId">Cognoms</label>
+    <div>
+      <input class="form-control"
+      id="lastNameId"
+      type="string"
+      required
+      formControlName="lastName"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="positionId">Càrrec</label>
+    <div>
+      <input class="form-control"
+      id="positionId"
+      type="text"
+      required
+      formControlName="position"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="salaryId">Salari</label>
+    <div>
+      <input class="form-control"
+      id="salaryId"
+      type="number"
+      required
+      formControlName="salary"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Direccions</label>
+    <button class="btn btn-primary" (click)="addAddress()">Afegir adreça</button>
+  </div>
+  
+  <div formArrayName="addresses"
+        *ngFor="let address of addresses.controls; let i = index;">
+    <div [formGroupName]="i">      
+      <div class="form-group">    
+        <label class="col-md-2 control-label" [attr.for]="'name' + i">
+          Nom adreça
+        </label>            
+        <div class="col-md-8">
+          <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name" />
         </div>
-      </div>
-      <div class="form-group">
-        <label for="firstNameId">Nom</label>
-        <div>
-          <input class="form-control"
-          id="firstNameId"
-          type="string"
-          required
-          formControlName="firstName"/>
+      </div>    
+      <div class="form-group">  
+        <label class="col-md-2 control-label" [attr.for]="'type' + i">
+          Tipus adreça
+        </label>              
+        <div class="col-md-8">
+          <input class="form-control" [attr.id]="'type' + i" type="text" formControlName="type" />
         </div>
-      </div>
+      </div>               
       <div class="form-group">
-        <label for="lastNameId">Cognoms</label>
-        <div>
-          <input class="form-control"
-          id="lastNameId"
-          type="string"
-          required
-          formControlName="lastName"/>
+        <div class="col-md-10">
+          <button type="button" class="btn btn-danger pull-right" (click)="deleteAddress(i)">Borrar adreça</button>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="positionId">Direcció</label>
-        <div>
-          <input class="form-control"
-          id="addressId"
-          type="text"
-          required
-          formControlName="address"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="positionId">Càrrec</label>
-        <div>
-          <input class="form-control"
-          id="positionId"
-          type="text"
-          required
-          formControlName="position"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="salaryId">Salari</label>
-        <div>
-          <input class="form-control"
-          id="salaryId"
-          type="number"
-          required
-          formControlName="salary"/>
-        </div>
-      </div>      
-      <div class="form-group">
-        <div>
-          <button type="submit">Guardar</button>
-        </div>
-      </div>
+      </div>             
+    </div>  
+  </div>
+
+  <div class="form-group">
+    <div>
+      <button type="submit">Guardar</button>
+    </div>
+  </div>
 </form>
 
 <button (click)="goBack()">Tornar</button>

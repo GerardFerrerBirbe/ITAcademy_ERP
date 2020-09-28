@@ -1,4 +1,6 @@
 export interface Address {
   id: number;
-  addressName: string
+  personId: number;
+  name: string;
+  type: string;
 }

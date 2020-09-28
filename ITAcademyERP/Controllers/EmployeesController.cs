@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Models;
+using ITAcademyERP.Data;
 using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,9 +33,9 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetEmployees()
         {            
-            return await _context.Employee
+            return await _context.Employees
                 .Include(e => e.Person)
-                .ThenInclude(p => p.PersonalAddress)
+                .ThenInclude(p => p.Addresses)
                 .Select(e => EmployeeToDTO(e))
                 .ToListAsync();
         }
@@ -43,9 +44,9 @@ namespace ITAcademyERP.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDTO>> GetEmployee(int id)
         {              
-            var employee = await _context.Employee
+            var employee = await _context.Employees
                 .Include(e => e.Person)
-                .ThenInclude(p => p.PersonalAddress)
+                .ThenInclude(p => p.Addresses)
                 .SingleOrDefaultAsync(e => e.Id == id);
 
             if (employee == null)
@@ -67,7 +68,7 @@ namespace ITAcademyERP.Controllers
                 return BadRequest();
             }
 
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
 
             if (employee == null)
             {
@@ -84,7 +85,7 @@ namespace ITAcademyERP.Controllers
                 Email = employeeDTO.Email,
                 FirstName = employeeDTO.FirstName,
                 LastName = employeeDTO.LastName,
-                Address = employeeDTO.Address
+                Addresses = employeeDTO.Addresses
             };
 
             await _peopleController.UpdatePerson(employee.PersonId, personDTO);           
@@ -114,23 +115,7 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
         {
-            var addressExists = _context.Address.FirstOrDefault(a => a.AddressName == employeeDTO.Address);
-
-            if (addressExists == default)
-            {
-                var address = new Address
-                {
-                    AddressName = employeeDTO.Address
-                };
-
-                _context.Address.Add(address);
-
-                _context.SaveChanges();
-            }
-
-            var addressId = _context.Address.FirstOrDefault(a => a.AddressName == employeeDTO.Address).Id;            
-
-            var personExists = _context.Person.FirstOrDefault(p => p.Email == employeeDTO.Email);
+            var personExists = _context.People.FirstOrDefault(p => p.Email == employeeDTO.Email);
 
             if (personExists == default)
             {
@@ -138,16 +123,15 @@ namespace ITAcademyERP.Controllers
                 {
                     Email = employeeDTO.Email,
                     FirstName = employeeDTO.FirstName,
-                    LastName = employeeDTO.LastName,
-                    PersonalAddressId = addressId
+                    LastName = employeeDTO.LastName
                 };
 
-                _context.Person.Add(person);
+                _context.People.Add(person);
 
                 _context.SaveChanges();
             }            
 
-            var personId = _context.Person.FirstOrDefault(p => p.Email == employeeDTO.Email).Id;
+            var personId = _context.People.FirstOrDefault(p => p.Email == employeeDTO.Email).Id;
 
             var employee = new Employee
             {
@@ -156,7 +140,7 @@ namespace ITAcademyERP.Controllers
                 Salary = employeeDTO.Salary
             };
 
-            _context.Employee.Add(employee);
+            _context.Employees.Add(employee);
 
             await _context.SaveChangesAsync();
 
@@ -167,14 +151,14 @@ namespace ITAcademyERP.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Employee>> DeleteEmployee(int id)
         {
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
 
             if (employee == null)
             {
                 return NotFound();
             }
 
-            _context.Employee.Remove(employee);
+            _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
 
             return employee;
@@ -182,28 +166,29 @@ namespace ITAcademyERP.Controllers
 
         private bool EmployeeExists(int id)
         {
-            return _context.Employee.Any(e => e.Id == id);
+            return _context.Employees.Any(e => e.Id == id);
         }
 
         private static EmployeeDTO EmployeeToDTO(Employee employee) =>
             new EmployeeDTO
             {
                 Id = employee.Id,
+                PersonId = employee.PersonId,
                 Email = employee.Person.Email,
                 FirstName = employee.Person.FirstName,
                 LastName = employee.Person.LastName,
-                Address = employee.Person.PersonalAddress.AddressName,
+                Addresses = employee.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList(),
                 Position = employee.Position,
                 Salary = employee.Salary
             };
 
         public int GetEmployeeId (string employeeName)
         {
-            var personEmployeeId = _context.Person
+            var personEmployeeId = _context.People
                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == employeeName)
                            .Id;
 
-            var employeeId = _context.Employee
+            var employeeId = _context.Employees
                             .FirstOrDefault(x => x.PersonId == personEmployeeId)
                             .Id;
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Models;
+using ITAcademyERP.Data;
 
 namespace ITAcademyERP.Controllers
 {
@@ -14,7 +15,6 @@ namespace ITAcademyERP.Controllers
     public class OrderHeadersController : ControllerBase
     {
         private readonly ITAcademyERPContext _context;
-        private readonly AddressesController _addressesController;
         private readonly ClientsController _clientsController;
         private readonly EmployeesController _employeesController;
         private readonly OrderPrioritiesController _orderPrioritiesController;
@@ -23,7 +23,6 @@ namespace ITAcademyERP.Controllers
 
         public OrderHeadersController(
             ITAcademyERPContext context,
-            AddressesController addressesController,
             ClientsController clientsController,
             EmployeesController employeesController,
             OrderPrioritiesController orderPrioritiesController,
@@ -31,7 +30,6 @@ namespace ITAcademyERP.Controllers
             ProductsController productsController)
         {
             _context = context;
-            _addressesController = addressesController;
             _clientsController = clientsController;
             _employeesController = employeesController;
             _orderPrioritiesController = orderPrioritiesController;
@@ -43,10 +41,10 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeaders()
         {
-            var output = _context.OrderHeader
-                    .Include(o => o.DeliveryAddress)
+            var output = _context.OrderHeaders                    
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
+                    .ThenInclude(p => p.Addresses)
                     .Include(o => o.Employee)
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
@@ -61,10 +59,10 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByEmployee(int employeeId)
         {
-            var output = _context.OrderHeader
-                    .Include(o => o.DeliveryAddress)
+            var output = _context.OrderHeaders
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
+                    .ThenInclude(p => p.Addresses)
                     .Include(o => o.Employee)
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
@@ -80,10 +78,10 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByClient(int clientId)
         {
-            var output = _context.OrderHeader
-                    .Include(o => o.DeliveryAddress)
+            var output = _context.OrderHeaders
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
+                    .ThenInclude(p => p.Addresses)
                     .Include(o => o.Employee)
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
@@ -108,10 +106,10 @@ namespace ITAcademyERP.Controllers
 
             if (includeOrderLines)
             {
-                orderHeader = await _context.OrderHeader
-                    .Include(o => o.DeliveryAddress)
+                orderHeader = await _context.OrderHeaders
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
+                    .ThenInclude(p => p.Addresses)
                     .Include(o => o.Employee)
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
@@ -122,10 +120,10 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                orderHeader = await _context.OrderHeader
-                    .Include(o => o.DeliveryAddress)
+                orderHeader = await _context.OrderHeaders
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
+                    .ThenInclude(p => p.Addresses)
                     .Include(o => o.Employee)
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
@@ -152,7 +150,7 @@ namespace ITAcademyERP.Controllers
                 return BadRequest();
             }
 
-            var orderHeader = await _context.OrderHeader.FindAsync(id);
+            var orderHeader = await _context.OrderHeaders.FindAsync(id);
 
             if (orderHeader == null)
             {
@@ -160,7 +158,6 @@ namespace ITAcademyERP.Controllers
             }          
 
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
-            orderHeader.DeliveryAddressId = _addressesController.GetAddressId(orderHeaderDTO.Address);
             orderHeader.ClientId = _clientsController.GetClientId(orderHeaderDTO.Client);
             orderHeader.EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee);
             orderHeader.OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState);
@@ -213,7 +210,7 @@ namespace ITAcademyERP.Controllers
                         Quantity = orderLineDTO.Quantity
                     };
 
-                    _context.OrderLine.Add(orderLine);
+                    _context.OrderLines.Add(orderLine);
                     await _context.SaveChangesAsync();
 
                     CreatedAtAction("GetOrderLine", new { id = orderLine.Id }, OrderLineToDTO(orderLine));
@@ -224,7 +221,7 @@ namespace ITAcademyERP.Controllers
             {
                 foreach (var orderLineDTO in orderLinesToEdit)
                 {
-                    var orderLine = _context.OrderLine.FirstOrDefault(x => x.Id == orderLineDTO.Id);
+                    var orderLine = _context.OrderLines.FirstOrDefault(x => x.Id == orderLineDTO.Id);
 
                     orderLine.OrderHeaderId = orderLineDTO.OrderHeaderId;
                     orderLine.ProductId = _productsController.GetProductId(orderLineDTO.ProductName);
@@ -247,7 +244,6 @@ namespace ITAcademyERP.Controllers
             var orderHeader = new OrderHeader
             {
                 OrderNumber = orderHeaderDTO.OrderNumber,
-                DeliveryAddressId = _addressesController.GetAddressId(orderHeaderDTO.Address),
                 ClientId = _clientsController.GetClientId(orderHeaderDTO.Client),
                 EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee),
                 OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState),
@@ -257,7 +253,7 @@ namespace ITAcademyERP.Controllers
                 FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate)
             };
 
-            _context.OrderHeader.Add(orderHeader);
+            _context.OrderHeaders.Add(orderHeader);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetOrderHeader", new { id = orderHeader.Id }, OrderHeaderToDTO(orderHeader));
@@ -267,13 +263,13 @@ namespace ITAcademyERP.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<OrderHeader>> DeleteOrderHeader(int id)
         {
-            var orderHeader = await _context.OrderHeader.FindAsync(id);
+            var orderHeader = await _context.OrderHeaders.FindAsync(id);
             if (orderHeader == null)
             {
                 return NotFound();
             }
 
-            _context.OrderHeader.Remove(orderHeader);
+            _context.OrderHeaders.Remove(orderHeader);
             await _context.SaveChangesAsync();
 
             return orderHeader;
@@ -281,7 +277,7 @@ namespace ITAcademyERP.Controllers
 
         private bool OrderHeaderExists(int id)
         {
-            return _context.OrderHeader.Any(e => e.Id == id);
+            return _context.OrderHeaders.Any(e => e.Id == id);
         }
 
         public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
@@ -290,7 +286,7 @@ namespace ITAcademyERP.Controllers
             {
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
-                Address = orderHeader.DeliveryAddress.AddressName,
+                Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == "Delivery").Name,
                 Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
                 Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
                 OrderState = orderHeader.OrderState.State,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITAcademyERP.Controllers;
+using ITAcademyERP.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,9 +29,9 @@ namespace ITAcademyERP.Models
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ClientDTO>>> GetClients()
         {
-            return await _context.Client
+            return await _context.Clients
                 .Include(c => c.Person)
-                .ThenInclude(p => p.PersonalAddress)
+                .ThenInclude(p => p.Addresses)
                 .Select(c => ClientToDTO(c))
                 .ToListAsync();
         }
@@ -39,9 +40,9 @@ namespace ITAcademyERP.Models
         [HttpGet("{id}")]
         public async Task<ActionResult<ClientDTO>> GetClient(int id)
         {
-            var client = await _context.Client
+            var client = await _context.Clients
                 .Include(c => c.Person)
-                .ThenInclude(p => p.PersonalAddress)
+                .ThenInclude(p => p.Addresses)
                 .SingleOrDefaultAsync(c => c.Id == id);
 
             if (client == null)
@@ -63,7 +64,7 @@ namespace ITAcademyERP.Models
                 return BadRequest();
             }
 
-            var client = await _context.Client.FindAsync(id);
+            var client = await _context.Clients.FindAsync(id);
 
             if (client == null)
             {
@@ -75,7 +76,7 @@ namespace ITAcademyERP.Models
                 Email = clientDTO.Email,
                 FirstName = clientDTO.FirstName,
                 LastName = clientDTO.LastName,
-                Address = clientDTO.Address
+                Addresses = clientDTO.Addresses
             };
 
             await _peopleController.UpdatePerson(client.PersonId, personDTO);
@@ -104,24 +105,8 @@ namespace ITAcademyERP.Models
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
-        {
-            var addressExists = _context.Address.FirstOrDefault(a => a.AddressName == clientDTO.Address);
-
-            if (addressExists == default)
-            {
-                var address = new Address
-                {
-                    AddressName = clientDTO.Address
-                };
-
-                _context.Address.Add(address);
-
-                _context.SaveChanges();
-            }
-
-            var addressId = _context.Address.FirstOrDefault(a => a.AddressName == clientDTO.Address).Id;
-
-            var personExists = _context.Person.FirstOrDefault(p => p.FirstName + ' ' + p.LastName == clientDTO.FirstName + ' ' + clientDTO.LastName);
+        {            
+            var personExists = _context.People.FirstOrDefault(p => p.FirstName + ' ' + p.LastName == clientDTO.FirstName + ' ' + clientDTO.LastName);
 
             if (personExists == default)
             {
@@ -129,23 +114,22 @@ namespace ITAcademyERP.Models
                 {
                     Email = clientDTO.Email,
                     FirstName = clientDTO.FirstName,
-                    LastName = clientDTO.LastName,
-                    PersonalAddressId = addressId
+                    LastName = clientDTO.LastName
                 };
 
-                _context.Person.Add(person);
+                _context.People.Add(person);
 
                 _context.SaveChanges();
             }
 
-            var personId = _context.Person.FirstOrDefault(p => p.Email == clientDTO.Email).Id;
+            var personId = _context.People.FirstOrDefault(p => p.Email == clientDTO.Email).Id;
 
             var client = new Client
             {
                 PersonId = personId
             };
 
-            _context.Client.Add(client);            
+            _context.Clients.Add(client);            
 
             await _context.SaveChangesAsync();
 
@@ -156,14 +140,14 @@ namespace ITAcademyERP.Models
         [HttpDelete("{id}")]
         public async Task<ActionResult<Client>> DeleteClient(int id)
         {
-            var client = await _context.Client.FindAsync(id);
+            var client = await _context.Clients.FindAsync(id);
 
             if (client == null)
             {
                 return NotFound();
             }
 
-            _context.Client.Remove(client);
+            _context.Clients.Remove(client);
             await _context.SaveChangesAsync();
 
             return client;
@@ -171,26 +155,27 @@ namespace ITAcademyERP.Models
 
         private bool ClientExists(int id)
         {
-            return _context.Client.Any(e => e.Id == id);
+            return _context.Clients.Any(e => e.Id == id);
         }
 
         private static ClientDTO ClientToDTO(Client client) =>
             new ClientDTO
             {
                 Id = client.Id,
+                PersonId = client.PersonId,
                 Email = client.Person.Email,
                 FirstName = client.Person.FirstName,
                 LastName = client.Person.LastName,
-                Address = client.Person.PersonalAddress.AddressName
-            };
-
+                Addresses = client.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList()
+            };       
+        
         public int GetClientId (string clientName)
         {
-            var personClientId = _context.Person
+            var personClientId = _context.People
                             .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == clientName)
                             .Id;
 
-            var clientId = _context.Client
+            var clientId = _context.Clients
                             .FirstOrDefault(x => x.PersonId == personClientId)
                             .Id;
 

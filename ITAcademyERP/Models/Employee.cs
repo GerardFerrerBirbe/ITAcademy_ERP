@@ -8,7 +8,7 @@ namespace ITAcademyERP.Models
     {
         public Employee()
         {
-            OrderHeader = new HashSet<OrderHeader>();
+            OrderHeaders = new HashSet<OrderHeader>();
         }
 
         public int Id { get; set; }
@@ -17,6 +17,6 @@ namespace ITAcademyERP.Models
         public double Salary { get; set; }
 
         public virtual Person Person { get; set; }
-        public virtual ICollection<OrderHeader> OrderHeader { get; set; }
+        public virtual ICollection<OrderHeader> OrderHeaders { get; set; }
     }
 }

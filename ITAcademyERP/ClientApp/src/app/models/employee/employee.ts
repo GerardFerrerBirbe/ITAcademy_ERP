@@ -1,11 +1,12 @@
-import { Person } from '../person/person';
+import { Address } from '../address/address';
 
 export interface Employee {
   id: number;
+  personId: number;
   email: string;
   firstName: string;
   lastName: string;
-  address: string;
   position: string;
-  salary: number;
+  salary: number;  
+  addresses: Address[];
 }

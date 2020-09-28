@@ -10,8 +10,7 @@ namespace ITAcademyERP.Models
             OrderLines = new HashSet<OrderLine>();
         }
         public int Id { get; set; }
-        public string OrderNumber { get; set; }        
-        public int DeliveryAddressId { get; set; }
+        public string OrderNumber { get; set; }
         public int ClientId { get; set; }
         public int EmployeeId { get; set; }
         public int OrderStateId { get; set; }
@@ -22,7 +21,6 @@ namespace ITAcademyERP.Models
 
 
         public virtual Client Client { get; set; }
-        public virtual Address DeliveryAddress { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual OrderState OrderState { get; set; }
         public virtual OrderPriority OrderPriority { get; set; }

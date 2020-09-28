@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Models;
+using ITAcademyERP.Data;
 
 namespace ITAcademyERP.Controllers
 {
@@ -24,14 +25,14 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductCategory>>> GetProductCategory()
         {
-            return await _context.ProductCategory.ToListAsync();
+            return await _context.ProductCategories.ToListAsync();
         }
 
         // GET: api/ProductCategories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductCategory>> GetProductCategory(int id)
         {            
-            var productCategory = await _context.ProductCategory
+            var productCategory = await _context.ProductCategories
                     .SingleOrDefaultAsync(p => p.Id == id);
             
             if (productCategory == null)
@@ -80,7 +81,7 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductCategory>> PostProductCategory(ProductCategory productCategory)
         {
-            _context.ProductCategory.Add(productCategory);
+            _context.ProductCategories.Add(productCategory);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProductCategory", new { id = productCategory.Id }, productCategory);
@@ -90,13 +91,13 @@ namespace ITAcademyERP.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ProductCategory>> DeleteProductCategory(int id)
         {
-            var productCategory = await _context.ProductCategory.FindAsync(id);
+            var productCategory = await _context.ProductCategories.FindAsync(id);
             if (productCategory == null)
             {
                 return NotFound();
             }
 
-            _context.ProductCategory.Remove(productCategory);
+            _context.ProductCategories.Remove(productCategory);
             await _context.SaveChangesAsync();
 
             return productCategory;
@@ -104,7 +105,7 @@ namespace ITAcademyERP.Controllers
 
         private bool ProductCategoryExists(int id)
         {
-            return _context.ProductCategory.Any(e => e.Id == id);
+            return _context.ProductCategories.Any(e => e.Id == id);
         }
     }
 }

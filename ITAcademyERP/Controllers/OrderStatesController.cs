@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITAcademyERP.Data;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +25,12 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderState>>> GetOrderState()
         {
-            return await _context.OrderState.ToListAsync();
+            return await _context.OrderStates.ToListAsync();
         }
 
         public int GetOrderStateId (string orderStateName)
         {
-            var orderStateId = _context.OrderState
+            var orderStateId = _context.OrderStates
                             .FirstOrDefault(x => x.State == orderStateName)
                             .Id;
 
