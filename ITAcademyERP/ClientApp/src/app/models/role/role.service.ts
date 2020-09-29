@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Role } from './role';
@@ -21,12 +21,13 @@ export class RoleService {
   }
 
   getRole(id: string): Observable<Role> {
+    let params = new HttpParams().set('includeUsers', "true");
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Role>(url);
-  }
+    return this.http.get<Role>(url, {params: params});
+  } 
 
   updateRole(role: Role): Observable<Role> {
-    return this.http.put<Role>(this.apiUrl + "/" + role.id.toString(), role, this.httpOptions);
+    return this.http.put<Role>(this.apiUrl + "/" + role.roleId, role, this.httpOptions);
   }
 
   addRole(role: Role): Observable<Role> {
@@ -34,7 +35,7 @@ export class RoleService {
   }
 
   deleteRole(role: Role | number): Observable<Role> {
-    const id = typeof role === 'number' ? role : role.id;
+    const id = typeof role === 'number' ? role : role.roleId;
     const url = `${this.apiUrl}/${id}`;
 
     return this.http.delete<Role>(url, this.httpOptions);

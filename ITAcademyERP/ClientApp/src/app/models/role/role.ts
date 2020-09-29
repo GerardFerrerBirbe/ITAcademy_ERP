@@ -1,6 +1,7 @@
+import { RoleUser} from './roleUser';
+
 export interface Role {
-  id: string;
-  name: string;
-  normalizedName: string;
-  concurrencyStamp: string
+  roleId: string;
+  roleName: string;
+  roleUsers: RoleUser[];
 }

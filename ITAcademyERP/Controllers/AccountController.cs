@@ -17,15 +17,18 @@ namespace ITAcademyERP.Controllers
     [Route("api/Account")]
     public class AccountController : Controller
     {
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
 
         public AccountController(
+            RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration)
         {
+            _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             this._configuration = configuration;
@@ -41,7 +44,9 @@ namespace ITAcademyERP.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    return BuildToken(model);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    return BuildToken(model, roles);
                 }
                 else
                 {
@@ -64,7 +69,11 @@ namespace ITAcademyERP.Controllers
                 var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return BuildToken(userInfo);
+                    var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+                    var roles = await _userManager.GetRolesAsync(user);
+                    
+                    return BuildToken(userInfo, roles);
                 }
                 else
                 {
@@ -78,13 +87,18 @@ namespace ITAcademyERP.Controllers
             }
         }
 
-        private IActionResult BuildToken(UserInfo userInfo)
+        private IActionResult BuildToken(UserInfo userInfo, IList<string> roles)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+                        
+            foreach (var role in roles)
+            {                
+                claims.Add(new Claim(ClaimTypes.Role, role));                
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Llave_super_secreta"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

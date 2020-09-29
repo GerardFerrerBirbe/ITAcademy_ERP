@@ -25,6 +25,7 @@ import { OrderDetailComponent } from './models/order-Header/order-detail/order-d
 
 import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { RoleDetailComponent } from './models/role/role-detail/role-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -54,7 +55,9 @@ const routes: Routes = [
   { path: 'product-cat-detail', component: ProductCategoryDetailComponent },
   { path: 'product-cat-detail/:id', component: ProductCategoryDetailComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'role', component: RoleComponent }
+  { path: 'role', component: RoleComponent },
+  { path: 'role-detail', component: RoleDetailComponent },
+  { path: 'role-detail/:id', component: RoleDetailComponent }
 ];
 
 @NgModule({

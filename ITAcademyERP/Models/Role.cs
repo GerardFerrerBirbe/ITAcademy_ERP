@@ -7,6 +7,6 @@ namespace ITAcademyERP.Models
 {
     public class Role
     {
-        public string RoleName { get; set; }
+        public string Name { get; set; }
     }
 }

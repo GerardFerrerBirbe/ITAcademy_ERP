@@ -29,6 +29,8 @@ import { PersonDetailComponent } from './models/person/person-detail/person-deta
 import { ProductDetailComponent } from './models/product/product-detail/product-detail.component';
 import { ProductCategoryDetailComponent } from './models/product-category/product-category-detail/product-category-detail.component';
 import { OrderDetailComponent } from './models/order-Header/order-detail/order-detail.component';
+import { RoleComponent } from './models/role/role.component';
+import { RoleDetailComponent } from './models/role/role-detail/role-detail.component';
 
 import { EmployeeService } from './models/employee/employee.service';
 import { ClientService } from './models/client/client.service';
@@ -46,7 +48,7 @@ import { AccountService } from './login/account.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
 import { DatePipe } from '@angular/common';
-import { RoleComponent } from './models/role/role.component';
+import { RoleService } from './models/role/role.service';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,8 @@ import { RoleComponent } from './models/role/role.component';
     ProductCategoryDetailComponent,
     OrderDetailComponent,
     LoginComponent,
-    RoleComponent
+    RoleComponent,
+    RoleDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -94,6 +97,7 @@ import { RoleComponent } from './models/role/role.component';
     OrderLineService,
     OrderPriorityService,
     OrderStateService,
+    RoleService,
     AuthGuardService,
     AccountService,
     {

@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Models
 {
-    public class UserRole
+    public class UserDTO
     {
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public bool IsSelected { get; set; }
     }
 }

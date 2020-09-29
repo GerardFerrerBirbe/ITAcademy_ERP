@@ -1,0 +1,45 @@
+<h2>{{editionMode ? 'Fitxa' : 'Nou'}} Rol</h2>
+<form class="form-horizontal" novalidate
+    (ngSubmit)="save()" [formGroup]="formGroup">
+      <div class="form-group">
+        <label for="nameId">Nom Rol</label>
+        <div>
+          <input class="form-control"
+          id="roleNameId"
+          type="text"
+          required
+          formControlName="roleName"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-primary" (click)="addRoleUser()">Afegir usuari</button>
+      </div>
+      
+      <div formArrayName="roleUsers"
+            *ngFor="let roleUser of roleUsers.controls; let i = index;">
+        <div [formGroupName]="i">      
+          <div class="form-group">                   
+            <div class="col-md-8">
+              <input class="form-control" [attr.id]="'userName' + i" type="text" formControlName="userName" />            
+            </div>
+          </div>    
+         
+               
+          <div class="form-group">
+            <div class="col-md-10">
+              <button type="button" class="btn btn-danger pull-right" (click)="deleteRoleUser(i)">Borrar usuari</button>
+            </div>
+          </div>             
+        </div>  
+      </div>
+
+      <div class="form-group">
+        <div>
+          <button type="submit">Guardar</button>
+        </div>
+      </div>
+</form>
+
+  <button (click)="goBack()">Tornar</button>
+
