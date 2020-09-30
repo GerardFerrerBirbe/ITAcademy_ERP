@@ -27,17 +27,20 @@ export class RoleService {
   } 
 
   updateRole(role: Role): Observable<Role> {
-    return this.http.put<Role>(this.apiUrl + "/" + role.roleId, role, this.httpOptions);
+    return this.http.put<Role>(this.apiUrl + "/" + role.id, role, this.httpOptions);
   }
 
   addRole(role: Role): Observable<Role> {
     return this.http.post<Role>(this.apiUrl, role, this.httpOptions);
   }
 
-  deleteRole(role: Role | number): Observable<Role> {
-    const id = typeof role === 'number' ? role : role.roleId;
+  deleteRole(role: Role | string): Observable<Role> {
+    const id = typeof role === 'string' ? role : role.id;
     const url = `${this.apiUrl}/${id}`;
-
     return this.http.delete<Role>(url, this.httpOptions);
+  }
+
+  deleteRoleUserLines(ids: string[], roleId: string): Observable<void>{
+    return this.http.post<void>(this.apiUrl + "/RoleUsers" + roleId, ids, this.httpOptions);
   }
 }

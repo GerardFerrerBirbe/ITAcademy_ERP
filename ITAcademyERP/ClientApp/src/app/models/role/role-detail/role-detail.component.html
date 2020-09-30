@@ -5,10 +5,10 @@
         <label for="nameId">Nom Rol</label>
         <div>
           <input class="form-control"
-          id="roleNameId"
+          id="nameId"
           type="text"
           required
-          formControlName="roleName"/>
+          formControlName="name"/>
         </div>
       </div>
 
@@ -21,10 +21,9 @@
         <div [formGroupName]="i">      
           <div class="form-group">                   
             <div class="col-md-8">
-              <input class="form-control" [attr.id]="'userName' + i" type="text" formControlName="userName" />            
+              <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name" />            
             </div>
-          </div>    
-         
+          </div>         
                
           <div class="form-group">
             <div class="col-md-10">

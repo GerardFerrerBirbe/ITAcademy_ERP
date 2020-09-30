@@ -96,6 +96,26 @@ export class OrderDetailComponent implements OnInit {
     });
   }
 
+  loadForm(orderHeader: OrderHeader){
+    this.formGroup.patchValue({
+      orderNumber: orderHeader.orderNumber,
+      address: orderHeader.address,
+      client: orderHeader.client,
+      employee: orderHeader.employee,
+      orderState: orderHeader.orderState,
+      orderPriority: orderHeader.orderPriority,
+      creationDate: this.datePipe.transform(orderHeader.creationDate, "yyyy-MM-dd"),
+      assignToEmployeeDate: this.datePipe.transform(orderHeader.assignToEmployeeDate, "yyyy-MM-dd"),
+      finalisationDate: this.datePipe.transform(orderHeader.finalisationDate, "yyyy-MM-dd")
+    });
+        
+      orderHeader.orderLines.forEach(orderLine => {
+      let orderLineFG = this.buildOrderLine();
+      orderLineFG.patchValue(orderLine);
+      this.orderLines.push(orderLineFG);
+      });   
+  }
+
   addOrderLine(){    
     let orderLineFG = this.buildOrderLine();
     this.orderLines.push(orderLineFG);
@@ -118,27 +138,7 @@ export class OrderDetailComponent implements OnInit {
       this.orderLinesToDelete.push(<number>orderLineToDelete.controls['id'].value);
     }
     this.orderLines.removeAt(index);
-  }
-
-  loadForm(orderHeader: OrderHeader){
-    this.formGroup.patchValue({
-      orderNumber: orderHeader.orderNumber,
-      address: orderHeader.address,
-      client: orderHeader.client,
-      employee: orderHeader.employee,
-      orderState: orderHeader.orderState,
-      orderPriority: orderHeader.orderPriority,
-      creationDate: this.datePipe.transform(orderHeader.creationDate, "yyyy-MM-dd"),
-      assignToEmployeeDate: this.datePipe.transform(orderHeader.assignToEmployeeDate, "yyyy-MM-dd"),
-      finalisationDate: this.datePipe.transform(orderHeader.finalisationDate, "yyyy-MM-dd")
-    });
-        
-      orderHeader.orderLines.forEach(orderLine => {
-      let orderLineFG = this.buildOrderLine();
-      orderLineFG.patchValue(orderLine);
-      this.orderLines.push(orderLineFG);
-      });   
-  }
+  }  
 
   save() {
     let orderHeader: OrderHeader = Object.assign({}, this.formGroup.value);

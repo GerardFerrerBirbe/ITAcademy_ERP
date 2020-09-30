@@ -1,4 +1,5 @@
 export interface RoleUser {
-  userId: string;
-  userName: string;
+  id: string;
+  roleId: string;
+  name: string;
 }

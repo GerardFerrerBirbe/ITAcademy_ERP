@@ -57,24 +57,27 @@ namespace ITAcademyERP.Controllers
                     return NotFound();
                 }
 
-                var roleUsers = new List<UserDTO>();
+                var usersInRoleDTO = new List<UserDTO>();
 
-                foreach (var user in userManager.Users)
+                var usersInRole = await userManager.GetUsersInRoleAsync(identityRole.Name);
+
+                foreach (var user in usersInRole)
                 {
-                    var roleUser = new UserDTO
+                    var roleUserDTO = new UserDTO
                     {
-                        UserId = user.Id,
-                        UserName = user.UserName
+                        Id = user.Id,
+                        RoleId = identityRole.Id,
+                        Name = user.UserName
                     };                  
 
-                    roleUsers.Add(roleUser);                                       
+                    usersInRoleDTO.Add(roleUserDTO);                                       
                 }
 
                 var roleDTO = new RoleDTO
                 {
-                    RoleId = id,
-                    RoleName = identityRole.Name,
-                    RoleUsers = roleUsers
+                    Id = id,
+                    Name = identityRole.Name,
+                    RoleUsers = usersInRoleDTO
                 };
 
                 return roleDTO;
@@ -86,8 +89,8 @@ namespace ITAcademyERP.Controllers
 
                 var roleDTO = new RoleDTO
                 {
-                    RoleId = id,
-                    RoleName = identityRole.Name
+                    Id = id,
+                    Name = identityRole.Name
                 };
 
                 return roleDTO;
@@ -98,38 +101,50 @@ namespace ITAcademyERP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRole(string id, IdentityRole identityRole)
+        public async Task<IActionResult> PutRole(string id, RoleDTO roleDTO)
         {
-            if (id != identityRole.Id)
+            if (id != roleDTO.Id)
             {
                 return BadRequest();
             }
 
             var role = await roleManager.FindByIdAsync(id);
 
-            role.Name = identityRole.Name;
-            //role.NormalizedName = identityRole.Name.Normalize();
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            role.Name = roleDTO.Name;
 
             await roleManager.UpdateAsync(role);
 
+            var usersDTO = roleDTO.RoleUsers;
+
+            foreach (var userDTO in usersDTO)
+            {
+                var user = await userManager.FindByNameAsync(userDTO.Name);
+                await userManager.AddToRoleAsync(user, role.Name);
+            }
+
             return NoContent();
-        }
+        }        
 
         [HttpPost]
-        public async Task<IActionResult> CreateRole(Role role)
+        public async Task<IActionResult> CreateRole(RoleDTO roleDTO)
         {
             if (ModelState.IsValid)
             {
                 IdentityRole identityRole = new IdentityRole
                 {
-                    Name = role.Name
+                    Name = roleDTO.Name
                 };
 
                 IdentityResult result = await roleManager.CreateAsync(identityRole);
 
                 if (result.Succeeded)
                 {
-                    return CreatedAtAction("GetRole", new { id = identityRole.Id }, role);
+                    return CreatedAtAction("GetRole", new { id = identityRole.Id }, roleDTO);
                 }
                 foreach (IdentityError error in result.Errors)
                 {
@@ -139,88 +154,6 @@ namespace ITAcademyERP.Controllers
 
             return NoContent();
         }
-
-        [Route("Users")]
-        [HttpGet]
-        //public async Task<ActionResult<List<RoleDTO>>> GetUsersInRole (string roleId)
-        //{
-        //    var role = await roleManager.FindByIdAsync(roleId);
-
-        //    if (role == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var model = new List<RoleDTO>();
-
-        //    foreach (var user in userManager.Users)
-        //    {
-        //        var userRole = new RoleDTO
-        //        {
-        //            UserId = user.Id,
-        //            UserName = user.UserName
-        //        };
-
-        //        if (await userManager.IsInRoleAsync(user, role.Name))
-        //        {
-        //            userRole.IsSelected = true;
-        //        }
-        //        else
-        //        {
-        //            userRole.IsSelected = false;
-        //        }
-
-        //        model.Add(userRole);
-        //    }
-
-        //    return model;
-        //}
-
-        //[Route("Users")]
-        //[HttpPost]
-        //public async Task<IActionResult> EditUsersInRole(List<RoleDTO> model, string roleId)
-        //{
-        //    var role = await roleManager.FindByIdAsync(roleId);
-
-        //    if (role == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    for (int i = 0; i < model.Count; i++)
-        //    {
-        //        var user = await userManager.FindByIdAsync(model[i].UserId);
-
-        //        IdentityResult result = null;
-
-        //        if (model[i].IsSelected && !(await userManager.IsInRoleAsync(user, role.Name)))
-        //        {
-        //            result = await userManager.AddToRoleAsync(user, role.Name);
-        //        }
-        //        else if(!model[i].IsSelected && await userManager.IsInRoleAsync(user, role.Name))
-        //        {
-        //            result = await userManager.RemoveFromRoleAsync(user, role.Name);
-        //        }
-        //        else
-        //        {
-        //            continue;
-        //        }
-
-        //        if (result.Succeeded)
-        //        {
-        //            if (i < (model.Count - 1))
-        //            {
-        //                continue;
-        //            }
-        //            else
-        //            {
-        //                return RedirectToAction("EditRole", new { Id = roleId });
-        //            }
-        //        }
-        //    }
-
-        //    return RedirectToAction("EditRole", new { Id = roleId });
-        //}
 
         // DELETE: api/ProductCategories/5
         [HttpDelete("{id}")]
@@ -237,5 +170,32 @@ namespace ITAcademyERP.Controllers
 
             return role;
         }
+
+        // POST: api/Roles
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Route("RoleUsers")]
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteList([FromBody] List<string> ids, string id)
+        {
+            
+            var roleId = id.Substring(9);
+            var role = await roleManager.FindByIdAsync(roleId);
+            
+            try
+            {
+                foreach (var userId in ids)
+                {
+                    var roleUser = await userManager.FindByIdAsync(userId);
+                    await userManager.RemoveFromRoleAsync(roleUser, role.Name);             
+                }                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok();
+        }        
     }
 }

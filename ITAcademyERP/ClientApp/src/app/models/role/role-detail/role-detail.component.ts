@@ -23,7 +23,7 @@ export class RoleDetailComponent implements OnInit {
   editionMode: boolean = false;
   formGroup: FormGroup;
   roleId: any;
-  roleUsersToDelete: number[] = [];
+  roleUserLinesToDelete: string[] = [];
 
   roles: Role[];
 
@@ -33,7 +33,7 @@ export class RoleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
-      roleName: '',
+      name: '',
       roleUsers: this.fb.array([])
     });  
 
@@ -52,7 +52,7 @@ export class RoleDetailComponent implements OnInit {
 
   loadForm(role: Role){
     this.formGroup.patchValue({
-      roleName: role.roleName
+      name: role.name
     });
 
     role.roleUsers.forEach(roleUser => {
@@ -64,9 +64,9 @@ export class RoleDetailComponent implements OnInit {
 
   buildRoleUser(){
     return this.fb.group({
-      userId: '',
+      id: '',
       roleId: this.roleId != null ? this.roleId : '',
-      userName: ''
+      name: ''
     })
   }
 
@@ -78,7 +78,7 @@ export class RoleDetailComponent implements OnInit {
   deleteRoleUser(index: number){
     let roleUserToDelete = this.roleUsers.at(index) as FormGroup;
     if (roleUserToDelete.controls['id'].value != '') {
-      this.roleUsersToDelete.push(<number>roleUserToDelete.controls['id'].value);
+      this.roleUserLinesToDelete.push(<string>roleUserToDelete.controls['id'].value);
     }
     this.roleUsers.removeAt(index);
   }
@@ -89,14 +89,23 @@ export class RoleDetailComponent implements OnInit {
 
     if (this.editionMode){
       //edit role
-      role.roleId = this.roleId;
+      role.id = this.roleId;
       this.roleService.updateRole(role)
-      .subscribe();
+      .subscribe(() => this.deleteRoleUserLines());
     } else {
       //add role
       this.roleService.addRole(role)
       .subscribe();
     }    
+  }
+
+  deleteRoleUserLines(){
+    if (this.roleUserLinesToDelete.length === 0) {
+      return;
+    }
+
+    this.roleService.deleteRoleUserLines(this.roleUserLinesToDelete, this.roleId)
+    .subscribe();
   }
   
   goBack(): void {

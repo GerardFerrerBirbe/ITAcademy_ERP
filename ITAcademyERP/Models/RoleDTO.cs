@@ -7,8 +7,8 @@ namespace ITAcademyERP.Models
 {
     public class RoleDTO
     {
-        public string RoleId { get; set; }
-        public string RoleName { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
         public ICollection<UserDTO> RoleUsers { get; set; }
     }
 }
