@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -60,6 +60,7 @@ namespace ITAcademyERP.Controllers
         // PUT: api/Employees/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, EmployeeDTO employeeDTO)
         {
@@ -112,6 +113,7 @@ namespace ITAcademyERP.Controllers
         // POST: api/Employees
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
         {
@@ -148,6 +150,7 @@ namespace ITAcademyERP.Controllers
         }
 
         // DELETE: api/Employees/5
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Employee>> DeleteEmployee(int id)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITAcademyERP.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,8 +14,8 @@ namespace ITAcademyERP.Controllers
 {
     
     [Route("api/[controller]")]
-    [ApiController]
-    //[Authorize (Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [ApiController]    
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> roleManager;

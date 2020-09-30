@@ -6,6 +6,7 @@
         <span class='glyphicon glyphicon-th-list'></span> Registre / Login
       </a>
     </li>
+    <li *ngIf="isLogged()">{{ userName }}</li>
     <li *ngIf="isLogged()" [routerLinkActive]='["link-active"]'>
       <a (click)='logout()'>
         <span class='glyphicon glyphicon-th-list'></span> Logout
@@ -13,10 +14,15 @@
     </li>
 </ul>
 </div>
-<nav>
+<nav *ngIf="adminUser == 'true'">
   <button routerLink="/">Inici</button>
   <button routerLink="/hhrr">Recursos Humans</button>
   <button routerLink="/sales">Vendes</button>
   <button routerLink="/statistics">Estadístiques</button>
+</nav>
+<nav *ngIf="adminUser == 'false'">
+  <button routerLink="/">Inici</button>
+  <button routerLink="/hhrr">Recursos Humans</button>
+  <button routerLink="/sales">Vendes</button>
 </nav>
 <router-outlet></router-outlet>

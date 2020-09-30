@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITAcademyERP.Data;
 using ITAcademyERP.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
     [ApiController]
     public class AddressesController : ControllerBase
     {

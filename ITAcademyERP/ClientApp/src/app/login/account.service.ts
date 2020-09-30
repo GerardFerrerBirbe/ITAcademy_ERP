@@ -29,6 +29,8 @@ export class AccountService {
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenExpiration");
+    localStorage.removeItem("adminUser");
+    localStorage.removeItem("userName");
   }
 
   isLogged(): boolean {
@@ -47,6 +49,8 @@ export class AccountService {
       // The token is already expired
       localStorage.removeItem('token');
       localStorage.removeItem('tokenExpiration');
+      localStorage.removeItem('adminUser');
+      localStorage.removeItem('userName');
       return false;
     } else {
       return true;

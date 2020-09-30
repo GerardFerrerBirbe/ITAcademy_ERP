@@ -10,28 +10,35 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ITAcademyERP.Data;
 
 namespace ITAcademyERP.Controllers
 {
     [Produces("application/json")]
     [Route("api/Account")]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ITAcademyERPContext _context;
 
         public AccountController(
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ITAcademyERPContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             this._configuration = configuration;
+            _context = context;
         }
 
         [Route("Create")]
@@ -57,7 +64,6 @@ namespace ITAcademyERP.Controllers
             {
                 return BadRequest(ModelState);
             }
-
         }
 
         [HttpPost]
@@ -112,11 +118,15 @@ namespace ITAcademyERP.Controllers
                expires: expiration,
                signingCredentials: creds);
 
+            var adminUser = roles.Contains("Admin");
+            
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = expiration
+                expiration = expiration,
+                userName = userInfo.Email,
+                adminUser = adminUser
             });
-        }
+        }        
     }
 }
