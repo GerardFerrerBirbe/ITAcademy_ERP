@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITAcademyERP.Data
 {
-    public partial class ITAcademyERPContext : IdentityDbContext<ApplicationUser>
+    public partial class ITAcademyERPContext : IdentityDbContext<Person>
     {
         public ITAcademyERPContext()
         {

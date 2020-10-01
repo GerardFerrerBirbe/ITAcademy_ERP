@@ -33,7 +33,7 @@ namespace ITAcademyERP
             services.AddDbContext<ITAcademyERPContext>(opt =>
                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<Person, IdentityRole>()
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ITAcademyERPContext>()
                 .AddDefaultTokenProviders();

@@ -17,7 +17,7 @@ namespace ITAcademyERP.Models
         public int OrderPriorityId { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime AssignToEmployeeDate { get; set; }
-        public DateTime FinalisationDate { get; set; }
+        public DateTime? FinalisationDate { get; set; }
 
 
         public virtual Client Client { get; set; }

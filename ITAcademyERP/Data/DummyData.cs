@@ -16,9 +16,9 @@ namespace ITAcademyERP.Data
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var _context = serviceScope.ServiceProvider.GetService<ITAcademyERPContext>();
-            _context.Database.EnsureCreated();    
-            
-            
+            _context.Database.EnsureCreated();
+
+
             // Look for any users
             if (_context.ProductCategories.Count() != 0)
                 return;
@@ -46,7 +46,7 @@ namespace ITAcademyERP.Data
             var products = GetProducts().ToArray();
             _context.Products.AddRange(products);
             _context.SaveChanges();
-            
+
             var orderStates = GetOrderStates().ToArray();
             _context.OrderStates.AddRange(orderStates);
             _context.SaveChanges();
@@ -66,43 +66,43 @@ namespace ITAcademyERP.Data
             var role = "Admin";
             var roleStore = new RoleStore<IdentityRole>(_context);
             roleStore.CreateAsync(new IdentityRole(role));
-
-            var user = new ApplicationUser
-            {
-                Email = "proves@e.com",
-                NormalizedEmail = "PROVES@E.COM",
-                UserName = "Admin",
-                NormalizedUserName = "ADMIN",
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString("D")
-            };
-
-            if (!_context.Users.Any(u => u.UserName == user.UserName))
-            {
-                var password = new PasswordHasher<ApplicationUser>();
-                var hashed = password.HashPassword(user, "Aa111111!");
-                user.PasswordHash = hashed;
-
-                var userStore = new UserStore<ApplicationUser>(_context);
-                var result = userStore.CreateAsync(user);
-            }
-
-            _context.SaveChangesAsync();
-
-            AssignRoles(serviceProvider, user.Email, role).Wait();
-
-            _context.SaveChangesAsync();
         }
+        //    var user = new ApplicationUser
+        //    {
+        //        Email = "proves@e.com",
+        //        NormalizedEmail = "PROVES@E.COM",
+        //        UserName = "Admin",
+        //        NormalizedUserName = "ADMIN",
+        //        EmailConfirmed = true,
+        //        PhoneNumberConfirmed = true,
+        //        SecurityStamp = Guid.NewGuid().ToString("D")
+        //    };
 
-        public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string role)
-        {
-            UserManager<ApplicationUser> _userManager = services.GetService<UserManager<ApplicationUser>>();
-            ApplicationUser user = await _userManager.FindByEmailAsync(email);
-            var result = await _userManager.AddToRoleAsync(user, role);
+        //    if (!_context.Users.Any(u => u.UserName == user.UserName))
+        //    {
+        //        var password = new PasswordHasher<ApplicationUser>();
+        //        var hashed = password.HashPassword(user, "Aa111111!");
+        //        user.PasswordHash = hashed;
 
-            return result;
-        }
+        //        var userStore = new UserStore<ApplicationUser>(_context);
+        //        var result = userStore.CreateAsync(user);
+        //    }
+
+        //    _context.SaveChangesAsync();
+
+        //    AssignRoles(serviceProvider, user.Email, role).Wait();
+
+        //    _context.SaveChangesAsync();
+        //}
+
+        //public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string role)
+        //{
+        //    UserManager<ApplicationUser> _userManager = services.GetService<UserManager<ApplicationUser>>();
+        //    ApplicationUser user = await _userManager.FindByEmailAsync(email);
+        //    var result = await _userManager.AddToRoleAsync(user, role);
+
+        //    return result;
+        //}
 
         public static List<Person> GetPeople()
         {
@@ -119,10 +119,10 @@ namespace ITAcademyERP.Data
         {
             List<Address> addresses = new List<Address>()
             {
-                new Address{Name = "C/ Montjuic, 127", PersonId = 2, Type = "Personal"},
-                new Address{Name = "C/ Barcelona, 328", PersonId = 2, Type = "Delivery"},
-                new Address{Name = "C/ Perill, 12", PersonId = 1, Type = "Personal"},
-                new Address{Name = "C/ Girona, 124", PersonId = 1, Type = "Delivery"}
+                new Address{Name = "C/ Montjuic, 127", Type = "Personal"},
+                new Address{Name = "C/ Barcelona, 328", Type = "Delivery"},
+                new Address{Name = "C/ Perill, 12", Type = "Personal"},
+                new Address{Name = "C/ Girona, 124", Type = "Delivery"}
             };
             return addresses;
         }
@@ -151,8 +151,6 @@ namespace ITAcademyERP.Data
         {
             List<Client> clients = new List<Client>()
             {
-                new Client{PersonId = 1},
-                new Client{PersonId = 2}
             };
             return clients;
         }
@@ -160,8 +158,8 @@ namespace ITAcademyERP.Data
         {
             List<Employee> employees = new List<Employee>()
             {
-                new Employee{PersonId = 3, Position = "Director", Salary = 20000},
-                new Employee{PersonId = 4, Position = "Manager", Salary = 15000}
+                new Employee{Position = "Director", Salary = 20000},
+                new Employee{Position = "Manager", Salary = 15000}
             };
             return employees;
         }
@@ -194,7 +192,6 @@ namespace ITAcademyERP.Data
                 new OrderHeader
                 {
                     OrderNumber = "2020-01",
-                    ClientId = 1,
                     EmployeeId = 1,
                     OrderPriorityId = 1,
                     OrderStateId = 3,
@@ -205,7 +202,6 @@ namespace ITAcademyERP.Data
                 new OrderHeader
                 {
                     OrderNumber = "2020-02",
-                    ClientId = 2,
                     EmployeeId = 1,
                     OrderPriorityId = 3,
                     OrderStateId = 2,
@@ -216,7 +212,6 @@ namespace ITAcademyERP.Data
                 new OrderHeader
                 {
                     OrderNumber = "2020-03",
-                    ClientId = 1,
                     EmployeeId = 2,
                     OrderPriorityId = 2,
                     OrderStateId = 1,

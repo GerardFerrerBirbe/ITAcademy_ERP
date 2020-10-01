@@ -8,7 +8,7 @@
     </li>
     <li *ngIf="isLogged()">{{ userName }}</li>
     <li *ngIf="isLogged()" [routerLinkActive]='["link-active"]'>
-      <a (click)='logout()'>
+      <a [routerLink]='["/login"]' (click)='logout()'>
         <span class='glyphicon glyphicon-th-list'></span> Logout
       </a>
     </li>

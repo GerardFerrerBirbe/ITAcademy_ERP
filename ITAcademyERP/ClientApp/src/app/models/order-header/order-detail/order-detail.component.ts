@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderHeader } from '../order-header';
 import { ActivatedRoute } from '@angular/router';
-import { Location, DatePipe } from '@angular/common';
+import { Location } from '@angular/common';
 import { OrderHeaderService }  from '../../../models/order-header/order-header.service';
 import { OrderLineService } from '../../order-line/order-line.service';
 import { OrderStateService } from '../../order-state/order-state.service';
 import { OrderPriorityService } from '../../order-priority/order-priority.service';
-import { EmployeeService } from '../../employee/employee.service';
 import { ClientService } from '../../client/client.service';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { OrderState } from '../../order-state/order-state';
 import { OrderPriority } from '../../order-priority/order-priority';
-import { Employee } from '../../employee/employee';
 import { Client } from '../../client/client';
 import { Product } from '../../product/product';
 import { ProductService } from 'src/app/models/product/product.service';
+import { EmployeeService } from '../../employee/employee.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -26,13 +25,12 @@ export class OrderDetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private datePipe: DatePipe,
     private orderHeaderService: OrderHeaderService,
     private orderLineService: OrderLineService,
     private orderStateService: OrderStateService,
     private orderPriorityService: OrderPriorityService,
-    private employeeService: EmployeeService,
     private clientService: ClientService,
+    private employeeService: EmployeeService,
     private productService: ProductService,
     private location: Location
   ) { }
@@ -42,11 +40,11 @@ export class OrderDetailComponent implements OnInit {
   orderHeaderId: any;
   orderLinesToDelete: number[] = [];
 
+  orderHeader: OrderHeader;
   orderHeaders: OrderHeader[];
 
   orderStates: OrderState[];
   orderPriorities: OrderPriority[];
-  employees: Employee[];
   clients: Client[];
   products: Product[];
 
@@ -59,12 +57,8 @@ export class OrderDetailComponent implements OnInit {
       orderNumber: '',
       address: '',
       client: '',
-      employee: '',
       orderState: '',
       orderPriority: '',
-      creationDate: '',
-      assignToEmployeeDate: '',
-      finalisationDate: '',
       orderLines: this.fb.array([])
     });
     
@@ -73,9 +67,6 @@ export class OrderDetailComponent implements OnInit {
 
     this.orderPriorityService.getOrderPriorities()
     .subscribe(orderPriorities => this.orderPriorities = orderPriorities);
-
-    this.employeeService.getEmployees()
-    .subscribe(employees => this.employees = employees);
 
     this.clientService.getClients()
     .subscribe(clients => this.clients = clients);
@@ -92,7 +83,10 @@ export class OrderDetailComponent implements OnInit {
       this.orderHeaderId = params["id"];
       
       this.orderHeaderService.getOrderHeader(this.orderHeaderId.toString())
-      .subscribe(orderHeader => this.loadForm(orderHeader));
+      .subscribe(orderHeader => {
+        this.orderHeader = orderHeader;
+        this.loadForm(orderHeader);
+      });
     });
   }
 
@@ -101,12 +95,8 @@ export class OrderDetailComponent implements OnInit {
       orderNumber: orderHeader.orderNumber,
       address: orderHeader.address,
       client: orderHeader.client,
-      employee: orderHeader.employee,
       orderState: orderHeader.orderState,
-      orderPriority: orderHeader.orderPriority,
-      creationDate: this.datePipe.transform(orderHeader.creationDate, "yyyy-MM-dd"),
-      assignToEmployeeDate: this.datePipe.transform(orderHeader.assignToEmployeeDate, "yyyy-MM-dd"),
-      finalisationDate: this.datePipe.transform(orderHeader.finalisationDate, "yyyy-MM-dd")
+      orderPriority: orderHeader.orderPriority
     });
         
       orderHeader.orderLines.forEach(orderLine => {
@@ -147,11 +137,14 @@ export class OrderDetailComponent implements OnInit {
     if (this.editionMode){
       //edit order     
       this.orderHeaderId = parseInt(this.orderHeaderId);
-      orderHeader.id = this.orderHeaderId;      
+      orderHeader.id = this.orderHeaderId;     
       this.orderHeaderService.updateOrderHeader(orderHeader)
       .subscribe(() => this.deleteOrderLines());
     } else {
       //add order
+      let userName = localStorage.getItem('userName');
+      this.employeeService.getEmployeeName(userName)
+      .subscribe(employee => orderHeader.employee = employee.firstName + ' ' + employee.lastName);
       this.orderHeaderService.addOrderHeader(orderHeader)
       .subscribe();
     }    

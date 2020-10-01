@@ -54,15 +54,11 @@
     </tr>
     <tr>      
       <td>
-        <div class="form-group">
+        <div *ngIf="orderHeader">
           <label for="employeeId">Empleat</label>
-          <select
-          class="form-control"
-          id="employeeId"
-          formControlName="employee"
-          size="1">
-          <option *ngFor="let employee of employees">{{ employee.firstName }} {{ employee.lastName }}</option>
-        </select>
+          <div>
+            {{ orderHeader.employee }}
+          </div>
         </div>
       </td>      
     </tr>
@@ -82,38 +78,26 @@
     </tr>
     <tr>
       <td>
-        <div class="form-group">
+        <div *ngIf="orderHeader">
           <label for="creationDateId">Data Creació</label>
           <div>
-            <input class="form-control"
-            id="creationDateId"
-            type="date"
-            required
-            formControlName="creationDate"/>
+            {{ orderHeader.creationDate | date: 'dd/MM/yyyy'}}
           </div>
         </div>
       </td>
       <td>
-        <div class="form-group">
+        <div *ngIf="orderHeader">
           <label for="assignToEmployeeDateId">Data Assignació Empleat</label>
           <div>
-            <input class="form-control"
-            id="assignToEmployeeDateId"
-            type="date"
-            required
-            formControlName="assignToEmployeeDate"/>
+            {{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy'}}
           </div>
-        </div>
+        </div>        
       </td>
       <td>
-        <div class="form-group">
+        <div *ngIf="orderHeader">
           <label for="finalisationDateId">Data Finalització</label>
           <div>
-            <input class="form-control"
-            id="finalisationDateId"
-            type="date"
-            required
-            formControlName="finalisationDate"/>
+            {{ orderHeader.finalisationDate | date: 'dd/MM/yyyy'}}
           </div>
         </div>
       </td>

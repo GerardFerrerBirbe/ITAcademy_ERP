@@ -28,7 +28,7 @@ export class PersonService {
   }
 
   updatePerson(person: Person): Observable<Person> {
-    return this.http.put<Person>(this.apiUrl + "/" + person.id.toString(), person, this.httpOptions);
+    return this.http.put<Person>(this.apiUrl + "/" + person.id, person, this.httpOptions);
   }
 
   addPerson(person: Person): Observable<Person> {

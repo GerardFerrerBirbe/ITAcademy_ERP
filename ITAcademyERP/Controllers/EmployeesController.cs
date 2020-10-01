@@ -57,6 +57,27 @@ namespace ITAcademyERP.Controllers
             return EmployeeToDTO(employee);
         }
 
+        // GET: api/Employees
+        [Route("User")]
+        [HttpGet]
+        public async Task<ActionResult<EmployeeDTO>> GetEmployeeName(string user)
+        {
+            var employee = await _context.Employees
+                .Include(e => e.Person)
+                .ThenInclude(p => p.Addresses)
+                .SingleOrDefaultAsync(e => e.Person.Email == user);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            //var employeeName = employee.Person.FirstName + ' ' + employee.Person.LastName;
+
+            //return employeeName;
+            return EmployeeToDTO(employee);
+        }
+
         // PUT: api/Employees/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

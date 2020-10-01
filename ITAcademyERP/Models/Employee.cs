@@ -12,7 +12,7 @@ namespace ITAcademyERP.Models
         }
 
         public int Id { get; set; }
-        public int PersonId { get; set; }
+        public string PersonId { get; set; }
         public string Position { get; set; }
         public double Salary { get; set; }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Models
 {
-    public class ApplicationUser: IdentityUser
+    public class ApplicationUser
     {
     }
 }

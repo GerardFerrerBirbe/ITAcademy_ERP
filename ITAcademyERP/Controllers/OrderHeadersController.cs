@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class OrderHeadersController : ControllerBase
     {
@@ -52,8 +52,8 @@ namespace ITAcademyERP.Controllers
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
                     .Include(o => o.OrderPriority)
-                    .Select(o => OrderHeaderToDTO(o))
-                    .ToListAsync();           
+                    .Select(o => OrderHeaderToDTO(o))                    
+                    .ToListAsync();        
 
             return await output;
         }
@@ -251,9 +251,8 @@ namespace ITAcademyERP.Controllers
                 EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee),
                 OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState),
                 OrderPriorityId = _orderPrioritiesController.GetOrderPriorityId(orderHeaderDTO.OrderPriority),
-                CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate),
-                AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate),
-                FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate)
+                CreationDate = DateTime.Now,
+                AssignToEmployeeDate = DateTime.Now
             };
 
             _context.OrderHeaders.Add(orderHeader);
@@ -283,8 +282,8 @@ namespace ITAcademyERP.Controllers
             return _context.OrderHeaders.Any(e => e.Id == id);
         }
 
-        public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
-
+        public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {            
+            
             var orderHeaderDTO = new OrderHeaderDTO
             {
                 Id = orderHeader.Id,

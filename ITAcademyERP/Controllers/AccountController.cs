@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ITAcademyERP.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ITAcademyERP.Controllers
 {
@@ -22,15 +23,15 @@ namespace ITAcademyERP.Controllers
     public class AccountController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<Person> _userManager;
+        private readonly SignInManager<Person> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ITAcademyERPContext _context;
 
         public AccountController(
             RoleManager<IdentityRole> roleManager,
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<Person> userManager,
+            SignInManager<Person> signInManager,
             IConfiguration configuration,
             ITAcademyERPContext context)
         {
@@ -43,12 +44,33 @@ namespace ITAcademyERP.Controllers
 
         [Route("Create")]
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserInfo model)
+        public async Task<IActionResult> CreatePassword([FromBody] UserInfo model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var user = _context.People.SingleOrDefault(p => p.Email == model.Email);
+
+                if (user == default)
+                {
+                    ModelState.AddModelError(string.Empty, "Email not registered. Please contact with admin responsible");
+                    return BadRequest(ModelState);
+                }
+
+                user.UserName = model.Email;
+
+                if (user.PasswordHash != null)
+                {
+                    ModelState.AddModelError(string.Empty, "User already registered. Please sign in");
+                    return BadRequest(ModelState);
+                }
+
+                var hasher = new PasswordHasher<IdentityUser>();
+
+                user.PasswordHash = hasher.HashPassword(user, model.Password);
+
+                _context.Entry(user).State = EntityState.Modified;
+
+                var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
@@ -57,14 +79,14 @@ namespace ITAcademyERP.Controllers
                 }
                 else
                 {
-                    return BadRequest("Username or password invalid");
+                    return BadRequest(ModelState);
                 }
             }
             else
             {
                 return BadRequest(ModelState);
             }
-        }
+        }                
 
         [HttpPost]
         [Route("Login")]

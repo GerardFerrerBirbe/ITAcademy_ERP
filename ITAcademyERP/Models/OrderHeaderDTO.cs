@@ -16,7 +16,7 @@ namespace ITAcademyERP.Models
         public string OrderPriority { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime AssignToEmployeeDate { get; set; }
-        public DateTime FinalisationDate { get; set; }
+        public DateTime? FinalisationDate { get; set; }
 
         public ICollection<OrderLineDTO> OrderLines { get; set; }
     }

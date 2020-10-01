@@ -36,7 +36,7 @@ namespace ITAcademyERP.Controllers
                 .ToListAsync();
         }
 
-        public async Task<IActionResult> UpdatePerson(int id, PersonDTO personDTO)
+        public async Task<IActionResult> UpdatePerson(string id, PersonDTO personDTO)
         {            
             var person = await _context.People.FindAsync(id);
 
@@ -71,7 +71,7 @@ namespace ITAcademyERP.Controllers
             return NoContent();
         }
 
-        private bool PersonExists(int id)
+        private bool PersonExists(string id)
         {
             return _context.People.Any(e => e.Id == id);
         }

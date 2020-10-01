@@ -14,16 +14,16 @@ namespace ITAcademyERP.Controllers
 {
     
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [ApiController]    
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<Person> userManager;
 
         public RolesController(
             RoleManager<IdentityRole> roleManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<Person> userManager)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;

@@ -26,6 +26,11 @@ export class EmployeeService {
     return this.http.get<Employee>(url, {params: params});
   }
 
+  getEmployeeName(user: string): Observable<Employee> {
+    let params = new HttpParams().set('user', user);
+    return this.http.get<Employee>(this.apiUrl + "/User", {params: params});
+  }
+
   updateEmployee(employee: Employee): Observable<Employee> {
     return this.http.put<Employee>(this.apiUrl + "/" + employee.id.toString(), employee, this.httpOptions);
   }
