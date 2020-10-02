@@ -15,7 +15,7 @@ export class AppComponent {
 
     isExpanded = false;
     public userName = '';
-    public adminUser = 'false';
+    public isAdminUser = 'false';
     
 
     collapse() {
@@ -29,14 +29,14 @@ export class AppComponent {
     logout() {
       this.accountService.logout();
       this.userName = '';
-      this.adminUser = 'false';
+      this.isAdminUser = 'false';
       this.router.navigate(['/']);
     }
 
     isLogged() {
       if (this.accountService.isLogged()) {
         this.userName = localStorage.getItem('userName');
-        this.adminUser = localStorage.getItem('adminUser');
+        this.isAdminUser = localStorage.getItem('isAdminUser');
         return true;
       }
       return false;

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AccountService {
-  // pass: Aa123456!
+  // pass: Aa111111!
   private apiURL = 'api/account';
 
   constructor(private http: HttpClient) { }
@@ -29,7 +29,7 @@ export class AccountService {
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenExpiration");
-    localStorage.removeItem("adminUser");
+    localStorage.removeItem("isAdminUser");
     localStorage.removeItem("userName");
   }
 
@@ -49,7 +49,7 @@ export class AccountService {
       // The token is already expired
       localStorage.removeItem('token');
       localStorage.removeItem('tokenExpiration');
-      localStorage.removeItem('adminUser');
+      localStorage.removeItem('isAdminUser');
       localStorage.removeItem('userName');
       return false;
     } else {

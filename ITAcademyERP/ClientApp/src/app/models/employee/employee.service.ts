@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Employee } from './employee';
+import { Person } from '../person/person';
 
 @Injectable({
   providedIn: 'root'
@@ -24,11 +25,6 @@ export class EmployeeService {
     const url = `${this.apiUrl}/${id}`;
     let params = new HttpParams().set('includePerson', "true");
     return this.http.get<Employee>(url, {params: params});
-  }
-
-  getEmployeeName(user: string): Observable<Employee> {
-    let params = new HttpParams().set('user', user);
-    return this.http.get<Employee>(this.apiUrl + "/User", {params: params});
   }
 
   updateEmployee(employee: Employee): Observable<Employee> {

@@ -10,23 +10,27 @@ using ITAcademyERP.Data;
 using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
         private readonly ITAcademyERPContext _context;
         private readonly PeopleController _peopleController;
+        private readonly UserManager<Person> _userManager;
 
         public EmployeesController(
             ITAcademyERPContext context,
-            PeopleController peopleController)
+            PeopleController peopleController,
+            UserManager<Person> userManager)
         {
             _context = context;
             _peopleController = peopleController;
+            _userManager = userManager;
         }
 
         // GET: api/Employees
@@ -57,31 +61,10 @@ namespace ITAcademyERP.Controllers
             return EmployeeToDTO(employee);
         }
 
-        // GET: api/Employees
-        [Route("User")]
-        [HttpGet]
-        public async Task<ActionResult<EmployeeDTO>> GetEmployeeName(string user)
-        {
-            var employee = await _context.Employees
-                .Include(e => e.Person)
-                .ThenInclude(p => p.Addresses)
-                .SingleOrDefaultAsync(e => e.Person.Email == user);
-
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            //var employeeName = employee.Person.FirstName + ' ' + employee.Person.LastName;
-
-            //return employeeName;
-            return EmployeeToDTO(employee);
-        }
-
         // PUT: api/Employees/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, EmployeeDTO employeeDTO)
         {
@@ -145,6 +128,8 @@ namespace ITAcademyERP.Controllers
                 var person = new Person
                 {
                     Email = employeeDTO.Email,
+                    UserName = employeeDTO.Email,
+                    NormalizedUserName = employeeDTO.Email.ToUpper(),
                     FirstName = employeeDTO.FirstName,
                     LastName = employeeDTO.LastName
                 };

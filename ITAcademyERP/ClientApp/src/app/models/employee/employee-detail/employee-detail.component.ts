@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { OrderHeaderService } from 'src/app/models/order-header/order-header.service';
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
+import { AccountService } from 'src/app/login/account.service';
 
 @Component({
   selector: 'app-employee-detail',
@@ -21,6 +22,7 @@ export class EmployeeDetailComponent implements OnInit {
     private employeeService: EmployeeService,
     private addressService: AddressService,
     private orderHeaderService: OrderHeaderService,
+    private accountService: AccountService,
     private location: Location
   ) { }
 
@@ -80,7 +82,7 @@ export class EmployeeDetailComponent implements OnInit {
   buildAddress(){
     return this.fb.group({
       id: 0,
-      personId: this.personId != null ? parseInt(this.personId) : 0,
+      personId: this.personId != null ? this.personId : '',
       name: '',
       type: ''
     })
@@ -138,6 +140,13 @@ export class EmployeeDetailComponent implements OnInit {
   
   goBack(): void {
     this.location.back();
+  }
+
+  isAdminUser() {
+    if (this.accountService.isLogged() && localStorage.getItem('isAdminUser') == 'true') {
+      return true;
+    }
+    return false;
   }
 
 }

@@ -41,7 +41,7 @@
       formControlName="position"/>
     </div>
   </div>
-  <div class="form-group">
+  <div *ngIf="isAdminUser()" class="form-group">
     <label for="salaryId">Salari</label>
     <div>
       <input class="form-control"

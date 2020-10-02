@@ -77,7 +77,7 @@ export class ClientDetailComponent implements OnInit {
   buildAddress(){
     return this.fb.group({
       id: 0,
-      personId: this.personId != null ? parseInt(this.personId) : 0,
+      personId: this.personId != null ? this.personId : '',
       name: '',
       type: ''
     })

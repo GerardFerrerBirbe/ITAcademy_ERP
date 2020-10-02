@@ -55,9 +55,7 @@ namespace ITAcademyERP.Controllers
                     ModelState.AddModelError(string.Empty, "Email not registered. Please contact with admin responsible");
                     return BadRequest(ModelState);
                 }
-
-                user.UserName = model.Email;
-
+                
                 if (user.PasswordHash != null)
                 {
                     ModelState.AddModelError(string.Empty, "User already registered. Please sign in");
@@ -140,14 +138,16 @@ namespace ITAcademyERP.Controllers
                expires: expiration,
                signingCredentials: creds);
 
-            var adminUser = roles.Contains("Admin");
+            var user = _context.People.FirstOrDefault(p => p.Email == userInfo.Email);
+            var userName = user.FirstName + ' ' + user.LastName;
+            var isAdminUser = roles.Contains("Admin");
             
             return Ok(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 expiration = expiration,
-                userName = userInfo.Email,
-                adminUser = adminUser
+                userName = userName,
+                isAdminUser = isAdminUser
             });
         }        
     }

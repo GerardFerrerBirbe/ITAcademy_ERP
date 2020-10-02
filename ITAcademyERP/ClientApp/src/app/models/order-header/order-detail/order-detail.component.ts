@@ -14,6 +14,8 @@ import { Client } from '../../client/client';
 import { Product } from '../../product/product';
 import { ProductService } from 'src/app/models/product/product.service';
 import { EmployeeService } from '../../employee/employee.service';
+import { Employee } from '../../employee/employee';
+import { AccountService } from 'src/app/login/account.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -32,10 +34,12 @@ export class OrderDetailComponent implements OnInit {
     private clientService: ClientService,
     private employeeService: EmployeeService,
     private productService: ProductService,
+    private accountService: AccountService,
     private location: Location
   ) { }
 
   editionMode: boolean = false;
+  userName: string;
   formGroup: FormGroup;
   orderHeaderId: any;
   orderLinesToDelete: number[] = [];
@@ -45,6 +49,7 @@ export class OrderDetailComponent implements OnInit {
 
   orderStates: OrderState[];
   orderPriorities: OrderPriority[];
+  employees: Employee[];
   clients: Client[];
   products: Product[];
 
@@ -55,18 +60,23 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       orderNumber: '',
-      address: '',
       client: '',
+      employee: '',
       orderState: '',
       orderPriority: '',
       orderLines: this.fb.array([])
     });
+
+    this.getUser();
     
     this.orderStateService.getOrderStates()
     .subscribe(orderStates => this.orderStates = orderStates);
 
     this.orderPriorityService.getOrderPriorities()
     .subscribe(orderPriorities => this.orderPriorities = orderPriorities);
+
+    this.employeeService.getEmployees()
+    .subscribe(employees => this.employees = employees);
 
     this.clientService.getClients()
     .subscribe(clients => this.clients = clients);
@@ -93,7 +103,7 @@ export class OrderDetailComponent implements OnInit {
   loadForm(orderHeader: OrderHeader){
     this.formGroup.patchValue({
       orderNumber: orderHeader.orderNumber,
-      address: orderHeader.address,
+      employee: orderHeader.employee,
       client: orderHeader.client,
       orderState: orderHeader.orderState,
       orderPriority: orderHeader.orderPriority
@@ -143,8 +153,7 @@ export class OrderDetailComponent implements OnInit {
     } else {
       //add order
       let userName = localStorage.getItem('userName');
-      this.employeeService.getEmployeeName(userName)
-      .subscribe(employee => orderHeader.employee = employee.firstName + ' ' + employee.lastName);
+      orderHeader.employee = userName;
       this.orderHeaderService.addOrderHeader(orderHeader)
       .subscribe();
     }    
@@ -163,4 +172,15 @@ export class OrderDetailComponent implements OnInit {
     this.location.back();
   }
 
+  isAdminUser() {
+    if (this.accountService.isLogged() && localStorage.getItem('isAdminUser') == 'true') {
+      return true;
+    }
+    return false;
+  }
+
+  getUser() {
+    this.userName = localStorage.getItem('userName');
+  }
+  
 }

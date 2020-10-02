@@ -23,6 +23,7 @@
           id="orderStateId"
           formControlName="orderState"
           size="1">
+          <option disabled selected value> -- Estat -- </option>
           <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
         </select>
         </div>
@@ -35,30 +36,54 @@
           id="orderPriorityId"
           formControlName="orderPriority"
           size="1">
+          <option disabled selected value> -- Prioritat -- </option>
           <option *ngFor="let orderPriority of orderPriorities">{{ orderPriority.priority }}</option>
         </select>
         </div>
       </td>
       <td>
-        <div class="form-group">
-          <label for="addressId">Adreça</label>
+        <div *ngIf="orderHeader">
+          <label for="addressId">Adreça d'entrega</label>
           <div>
-            <input class="form-control"
-            id="addressId"
-            type="text"
-            required
-            formControlName="address"/>
+            {{ orderHeader.address }}
           </div>
         </div>
       </td>
     </tr>
-    <tr>      
+    <tr *ngIf="!editionMode">      
       <td>
         <div *ngIf="orderHeader">
           <label for="employeeId">Empleat</label>
           <div>
             {{ orderHeader.employee }}
           </div>
+        </div>
+      </td>      
+    </tr>
+    <tr *ngIf="editionMode">      
+      <td>
+        <div *ngIf="isAdminUser()" class="form-group">
+          <label for="employeeId">Empleat</label>
+          <select            
+            class="form-control"
+            id="employeeId"
+            formControlName="employee"
+            size="1">
+            <option disabled selected value> -- Empleat -- </option>
+            <option *ngFor="let employee of employees">{{ employee.firstName }} {{ employee.lastName }}</option>
+          </select>
+        </div>
+        <div *ngIf="!isAdminUser()" class="form-group">
+          <label for="employeeId">Empleat</label>
+          <select            
+            class="form-control"
+            id="employeeId"
+            formControlName="employee"
+            size="1">
+            <option disabled selected value> -- Empleat -- </option>
+            <option *ngIf="orderHeader">{{ orderHeader.employee }}</option>
+            <option *ngIf="userName">{{ userName }}</option>
+          </select>
         </div>
       </td>      
     </tr>
@@ -71,6 +96,7 @@
           id="clientId"
           formControlName="client"
           size="1">
+          <option disabled selected value> -- Client -- </option>
           <option *ngFor="let client of clients">{{ client.firstName }} {{ client.lastName }}</option>
         </select>
         </div>

@@ -158,16 +158,23 @@ namespace ITAcademyERP.Controllers
             if (orderHeader == null)
             {
                 return NotFound();
-            }          
+            }            
+            
+            if (orderHeaderDTO.OrderState == "Complet" && _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState) != orderHeader.OrderStateId)
+            {
+                orderHeader.FinalisationDate = DateTime.Now;
+            }
+
+            if (_employeesController.GetEmployeeId(orderHeaderDTO.Employee) != orderHeader.EmployeeId)
+            {
+                orderHeader.AssignToEmployeeDate = DateTime.Now;
+            }
 
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
             orderHeader.ClientId = _clientsController.GetClientId(orderHeaderDTO.Client);
             orderHeader.EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee);
             orderHeader.OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState);
             orderHeader.OrderPriorityId = _orderPrioritiesController.GetOrderPriorityId(orderHeaderDTO.OrderPriority);
-            orderHeader.CreationDate = Convert.ToDateTime(orderHeaderDTO.CreationDate);
-            orderHeader.AssignToEmployeeDate = Convert.ToDateTime(orderHeaderDTO.AssignToEmployeeDate);
-            orderHeader.FinalisationDate = Convert.ToDateTime(orderHeaderDTO.FinalisationDate);
 
             _context.Entry(orderHeader).State = EntityState.Modified;                   
 
@@ -282,20 +289,20 @@ namespace ITAcademyERP.Controllers
             return _context.OrderHeaders.Any(e => e.Id == id);
         }
 
-        public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {            
-            
+        public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
+
             var orderHeaderDTO = new OrderHeaderDTO
             {
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
-                Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == "Delivery").Name,
+                Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == "Delivery")?.Name,
                 Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
                 Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
                 OrderState = orderHeader.OrderState.State,
                 OrderPriority = orderHeader.OrderPriority.Priority,
                 CreationDate = orderHeader.CreationDate,
                 AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
-                FinalisationDate = orderHeader.FinalisationDate,
+                FinalisationDate = orderHeader.FinalisationDate == null ? null : orderHeader.FinalisationDate,
                 OrderLines = orderHeader.OrderLines.Select(o => OrderLineToDTO(o)).ToList()
             };
 

@@ -12,7 +12,7 @@
       <th>Nom</th>
       <th>Cognoms</th>
       <th>Càrrec</th>
-      <th>Salari</th>
+      <th *ngIf="isAdminUser()">Salari</th>
     </tr>
   </thead>
   <tbody>
@@ -22,7 +22,7 @@
       <td>{{ employee.firstName }}</td>
       <td>{{ employee.lastName }}</td>
       <td>{{ employee.position }}</td>
-      <td>{{ employee.salary }}</td>        
+      <td *ngIf="isAdminUser()">{{ employee.salary }}</td>        
       <td><button routerLink="/employee-detail/{{employee.id}}"
         class="btn-update" title="update employee">Seleccionar</button></td>
       <td><button class="btn-delete" title="delete employee"

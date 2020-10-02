@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('token', token.token);
     localStorage.setItem('tokenExpiration', token.expiration);
     localStorage.setItem('userName', token.userName);
-    localStorage.setItem('adminUser', token.adminUser);
+    localStorage.setItem('isAdminUser', token.isAdminUser);
     this.router.navigate([""]);
   }
 
