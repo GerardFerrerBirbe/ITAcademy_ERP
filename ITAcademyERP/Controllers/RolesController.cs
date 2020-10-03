@@ -29,12 +29,35 @@ namespace ITAcademyERP.Controllers
             this.userManager = userManager;
         }
 
+        //GET: api/Roles
         [HttpGet]
         public IQueryable<IdentityRole> GetRoles()
         {
             var roles = roleManager.Roles;           
             
             return roles;
+        }
+
+        //GET: api/Roles/RoleUsers
+        [Route("RoleUsers")]
+        [HttpGet]
+        public List<UserDTO> GetRoleUsers()
+        {
+            var users = userManager.Users;
+
+            var roleUsers = new List<UserDTO>();
+            
+            foreach (var user in users)
+            {
+                var roleUserDTO = new UserDTO
+                {
+                    Name = user.UserName
+                };
+
+                roleUsers.Add(roleUserDTO);
+            }
+
+            return roleUsers;
         }
 
         // GET: api/Roles/5
@@ -118,15 +141,7 @@ namespace ITAcademyERP.Controllers
 
             role.Name = roleDTO.Name;
 
-            await roleManager.UpdateAsync(role);
-
-            var usersDTO = roleDTO.RoleUsers;
-
-            foreach (var userDTO in usersDTO)
-            {
-                var user = await userManager.FindByNameAsync(userDTO.Name);
-                await userManager.AddToRoleAsync(user, role.Name);
-            }
+            await roleManager.UpdateAsync(role);           
 
             return NoContent();
         }        
@@ -197,6 +212,29 @@ namespace ITAcademyERP.Controllers
             }
 
             return Ok();
-        }        
+        }
+
+        // PUT: api/Roles
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        
+        [HttpPut]
+        public async Task<IActionResult> UpdateRoleUser(UserDTO userDTO, string addOrRemove)
+        {
+            var role = await roleManager.FindByIdAsync(userDTO.RoleId);
+
+            var user = await userManager.FindByNameAsync(userDTO.Name);
+
+            if (addOrRemove == "add")
+            {
+                await userManager.AddToRoleAsync(user, role.Name);
+            }
+
+            if (addOrRemove == "remove")
+            {
+                await userManager.RemoveFromRoleAsync(user, role.Name);
+            }
+            return NoContent();            
+        }
     }
 }

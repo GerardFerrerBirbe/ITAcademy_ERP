@@ -180,7 +180,6 @@ namespace ITAcademyERP.Controllers
 
             try
             {
-                await CreateOrEditOrderLines(orderHeaderDTO.OrderLines);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -196,53 +195,7 @@ namespace ITAcademyERP.Controllers
             }
 
             return NoContent();
-        }
-
-        private async Task CreateOrEditOrderLines(ICollection<OrderLineDTO> orderLinesDTO)
-        {
-            ICollection<OrderLineDTO> orderLinesToCreate = orderLinesDTO.Where(x => x.Id == 0).ToList();
-            ICollection<OrderLineDTO> orderLinesToEdit = orderLinesDTO.Where(x => x.Id != 0).ToList();
-
-            if (orderLinesToCreate.Any())
-            {               
-                foreach (var orderLineDTO in orderLinesToCreate)
-                {
-                    if (orderLineDTO.ProductName == "")
-                        return;
-                    
-                    var orderLine = new OrderLine
-                    {
-                        Id = orderLineDTO.Id,
-                        OrderHeaderId = orderLineDTO.OrderHeaderId,
-                        ProductId = _productsController.GetProductId(orderLineDTO.ProductName),
-                        UnitPrice = orderLineDTO.UnitPrice,
-                        Vat = orderLineDTO.Vat,
-                        Quantity = orderLineDTO.Quantity
-                    };
-
-                    _context.OrderLines.Add(orderLine);
-                    await _context.SaveChangesAsync();
-
-                    CreatedAtAction("GetOrderLine", new { id = orderLine.Id }, OrderLineToDTO(orderLine));
-                }                
-            }
-
-            if (orderLinesToEdit.Any())
-            {
-                foreach (var orderLineDTO in orderLinesToEdit)
-                {
-                    var orderLine = _context.OrderLines.FirstOrDefault(x => x.Id == orderLineDTO.Id);
-
-                    orderLine.OrderHeaderId = orderLineDTO.OrderHeaderId;
-                    orderLine.ProductId = _productsController.GetProductId(orderLineDTO.ProductName);
-                    orderLine.UnitPrice = orderLineDTO.UnitPrice;
-                    orderLine.Vat = orderLineDTO.Vat;
-                    orderLine.Quantity = orderLineDTO.Quantity;
-                    
-                    _context.Entry(orderLine).State = EntityState.Modified;
-                }
-            }
-        }
+        }       
 
         // POST: api/OrderHeaders
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

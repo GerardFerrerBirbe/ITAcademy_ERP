@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { Role } from '../role';
 
 import { RoleService } from '../role.service';
+import { RoleUser } from '../roleUser';
 
 @Component({
   selector: 'app-role-detail',
@@ -21,21 +22,22 @@ export class RoleDetailComponent implements OnInit {
   ) { }
 
   editionMode: boolean = false;
-  formGroup: FormGroup;
+  roleFormGroup: FormGroup;
+  roleUserFormGroup: FormGroup;
   roleId: any;
-  roleUserLinesToDelete: string[] = [];
 
   roles: Role[];
-
-  get roleUsers(): FormArray {
-    return this.formGroup.get('roleUsers') as FormArray;
-  }
+  users: RoleUser[];
+  currentRoleUsers: RoleUser[];
 
   ngOnInit(): void {
-    this.formGroup = this.fb.group({
+    this.roleFormGroup = this.fb.group({
+      name: ''
+    });
+
+    this.roleUserFormGroup = this.fb.group({
       name: '',
-      roleUsers: this.fb.array([])
-    });  
+    });
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
@@ -43,73 +45,65 @@ export class RoleDetailComponent implements OnInit {
       }
       this.editionMode = true;
 
+      this.roleService.getUsers()
+      .subscribe(users => this.users = users);
+
       this.roleId = params["id"];
 
       this.roleService.getRole(this.roleId)
-      .subscribe(role => this.loadForm(role));
+      .subscribe(role => {
+        this.loadRoleForm(role);
+        this.currentRoleUsers = role.roleUsers;
+      });
     });    
   }
 
-  loadForm(role: Role){
-    this.formGroup.patchValue({
+  loadRoleForm(role: Role){
+    this.roleFormGroup.patchValue({
       name: role.name
     });
+  }
 
-    role.roleUsers.forEach(roleUser => {
-      let roleUserFG = this.buildRoleUser();
-      roleUserFG.patchValue(roleUser);
-      this.roleUsers.push(roleUserFG);
+  addRoleUserLine(){
+    let roleUser: RoleUser = Object.assign({}, this.roleUserFormGroup.value);
+    console.table(roleUser);
+    roleUser.roleId = this.roleId;
+    
+    this.roleService.updateRoleUser(roleUser, 'add')
+    .subscribe(() => this.updateRoleUsers());
+
+    this.roleUserFormGroup = this.fb.group({
+      name: '',
     });
   }
 
-  buildRoleUser(){
-    return this.fb.group({
-      id: '',
-      roleId: this.roleId != null ? this.roleId : '',
-      name: ''
-    })
+  updateRoleUsers(){
+    this.roleService.getRole(this.roleId)
+    .subscribe(role => this.currentRoleUsers = role.roleUsers);  
   }
 
-  addRoleUser(){
-    let roleUserFG = this.buildRoleUser();
-    this.roleUsers.push(roleUserFG);
-  }
-
-  deleteRoleUser(index: number){
-    let roleUserToDelete = this.roleUsers.at(index) as FormGroup;
-    if (roleUserToDelete.controls['id'].value != '') {
-      this.roleUserLinesToDelete.push(<string>roleUserToDelete.controls['id'].value);
-    }
-    this.roleUsers.removeAt(index);
+  removeUserInRole(roleUserToRemove: RoleUser){
+    this.currentRoleUsers = this.currentRoleUsers.filter(r => r !== roleUserToRemove);
+    this.roleService.updateRoleUser(roleUserToRemove, 'remove').subscribe();
   }
 
   save() {
-    let role: Role = Object.assign({}, this.formGroup.value);
+    let role: Role = Object.assign({}, this.roleFormGroup.value);
     console.table(role);
 
     if (this.editionMode){
       //edit role
       role.id = this.roleId;
       this.roleService.updateRole(role)
-      .subscribe(() => this.deleteRoleUserLines());
+      .subscribe();
     } else {
       //add role
       this.roleService.addRole(role)
       .subscribe();
-    }    
-  }
-
-  deleteRoleUserLines(){
-    if (this.roleUserLinesToDelete.length === 0) {
-      return;
     }
-
-    this.roleService.deleteRoleUserLines(this.roleUserLinesToDelete, this.roleId)
-    .subscribe();
   }
   
   goBack(): void {
     this.location.back();
   }
-
 }

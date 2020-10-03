@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OrderLine } from './order-line';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,19 @@ export class OrderLineService {
 
   constructor(private http: HttpClient) { }
 
-  deleteOrderLines(ids: number[]): Observable<void>{
-    return this.http.post<void>(this.apiUrl, ids, this.httpOptions);
+  getOrderLines(): Observable<OrderLine[]>{
+    return this.http.get<OrderLine[]>(this.apiUrl);
   }
   
+  addOrderLine(orderLine: OrderLine): Observable<OrderLine> {
+    return this.http.post<OrderLine>(this.apiUrl, orderLine, this.httpOptions);
+  }
+
+  deleteOrderLine(orderLine: OrderLine | number): Observable<OrderLine> {
+    const id = typeof orderLine === 'number' ? orderLine : orderLine.id;
+    let url = `${this.apiUrl}/${id}`;
+
+    return this.http.delete<OrderLine>(url, this.httpOptions);
+  }
+    
 }

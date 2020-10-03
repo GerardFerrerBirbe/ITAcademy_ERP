@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Role } from './role';
+import { RoleUser } from './roleUser';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class RoleService {
 
   getRoles(): Observable<Role[]>{
     return this.http.get<Role[]>(this.apiUrl);
+  }
+
+  getUsers(): Observable<RoleUser[]>{
+    return this.http.get<RoleUser[]>(this.apiUrl + "/RoleUsers");
   }
 
   getRole(id: string): Observable<Role> {
@@ -40,7 +45,8 @@ export class RoleService {
     return this.http.delete<Role>(url, this.httpOptions);
   }
 
-  deleteRoleUserLines(ids: string[], roleId: string): Observable<void>{
-    return this.http.post<void>(this.apiUrl + "/RoleUsers" + roleId, ids, this.httpOptions);
+  updateRoleUser(roleUser: RoleUser, addOrRemove: string): Observable<RoleUser>{
+    let params = new HttpParams().set('addOrRemove', addOrRemove);
+    return this.http.put<RoleUser>(this.apiUrl, roleUser, {params: params});
   }
 }

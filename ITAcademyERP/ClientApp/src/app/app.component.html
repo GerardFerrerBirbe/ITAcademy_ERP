@@ -15,13 +15,11 @@
 </ul>
 </div>
 <nav *ngIf="isAdminUser == 'true'">
-  <button routerLink="/">Inici</button>
   <button routerLink="/hhrr">Recursos Humans</button>
   <button routerLink="/sales">Vendes</button>
   <button routerLink="/statistics">Estadístiques</button>
 </nav>
 <nav *ngIf="isAdminUser == 'false'">
-  <button routerLink="/">Inici</button>
   <button routerLink="/hhrr">Recursos Humans</button>
   <button routerLink="/sales">Vendes</button>
 </nav>

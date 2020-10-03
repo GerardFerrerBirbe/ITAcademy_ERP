@@ -1,6 +1,6 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nova'}} Comanda</h2>
 <form class="form-horizontal" novalidate
-  (ngSubmit)="save()" [formGroup]="formGroup">
+  (ngSubmit)="save()" [formGroup]="orderHeaderFormGroup">
   <table>
     <tr>
       <td>
@@ -23,9 +23,9 @@
           id="orderStateId"
           formControlName="orderState"
           size="1">
-          <option disabled selected value> -- Estat -- </option>
-          <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
-        </select>
+            <option disabled selected value> -- Estat -- </option>
+            <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
+          </select>
         </div>
       </td>
       <td>
@@ -128,70 +128,7 @@
         </div>
       </td>
     </tr>   
-  </table>      
-
-  <div class="form-group">
-    <button class="btn btn-primary" (click)="addOrderLine()">Afegir Línia Comanda</button>
-  </div>
-  
-  <div formArrayName="orderLines"
-        *ngFor="let orderLine of orderLines.controls; let i = index;">
-    <div [formGroupName]="i">      
-      <div class="form-group">    
-        <label class="col-md-2 control-label" [attr.for]="'productName' + i">
-          Producte
-        </label>            
-        <div class="col-md-8">
-          <input class="form-control" [attr.id]="'productName' + i" type="text" formControlName="productName" />
-        
-          <!-- <select
-          class="form-control"
-          [attr.id]="'productName' + i"
-          formControlName="productName"
-          size="1">
-            <option *ngFor="let product of products">{{ product.productName }}</option>
-          </select> -->
-        </div>
-      </div>    
-      <div class="form-group">  
-        <label class="col-md-2 control-label" [attr.for]="'unitPrice' + i">
-          Preu unitari
-        </label>              
-        <div class="col-md-8">
-          <input class="form-control" [attr.id]="'unitPrice' + i" type="number" formControlName="unitPrice" />
-        </div>
-      </div>          
-      <div class="form-group">  
-        <label class="col-md-2 control-label" [attr.for]="'vat' + i">
-          Tipus IVA
-        </label>            
-        <div class="col-md-8">
-          <input class="form-control" [attr.id]="'vat' + i" type="number" formControlName="vat" />
-        </div>
-      </div>          
-      <div class="form-group"> 
-        <label class="col-md-2 control-label" [attr.for]="'quantity' + i">
-          Quantitat
-        </label>          
-        <div class="col-md-8">
-          <input class="form-control" [attr.id]="'quantity' + i" type="number" formControlName="quantity" />
-        </div>
-      </div>
-      <!-- <div class="form-group"> 
-        <label class="col-md-2 control-label" [attr.for]="'totalPrice' + i">
-          Preu Total
-        </label>          
-        <div class="col-md-8">
-          <input name= [attr.id]="'totalPrice' + i" type="number" formControlName="totalPrice" [value]="calculate()" />
-        </div> 
-      </div>  -->       
-      <div class="form-group">
-        <div class="col-md-10">
-          <button type="button" class="btn btn-danger pull-right" (click)="deleteOrderLine(i)">Borrar línia</button>
-        </div>
-      </div>             
-    </div>  
-  </div>
+  </table>
 
   <div class="form-group">
     <div>
@@ -202,3 +139,83 @@
 </form>
 
 <button (click)="goBack()">Tornar</button>
+
+<fieldset>Detall Comanda:
+  <table *ngIf="orderLines">
+    <thead>
+      <tr>
+        <th>Producte</th>
+        <th>Preu Unitari</th>
+        <th>IVA</th>
+        <th>Quantitat</th>
+        <th>Preu Total</th>        
+      </tr>
+    </thead>
+    <tbody>  
+      <tr *ngFor="let orderLine of orderLines">
+        <td>{{ orderLine.productName }}</td>
+        <td>{{ orderLine.unitPrice }}</td>
+        <td>{{ orderLine.vat }}</td>
+        <td>{{ orderLine.quantity }}</td>
+        <td>{{ orderLine.totalPrice }}</td>
+        <td>
+          <button class="btn-delete" title="delete OrderLine"
+            (click)="deleteOrderLine(orderLine)">Borrar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</fieldset>
+
+<form class="form-horizontal" novalidate
+  (ngSubmit)="addOrderLine()" [formGroup]="orderLineFormGroup">
+  <div class="form-group">
+    <label for="productNameId">Producte</label>
+    <div>
+      <select
+      class="form-control"
+      id="productNameId"
+      formControlName="productName"
+      size="1">
+        <option disabled selected value>-- Producte --</option>
+        <option *ngFor="let product of products">{{ product.productName }}</option>
+    </select>
+    </div>    
+  </div>
+  <div class="form-group">
+    <label for="unitPriceId">Preu unitari</label>
+    <div>
+      <input
+      class="form-control"
+      id="unitPriceId"
+      formControlName="unitPrice"
+      type="number"/>
+    </div>    
+  </div>
+  <div class="form-group">
+    <label for="vatId">IVA</label>
+    <div>
+      <input
+      class="form-control"
+      id="vatId"
+      formControlName="vat"
+      type="number"/>
+    </div>    
+  </div>
+  <div class="form-group">
+    <label for="quantityId">Quantity</label>
+    <div>
+      <input
+      class="form-control"
+      id="quantityId"
+      formControlName="quantity"
+      type="number"/>
+    </div>    
+  </div>
+
+  <div class="form-group">
+    <div>
+      <button type="submit">Afegir línia comanda</button>
+    </div>
+  </div>
+</form>
