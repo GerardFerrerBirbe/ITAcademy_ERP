@@ -287,7 +287,7 @@ namespace ITAcademyERP.Data.Migrations
                     OrderPriorityId = table.Column<int>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     AssignToEmployeeDate = table.Column<DateTime>(nullable: false),
-                    FinalisationDate = table.Column<DateTime>(nullable: false)
+                    FinalisationDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {

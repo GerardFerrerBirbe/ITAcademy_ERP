@@ -68,7 +68,7 @@ export class EmployeeDetailComponent implements OnInit {
       this.orderHeaderService.getOHByEmployee(this.employeeId)
       .subscribe(orderHeaders => {
         this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet" || oh.orderState == "Cancel·lat");
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completat" || oh.orderState == "Cancel·lat");
       }
       );   
     });

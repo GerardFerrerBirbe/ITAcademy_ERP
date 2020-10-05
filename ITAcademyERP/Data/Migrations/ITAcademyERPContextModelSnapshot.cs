@@ -105,7 +105,7 @@ namespace ITAcademyERP.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FinalisationDate")
+                    b.Property<DateTime?>("FinalisationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderNumber")

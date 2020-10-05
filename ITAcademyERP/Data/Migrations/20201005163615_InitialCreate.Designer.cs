@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITAcademyERP.Data.Migrations
 {
     [DbContext(typeof(ITAcademyERPContext))]
-    [Migration("20201001140452_InitialCreate")]
+    [Migration("20201005163615_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace ITAcademyERP.Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FinalisationDate")
+                    b.Property<DateTime?>("FinalisationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderNumber")
