@@ -73,6 +73,16 @@
 
 <button (click)="goBack()">Tornar</button>
 
+<fieldset *ngIf="isAdminUser()">
+  <div>
+    <label><b>Nº comandes:</b></label>
+    <div>{{ totalOrderNumberByClient }}</div>
+  </div>
+  <div>
+    <label><b>Total facturat:</b></label>
+    <div>{{ totalOrderAmountByClient | currency:'EUR'}}</div>
+  </div>
+</fieldset>
 <fieldset>Comandes actuals
   <table *ngIf="currentOhs">
     <thead>

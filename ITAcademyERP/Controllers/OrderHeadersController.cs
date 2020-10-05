@@ -52,6 +52,8 @@ namespace ITAcademyERP.Controllers
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
                     .Include(o => o.OrderPriority)
+                    .Include(o => o.OrderLines)
+                    .ThenInclude(o => o.Product)
                     .Select(o => OrderHeaderToDTO(o))                    
                     .ToListAsync();        
 
@@ -70,6 +72,8 @@ namespace ITAcademyERP.Controllers
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
                     .Include(o => o.OrderPriority)
+                    .Include(o => o.OrderLines)
+                    .ThenInclude(o => o.Product)
                     .Where(o => o.EmployeeId == employeeId)
                     .Select(o => OrderHeaderToDTO(o))
                     .ToListAsync();
@@ -89,6 +93,8 @@ namespace ITAcademyERP.Controllers
                     .ThenInclude(e => e.Person)
                     .Include(o => o.OrderState)
                     .Include(o => o.OrderPriority)
+                    .Include(o => o.OrderLines)
+                    .ThenInclude(o => o.Product)
                     .Where(o => o.ClientId == clientId)
                     .Select(o => OrderHeaderToDTO(o))
                     .ToListAsync();
@@ -244,6 +250,14 @@ namespace ITAcademyERP.Controllers
 
         public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
 
+            var orderLinesDTO = new List<OrderLineDTO>();
+
+            foreach (var orderLine in orderHeader.OrderLines)
+            {
+                var orderLineDTO = OrderLineToDTO(orderLine);
+                orderLinesDTO.Add(orderLineDTO);
+            }
+            
             var orderHeaderDTO = new OrderHeaderDTO
             {
                 Id = orderHeader.Id,
@@ -256,7 +270,7 @@ namespace ITAcademyERP.Controllers
                 CreationDate = orderHeader.CreationDate,
                 AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
                 FinalisationDate = orderHeader.FinalisationDate == null ? null : orderHeader.FinalisationDate,
-                OrderLines = orderHeader.OrderLines.Select(o => OrderLineToDTO(o)).ToList()
+                OrderLines = orderLinesDTO
             };
 
             return orderHeaderDTO;

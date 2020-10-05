@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { OrderHeaderService } from 'src/app/models/order-header/order-header.service';
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
+import { AccountService } from 'src/app/login/account.service';
 
 @Component({
   selector: 'app-client-detail',
@@ -14,13 +15,14 @@ import { AddressService } from '../../address/address.service';
   styleUrls: ['./client-detail.component.css']
 })
 export class ClientDetailComponent implements OnInit {
-
+  
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private clientService: ClientService,
     private addressService: AddressService,
-    private orderHeaderService: OrderHeaderService,    
+    private orderHeaderService: OrderHeaderService,
+    private accountService: AccountService, 
     private location: Location
   ) { }
 
@@ -33,6 +35,9 @@ export class ClientDetailComponent implements OnInit {
   clients: Client[];
   currentOhs: OrderHeader[];
   oldOhs: OrderHeader[];
+  totalOrderAmountByClient: number;
+  totalOrderNumberByClient: number;
+  
 
   get addresses(): FormArray {
     return this.formGroup.get('addresses') as FormArray;
@@ -62,6 +67,7 @@ export class ClientDetailComponent implements OnInit {
 
       this.orderHeaderService.getOHByClient(this.clientId)
       .subscribe(orderHeaders => {
+        this.calculateTotalClient(orderHeaders);
         this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
         this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Complet" || oh.orderState == "Cancel·lat");
       }
@@ -129,6 +135,26 @@ export class ClientDetailComponent implements OnInit {
 
     this.addressService.deleteAddresses(this.addressesToDelete)
     .subscribe();
+  }
+
+  calculateTotalClient(orderHeaders: OrderHeader[]){
+
+    this.totalOrderAmountByClient = 0;
+    this.totalOrderNumberByClient = orderHeaders.length;    
+
+    orderHeaders.forEach(orderHeader => {
+      let orderLines = orderHeader.orderLines;
+            orderLines.forEach(orderLine => {
+        this.totalOrderAmountByClient += orderLine.unitPrice * orderLine.quantity * (1 + orderLine.vat);
+      });
+    });
+  }
+
+  isAdminUser() {
+    if (this.accountService.isLogged() && localStorage.getItem('isAdminUser') == 'true') {
+      return true;
+    }
+    return false;
   }
   
   goBack(): void {
