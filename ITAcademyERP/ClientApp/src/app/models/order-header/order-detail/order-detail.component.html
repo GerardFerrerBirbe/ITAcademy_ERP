@@ -147,21 +147,39 @@
         <th>Producte</th>
         <th>Preu Unitari</th>
         <th>IVA</th>
+        <th>Preu Unitari IVA</th>
         <th>Quantitat</th>
-        <th>Preu Total</th>        
+        <th>Preu Total IVA</th>     
       </tr>
     </thead>
     <tbody>  
       <tr *ngFor="let orderLine of orderLines">
         <td>{{ orderLine.productName }}</td>
         <td>{{ orderLine.unitPrice }}</td>
-        <td>{{ orderLine.vat }}</td>
+        <td>{{ orderLine.vat | percent }}</td>
+        <td>{{ orderLine.unitPrice * (1 + orderLine.vat) }}</td>
         <td>{{ orderLine.quantity }}</td>
-        <td>{{ orderLine.totalPrice }}</td>
+        <td>{{ (orderLine.unitPrice * orderLine.quantity) * (1 + orderLine.vat) | currency: 'EUR'}}</td>
         <td>
           <button class="btn-delete" title="delete OrderLine"
             (click)="deleteOrderLine(orderLine)">Borrar</button>
         </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><b>TOTAL sense IVA</b></td>
+        <td></td>
+        <td><b>IVA</b></td>
+        <td></td>
+        <td><b>TOTAL amb IVA</b></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>{{ totalOrderNoVat }}</td>
+        <td></td>
+        <td>{{ totalVat }}</td>
+        <td></td>
+        <td>{{ totalOrderVat }}</td>
       </tr>
     </tbody>
   </table>
@@ -176,6 +194,7 @@
       class="form-control"
       id="productNameId"
       formControlName="productName"
+      required
       size="1">
         <option disabled selected value>-- Producte --</option>
         <option *ngFor="let product of products">{{ product.productName }}</option>
@@ -189,7 +208,8 @@
       class="form-control"
       id="unitPriceId"
       formControlName="unitPrice"
-      type="number"/>
+      type="number"
+      required/>
     </div>    
   </div>
   <div class="form-group">
@@ -199,7 +219,8 @@
       class="form-control"
       id="vatId"
       formControlName="vat"
-      type="number"/>
+      type="number"
+      required/>
     </div>    
   </div>
   <div class="form-group">
@@ -209,7 +230,8 @@
       class="form-control"
       id="quantityId"
       formControlName="quantity"
-      type="number"/>
+      type="number"
+      required/>
     </div>    
   </div>
 

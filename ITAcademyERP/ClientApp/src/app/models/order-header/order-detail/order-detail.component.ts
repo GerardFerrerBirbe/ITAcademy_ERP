@@ -55,6 +55,10 @@ export class OrderDetailComponent implements OnInit {
   clients: Client[];
   products: Product[];
 
+  totalOrderNoVat: number;
+  totalOrderVat: number;
+  totalVat: number;
+
   ngOnInit(): void {
     this.orderHeaderFormGroup = this.fb.group({
       orderNumber: '',
@@ -67,7 +71,7 @@ export class OrderDetailComponent implements OnInit {
     this.orderLineFormGroup = this.fb.group({
       productName: '',
       unitPrice: 0,
-      vat: 21,
+      vat: 0.21,
       quantity: 0
     });
 
@@ -94,9 +98,6 @@ export class OrderDetailComponent implements OnInit {
       }
       this.editionMode = true;
 
-      // this.orderLineService.getOrderLines()
-      // .subscribe(orderLines => this.orderLines = orderLines);      
-
       this.orderHeaderId = params["id"];
       
       this.orderHeaderService.getOrderHeader(this.orderHeaderId.toString())
@@ -104,6 +105,7 @@ export class OrderDetailComponent implements OnInit {
         this.orderHeader = orderHeader;
         this.loadForm(orderHeader);
         this.orderLines = orderHeader.orderLines;
+        this.calculateTotalOrder();
       });
     });
   }
@@ -124,24 +126,28 @@ export class OrderDetailComponent implements OnInit {
     orderLine.orderHeaderId = this.orderHeaderId;
 
     this.orderLineService.addOrderLine(orderLine)
-    .subscribe(() => this.updateOrderLines());
+    .subscribe(() => this.updateOrderLines());   
 
     this.orderLineFormGroup = this.fb.group({
       productName: '',
       unitPrice: 0,
-      vat: 21,
+      vat: 0.21,
       quantity: 0
     })
   }  
   
   updateOrderLines(){
     this.orderHeaderService.getOrderHeader(this.orderHeaderId)
-    .subscribe(orderHeader => this.orderLines = orderHeader.orderLines);
+    .subscribe(orderHeader => {
+      this.orderLines = orderHeader.orderLines;      
+      this.calculateTotalOrder();
+    });
   }
 
   deleteOrderLine(orderLineToRemove: OrderLine){
     this.orderLines = this.orderLines.filter(r => r !== orderLineToRemove);
-    this.orderLineService.deleteOrderLine(orderLineToRemove);
+    this.orderLineService.deleteOrderLine(orderLineToRemove)
+    .subscribe(() => this.updateOrderLines());
   }
 
   save() {
@@ -176,6 +182,19 @@ export class OrderDetailComponent implements OnInit {
 
   getUser() {
     this.userName = localStorage.getItem('userName');
+  }
+
+  calculateTotalOrder() {
+    
+    this.totalOrderNoVat = 0;
+    this.totalOrderVat = 0;
+    this.totalVat = 0;
+    
+    this.orderLines.forEach(orderLine => {
+      this.totalOrderNoVat += orderLine.unitPrice * orderLine.quantity;
+      this.totalOrderVat += orderLine.unitPrice * orderLine.quantity * (1 + orderLine.vat);
+      this.totalVat += orderLine.unitPrice * orderLine.quantity * (orderLine.vat);
+    });
   }
   
 }

@@ -3,6 +3,6 @@ export interface OrderLine {
   orderHeaderId: number;
   productName: string;
   unitPrice: number;
-  vat: string;
-  quantity: string
+  vat: number;
+  quantity: number
 }
