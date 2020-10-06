@@ -55,17 +55,14 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, ProductDTO productDTO)
         {
-            if (id != productDTO.Id)
+            var product = await _context.Products
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (product.ProductName != productDTO.ProductName && ProductNameExists(productDTO.ProductName))
             {
-                return BadRequest();
+                ModelState.AddModelError(string.Empty, "Producte ja existent");
+                return BadRequest(ModelState);
             }
-
-            var product = await _context.Products.FindAsync(id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }            
 
             var productCategoryId = _context.ProductCategories
                             .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
@@ -101,20 +98,28 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
         {
-            var productCategoryId = _context.ProductCategories
-                            .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
-                            .Id;
-
-            var product = new Product
+            if (!ProductNameExists(productDTO.ProductName))
             {
-                ProductName = productDTO.ProductName,
-                ProductCategoryId = productCategoryId
-            };
-            
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+                var productCategoryId = _context.ProductCategories
+                                .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
+                                .Id;
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, ProductToDTO(product));
+                var product = new Product
+                {
+                    ProductName = productDTO.ProductName,
+                    ProductCategoryId = productCategoryId
+                };
+
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, ProductToDTO(product));
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Producte ja existent");
+                return BadRequest(ModelState);
+            }
         }
 
         // DELETE: api/Products/5
@@ -152,6 +157,11 @@ namespace ITAcademyERP.Controllers
             var productId = _context.Products.FirstOrDefault(x => x.ProductName == productName).Id;
 
             return productId;
+        }
+
+        private bool ProductNameExists(string name)
+        {
+            return _context.Products.Any(p => p.ProductName == name);
         }
     }
 }

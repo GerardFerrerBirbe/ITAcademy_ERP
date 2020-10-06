@@ -48,13 +48,13 @@ namespace ITAcademyERP.Controllers
 
                 if (user == default)
                 {
-                    ModelState.AddModelError(string.Empty, "Email not registered. Please contact with admin responsible");
+                    ModelState.AddModelError(string.Empty, "Email no registrat. Contacta amb l'administrador");
                     return BadRequest(ModelState);
                 }
                 
                 if (user.PasswordHash != null)
                 {
-                    ModelState.AddModelError(string.Empty, "User already registered. Please sign in");
+                    ModelState.AddModelError(string.Empty, "Usuari ja registrat. Clica al botó de 'Login'");
                     return BadRequest(ModelState);
                 }
 
@@ -99,7 +99,7 @@ namespace ITAcademyERP.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Contrasenya incorrecte");
                     return BadRequest(ModelState);
                 }
             }

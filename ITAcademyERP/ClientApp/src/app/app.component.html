@@ -19,8 +19,9 @@
   <button routerLink="/sales">Vendes</button>
   <button routerLink="/statistics">Estadístiques</button>
 </nav>
-<nav *ngIf="isAdminUser == 'false'">
+<nav *ngIf="isAdminUser == 'false' && isLogged()">
   <button routerLink="/hhrr">Recursos Humans</button>
   <button routerLink="/sales">Vendes</button>
 </nav>
+<nav *ngIf="!isLogged()"></nav>
 <router-outlet></router-outlet>

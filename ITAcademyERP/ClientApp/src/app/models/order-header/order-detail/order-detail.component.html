@@ -132,7 +132,7 @@
 
   <div class="form-group">
     <div>
-      <button type="submit">Guardar</button>
+      <button type="submit" [disabled]="!orderHeaderFormGroup.valid">Guardar</button>
     </div>
   </div>
 
@@ -237,7 +237,7 @@
 
   <div class="form-group">
     <div>
-      <button type="submit">Afegir línia comanda</button>
+      <button type="submit" [disabled]="!orderLineFormGroup.valid">Afegir línia comanda</button>
     </div>
   </div>
 </form>

@@ -120,11 +120,17 @@ export class ClientDetailComponent implements OnInit {
       this.clientId = parseInt(this.clientId);
       client.id = this.clientId;      
       this.clientService.updateClient(client)
-      .subscribe();
+      .subscribe(
+        () => alert("Actualització realitzada"),
+        error => alert(error.error[""])
+      );
     } else {
       //add client
       this.clientService.addClient(client)
-      .subscribe();
+      .subscribe(
+        client => alert("Client " + client.firstName + " " + client.lastName + " creat correctament"),
+        error => alert(error.error[""])
+      );
     }    
   }
 

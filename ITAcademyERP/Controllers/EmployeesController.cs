@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -66,17 +66,16 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, EmployeeDTO employeeDTO)
         {
-            if (id != employeeDTO.Id)
-            {
-                return BadRequest();
-            }
+            var employee = await _context.Employees
+                .Include(e => e.Person)
+                .ThenInclude(p => p.Addresses)
+                .SingleOrDefaultAsync(e => e.Id == id);
 
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
+            if (employeeDTO.Email != employee.Person.Email && _peopleController.EmailExists(employeeDTO.Email))
             {
-                return NotFound();
-            }
+                ModelState.AddModelError(string.Empty, "Email ja existent");
+                return BadRequest(ModelState);
+            }            
 
             employee.Position = employeeDTO.Position;
             employee.Salary = employeeDTO.Salary;
@@ -118,10 +117,8 @@ namespace ITAcademyERP.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
-        {
-            var personExists = _context.People.FirstOrDefault(p => p.Email == employeeDTO.Email);
-
-            if (personExists == default)
+        {                            
+            if (!_peopleController.EmailExists(employeeDTO.Email))
             {
                 var person = new Person
                 {
@@ -135,22 +132,33 @@ namespace ITAcademyERP.Controllers
                 _context.People.Add(person);
 
                 _context.SaveChanges();
-            }            
+            }
 
-            var personId = _context.People.FirstOrDefault(p => p.Email == employeeDTO.Email).Id;
+            var employeeExists = _context.Employees.FirstOrDefault(e => e.Person.Email == employeeDTO.Email);
 
-            var employee = new Employee
+            if (employeeExists != default)
             {
-                PersonId = personId,
-                Position = employeeDTO.Position,
-                Salary = employeeDTO.Salary
-            };
+                ModelState.AddModelError(string.Empty, "Empleat ja existent");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                var personId = _context.People.FirstOrDefault(p => p.Email == employeeDTO.Email).Id;
 
-            _context.Employees.Add(employee);
+                var employee = new Employee
+                {
+                    PersonId = personId,
+                    Position = employeeDTO.Position,
+                    Salary = employeeDTO.Salary
+                };
 
-            await _context.SaveChangesAsync();
+                _context.Employees.Add(employee);
 
-            return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, EmployeeToDTO(employee));
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, EmployeeToDTO(employee));
+            }
+           
         }
 
         // DELETE: api/Employees/5

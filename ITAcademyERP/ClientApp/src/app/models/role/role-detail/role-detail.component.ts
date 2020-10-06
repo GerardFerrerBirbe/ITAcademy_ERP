@@ -95,11 +95,17 @@ export class RoleDetailComponent implements OnInit {
       //edit role
       role.id = this.roleId;
       this.roleService.updateRole(role)
-      .subscribe();
+      .subscribe(
+        () => alert("Actualització realitzada"),
+        error => alert(error.error[""])
+      );
     } else {
       //add role
       this.roleService.addRole(role)
-      .subscribe();
+      .subscribe(
+        role => alert("Rol " + role.name + " creat correctament"),
+        error => alert(error.error[""])
+      );
     }
   }
   

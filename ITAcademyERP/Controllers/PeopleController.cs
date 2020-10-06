@@ -74,5 +74,10 @@ namespace ITAcademyERP.Controllers
         {
             return _context.People.Any(e => e.Id == id);
         }
+
+        public bool EmailExists(string email)
+        {
+            return _context.People.Any(p => p.Email == email);
+        }
     }
 }

@@ -67,11 +67,17 @@ export class ProductDetailComponent implements OnInit {
       this.productId = parseInt(this.productId);
       product.id = this.productId;      
       this.productService.updateProduct(product)
-      .subscribe();
+      .subscribe(
+        () => alert("Actualització realitzada"),
+        error => alert(error.error[""])
+      );
     } else {
       //add product
       this.productService.addProduct(product)
-      .subscribe();
+      .subscribe(
+        product => alert("Producte " + product.productName + " creat correctament"),
+        error => alert(error.error[""])
+      );
     }    
   }
   

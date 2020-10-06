@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Models;
@@ -22,26 +21,29 @@ namespace ITAcademyERP.Controllers
         private readonly EmployeesController _employeesController;
         private readonly OrderPrioritiesController _orderPrioritiesController;
         private readonly OrderStatesController _orderStatesController;
+        private readonly OrderLinesController _orderLinesController;
 
         public OrderHeadersController(
             ITAcademyERPContext context,
             ClientsController clientsController,
             EmployeesController employeesController,
             OrderPrioritiesController orderPrioritiesController,
-            OrderStatesController orderStatesController)
+            OrderStatesController orderStatesController,
+            OrderLinesController orderLinesController)
         {
             _context = context;
             _clientsController = clientsController;
             _employeesController = employeesController;
             _orderPrioritiesController = orderPrioritiesController;
             _orderStatesController = orderStatesController;
+            _orderLinesController = orderLinesController;
         }
 
         // GET: api/OrderHeaders
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeaders()
         {
-            var output = _context.OrderHeaders                    
+            var orderHeaders = await _context.OrderHeaders                    
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
                     .ThenInclude(p => p.Addresses)
@@ -50,18 +52,25 @@ namespace ITAcademyERP.Controllers
                     .Include(o => o.OrderState)
                     .Include(o => o.OrderPriority)
                     .Include(o => o.OrderLines)
-                    .ThenInclude(o => o.Product)
-                    .Select(o => OrderHeaderToDTO(o))                    
-                    .ToListAsync();        
+                    .ThenInclude(o => o.Product)                  
+                    .ToListAsync();
 
-            return await output;
+            var orderHeadersDTO = new List<OrderHeaderDTO>();
+
+            foreach (var orderHeader in orderHeaders)
+            {
+                var orderHeaderDTO = OrderHeaderToDTO(orderHeader);
+                orderHeadersDTO.Add(orderHeaderDTO);
+            }
+
+            return orderHeadersDTO;
         }
 
         [Route("Employee")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByEmployee(int employeeId)
         {
-            var output = _context.OrderHeaders
+            var orderHeaders = await _context.OrderHeaders
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
                     .ThenInclude(p => p.Addresses)
@@ -72,17 +81,24 @@ namespace ITAcademyERP.Controllers
                     .Include(o => o.OrderLines)
                     .ThenInclude(o => o.Product)
                     .Where(o => o.EmployeeId == employeeId)
-                    .Select(o => OrderHeaderToDTO(o))
                     .ToListAsync();
 
-            return await output;
+            var orderHeadersDTO = new List<OrderHeaderDTO>();
+
+            foreach (var orderHeader in orderHeaders)
+            {
+                var orderHeaderDTO = OrderHeaderToDTO(orderHeader);
+                orderHeadersDTO.Add(orderHeaderDTO);
+            }
+
+            return orderHeadersDTO;
         }
 
         [Route("Client")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByClient(int clientId)
         {
-            var output = _context.OrderHeaders
+            var orderHeaders = await _context.OrderHeaders
                     .Include(o => o.Client)
                     .ThenInclude(c => c.Person)
                     .ThenInclude(p => p.Addresses)
@@ -93,10 +109,17 @@ namespace ITAcademyERP.Controllers
                     .Include(o => o.OrderLines)
                     .ThenInclude(o => o.Product)
                     .Where(o => o.ClientId == clientId)
-                    .Select(o => OrderHeaderToDTO(o))
                     .ToListAsync();
 
-            return await output;
+            var orderHeadersDTO = new List<OrderHeaderDTO>();
+
+            foreach (var orderHeader in orderHeaders)
+            {
+                var orderHeaderDTO = OrderHeaderToDTO(orderHeader);
+                orderHeadersDTO.Add(orderHeaderDTO);
+            } 
+
+            return orderHeadersDTO;
         }
 
         //GET: api/OrderHeaders/5
@@ -245,13 +268,13 @@ namespace ITAcademyERP.Controllers
             return _context.OrderHeaders.Any(e => e.Id == id);
         }
 
-        public static OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
+        public OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
 
             var orderLinesDTO = new List<OrderLineDTO>();
 
             foreach (var orderLine in orderHeader.OrderLines)
             {
-                var orderLineDTO = OrderLinesController.OrderLineToDTO(orderLine);
+                var orderLineDTO = _orderLinesController.OrderLineToDTO(orderLine);
                 orderLinesDTO.Add(orderLineDTO);
             }
             

@@ -22,10 +22,8 @@ import { OrderLineComponent } from './models/order-line/order-line.component';
 import { OrderPriorityComponent } from './models/order-priority/order-priority.component';
 import { OrderStateComponent } from './models/order-state/order-state.component';
 
-import { AddressDetailComponent } from './models/address/address-detail/address-detail.component';
 import { EmployeeDetailComponent } from './models/employee/employee-detail/employee-detail.component';
 import { ClientDetailComponent } from './models/client/client-detail/client-detail.component';
-import { PersonDetailComponent } from './models/person/person-detail/person-detail.component';
 import { ProductDetailComponent } from './models/product/product-detail/product-detail.component';
 import { ProductCategoryDetailComponent } from './models/product-category/product-category-detail/product-category-detail.component';
 import { OrderDetailComponent } from './models/order-Header/order-detail/order-detail.component';
@@ -67,10 +65,8 @@ import { RoleService } from './models/role/role.service';
     OrderLineComponent,
     OrderPriorityComponent,
     OrderStateComponent,
-    AddressDetailComponent,
     EmployeeDetailComponent,
     ClientDetailComponent,
-    PersonDetailComponent,
     ProductDetailComponent,
     ProductCategoryDetailComponent,
     OrderDetailComponent,

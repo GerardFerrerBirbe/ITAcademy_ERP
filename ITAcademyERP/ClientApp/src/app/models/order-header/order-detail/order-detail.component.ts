@@ -159,13 +159,13 @@ export class OrderDetailComponent implements OnInit {
       this.orderHeaderId = parseInt(this.orderHeaderId);
       orderHeader.id = this.orderHeaderId;     
       this.orderHeaderService.updateOrderHeader(orderHeader)
-      .subscribe();
+      .subscribe(() => alert("Actualització realitzada"));
     } else {
       //add order
       let userName = localStorage.getItem('userName');
       orderHeader.employee = userName;
       this.orderHeaderService.addOrderHeader(orderHeader)
-      .subscribe();
+      .subscribe(oh => alert("Comanda " + oh.orderNumber + " creada correctament"));
     }    
   }  
 

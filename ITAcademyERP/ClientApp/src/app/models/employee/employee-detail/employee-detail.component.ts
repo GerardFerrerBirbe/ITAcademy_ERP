@@ -109,7 +109,7 @@ export class EmployeeDetailComponent implements OnInit {
       let addressFG = this.buildAddress();
       addressFG.patchValue(address);
       this.addresses.push(addressFG);
-    })
+    });
   }
 
   save() {
@@ -121,11 +121,18 @@ export class EmployeeDetailComponent implements OnInit {
       this.employeeId = parseInt(this.employeeId);
       employee.id = this.employeeId;      
       this.employeeService.updateEmployee(employee)
-      .subscribe();
+      .subscribe(
+        () => { this.deleteAddresses();
+          alert("Actualització realitzada")},
+        error => alert(error.error[""])
+      );
     } else {
       //add employee
       this.employeeService.addEmployee(employee)
-      .subscribe();
+      .subscribe(
+        employee => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
+        error => alert(error.error[""])
+        );
     }    
   }
 
@@ -148,5 +155,4 @@ export class EmployeeDetailComponent implements OnInit {
     }
     return false;
   }
-
 }

@@ -51,9 +51,13 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProductCategory(int id, ProductCategory productCategory)
         {
-            if (id != productCategory.Id)
+            var oldProductCategory = await _context.ProductCategories
+                .SingleOrDefaultAsync(p => p.Id == id);
+
+            if (productCategory.ProductCategoryName != oldProductCategory.ProductCategoryName && ProductCategoryNameExists(productCategory.ProductCategoryName))
             {
-                return BadRequest();
+                ModelState.AddModelError(string.Empty, "Categoria ja existent");
+                return BadRequest(ModelState);
             }
 
             _context.Entry(productCategory).State = EntityState.Modified;
@@ -83,10 +87,18 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductCategory>> PostProductCategory(ProductCategory productCategory)
         {
-            _context.ProductCategories.Add(productCategory);
-            await _context.SaveChangesAsync();
+            if (!ProductCategoryNameExists(productCategory.ProductCategoryName))
+            {
+                _context.ProductCategories.Add(productCategory);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProductCategory", new { id = productCategory.Id }, productCategory);
+                return CreatedAtAction("GetProductCategory", new { id = productCategory.Id }, productCategory);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Categoria ja existent");
+                return BadRequest(ModelState);
+            }
         }
 
         // DELETE: api/ProductCategories/5
@@ -108,6 +120,11 @@ namespace ITAcademyERP.Controllers
         private bool ProductCategoryExists(int id)
         {
             return _context.ProductCategories.Any(e => e.Id == id);
+        }
+
+        private bool ProductCategoryNameExists(string name)
+        {
+            return _context.ProductCategories.Any(p => p.ProductCategoryName == name);
         }
     }
 }

@@ -54,9 +54,12 @@
 
   <div class="form-group">
     <label>Direccions</label>
-    <button class="btn btn-primary" (click)="addAddress()">Afegir adreça</button>
-  </div>
-  
+    <button
+      class="btn btn-primary"
+      (click)="addAddress()">
+      Afegir adreça
+    </button>
+  </div>  
   <div formArrayName="addresses"
         *ngFor="let address of addresses.controls; let i = index;">
     <div [formGroupName]="i">      
@@ -86,7 +89,7 @@
 
   <div class="form-group">
     <div>
-      <button type="submit">Guardar</button>
+      <button type="submit" [disabled]="!formGroup.valid">Guardar</button>
     </div>
   </div>
 </form>

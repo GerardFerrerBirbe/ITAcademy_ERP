@@ -76,7 +76,7 @@ namespace ITAcademyERP.Controllers
             return orderLine;
         }
 
-        public static OrderLineDTO OrderLineToDTO(OrderLine orderLine)
+        public OrderLineDTO OrderLineToDTO(OrderLine orderLine)
         {
 
             var orderLineDTO = new OrderLineDTO

@@ -58,11 +58,17 @@ export class ProductCategoryDetailComponent implements OnInit {
       this.productCategoryId = parseInt(this.productCategoryId);
       productCategory.id = this.productCategoryId;      
       this.productCategoryService.updateProductCategory(productCategory)
-      .subscribe();
+      .subscribe(
+        () => alert("Actualització realitzada"),
+        error => alert(error.error[""])
+      );
     } else {
       //add productCategory
       this.productCategoryService.addProductCategory(productCategory)
-      .subscribe();
+      .subscribe(
+        pc => alert("Categoria " + pc.productCategoryName + " creada correctament"),
+        error => alert(error.error[""])
+      );
     }    
   }
   

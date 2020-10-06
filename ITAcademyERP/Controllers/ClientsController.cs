@@ -62,17 +62,16 @@ namespace ITAcademyERP.Models
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClient(int id, ClientDTO clientDTO)
         {
-            if (id != clientDTO.Id)
-            {
-                return BadRequest();
-            }
+            var client = await _context.Clients
+                .Include(e => e.Person)
+                .ThenInclude(p => p.Addresses)
+                .SingleOrDefaultAsync(e => e.Id == id);
 
-            var client = await _context.Clients.FindAsync(id);
-
-            if (client == null)
+            if (clientDTO.Email != client.Person.Email && _peopleController.EmailExists(clientDTO.Email))
             {
-                return NotFound();
-            }
+                ModelState.AddModelError(string.Empty, "Email ja existent");
+                return BadRequest(ModelState);
+            }            
 
             var personDTO = new PersonDTO
             {
@@ -109,9 +108,7 @@ namespace ITAcademyERP.Models
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
         {            
-            var personExists = _context.People.FirstOrDefault(p => p.Email == clientDTO.Email);
-
-            if (personExists == default)
+            if (!_peopleController.EmailExists(clientDTO.Email))
             {
                 var person = new Person
                 {
@@ -125,18 +122,28 @@ namespace ITAcademyERP.Models
                 _context.SaveChanges();
             }
 
-            var personId = _context.People.FirstOrDefault(p => p.Email == clientDTO.Email).Id;
+            var clientExists = _context.Clients.FirstOrDefault(e => e.Person.Email == clientDTO.Email);
 
-            var client = new Client
+            if (clientExists != default)
             {
-                PersonId = personId
-            };
+                ModelState.AddModelError(string.Empty, "Client ja existent");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                var personId = _context.People.FirstOrDefault(p => p.Email == clientDTO.Email).Id;
 
-            _context.Clients.Add(client);            
+                var client = new Client
+                {
+                    PersonId = personId
+                };
 
-            await _context.SaveChangesAsync();
+                _context.Clients.Add(client);
 
-            return CreatedAtAction(nameof(GetClient), new { id = client.Id }, ClientToDTO(client));
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetClient), new { id = client.Id }, ClientToDTO(client));
+            }
         }
 
         // DELETE: api/Clients/5

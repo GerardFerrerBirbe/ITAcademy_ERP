@@ -15,10 +15,8 @@ import { PersonComponent } from './models/person/person.component';
 import { OrderHeaderComponent } from './models/order-header/order-header.component';
 import { RoleComponent } from './models/role/role.component';
 
-import { AddressDetailComponent } from './models/address/address-detail/address-detail.component';
 import { EmployeeDetailComponent } from './models/employee/employee-detail/employee-detail.component';
 import { ClientDetailComponent } from './models/client/client-detail/client-detail.component';
-import { PersonDetailComponent } from './models/person/person-detail/person-detail.component';
 import { ProductDetailComponent } from './models/product/product-detail/product-detail.component';
 import { ProductCategoryDetailComponent } from './models/product-category/product-category-detail/product-category-detail.component';
 import { OrderDetailComponent } from './models/order-Header/order-detail/order-detail.component';
@@ -40,11 +38,7 @@ const routes: Routes = [
   { path: 'client-detail', component: ClientDetailComponent },
   { path: 'client-detail/:id', component: ClientDetailComponent },
   { path: 'person', component: PersonComponent },
-  { path: 'person-detail', component: PersonDetailComponent },
-  { path: 'person-detail/:id', component: PersonDetailComponent },
   { path: 'address', component: AddressComponent },
-  { path: 'address-detail', component: AddressDetailComponent },
-  { path: 'address-detail/:id', component: AddressDetailComponent },
   { path: 'order', component: OrderHeaderComponent },
   { path: 'order-detail', component: OrderDetailComponent },
   { path: 'order-detail/:id', component: OrderDetailComponent },

@@ -125,16 +125,12 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRole(string id, RoleDTO roleDTO)
         {
-            if (id != roleDTO.Id)
-            {
-                return BadRequest();
-            }
-
             var role = await _roleManager.FindByIdAsync(id);
 
-            if (role == null)
+            if (roleDTO.Name != role.Name && await RoleExists(roleDTO.Name))
             {
-                return NotFound();
+                ModelState.AddModelError(string.Empty, "Role ja existent");
+                return BadRequest(ModelState);
             }
 
             role.Name = roleDTO.Name;
@@ -147,7 +143,7 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRole(RoleDTO roleDTO)
         {
-            if (ModelState.IsValid)
+            if (!await RoleExists(roleDTO.Name))
             {
                 IdentityRole identityRole = new IdentityRole
                 {
@@ -166,7 +162,8 @@ namespace ITAcademyERP.Controllers
                 }
             }
 
-            return NoContent();
+            ModelState.AddModelError(string.Empty, "Role ja existent");
+            return BadRequest(ModelState);
         }
 
         // DELETE: api/ProductCategories/5
@@ -233,6 +230,12 @@ namespace ITAcademyERP.Controllers
                 await _userManager.RemoveFromRoleAsync(user, role.Name);
             }
             return NoContent();            
+        }
+
+        public async Task<bool> RoleExists(string name)
+        {
+            var roleExists = await _roleManager.RoleExistsAsync(name);
+            return roleExists;
         }
     }
 }
