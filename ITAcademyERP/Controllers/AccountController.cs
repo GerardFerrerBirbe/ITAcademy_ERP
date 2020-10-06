@@ -11,7 +11,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ITAcademyERP.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,20 +21,17 @@ namespace ITAcademyERP.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<Person> _userManager;
         private readonly SignInManager<Person> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ITAcademyERPContext _context;
 
         public AccountController(
-            RoleManager<IdentityRole> roleManager,
             UserManager<Person> userManager,
             SignInManager<Person> signInManager,
             IConfiguration configuration,
             ITAcademyERPContext context)
         {
-            _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             this._configuration = configuration;

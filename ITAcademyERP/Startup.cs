@@ -1,5 +1,4 @@
 using ITAcademyERP.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +33,7 @@ namespace ITAcademyERP
                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<Person, IdentityRole>()
-                .AddRoleManager<RoleManager<IdentityRole>>()
+                //.AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ITAcademyERPContext>()
                 .AddDefaultTokenProviders();
 
@@ -116,7 +115,7 @@ namespace ITAcademyERP
                 }
             });
 
-            DummyData.Initialize(app, serviceProvider);
+            DummyData.Initialize(app);
         }
     }
 }

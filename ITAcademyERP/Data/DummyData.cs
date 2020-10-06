@@ -1,18 +1,16 @@
 ﻿using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data
 {
     public class DummyData
     {
-        public static void Initialize(IApplicationBuilder app, IServiceProvider serviceProvider)
+        public static void Initialize(IApplicationBuilder app)
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var _context = serviceScope.ServiceProvider.GetService<ITAcademyERPContext>();
@@ -24,87 +22,47 @@ namespace ITAcademyERP.Data
             if (_context.People.Count() != 0)
                 return;
 
-            var people = GetPeople().ToArray();
+            var people = CreatePeople().ToArray();
             _context.People.AddRange(people);
             _context.SaveChanges();
 
-            var clients = GetClients(_context).ToArray();
+            var clients = CreateClients(_context).ToArray();
             _context.Clients.AddRange(clients);
             _context.SaveChanges();
 
-            var employees = GetEmployees(_context).ToArray();
+            var employees = CreateEmployees(_context).ToArray();
             _context.Employees.AddRange(employees);
             _context.SaveChanges();
 
             CreateRoles(_roleManager);
             AddUsersInRoles(_context, _userManager);
 
-            var addresses = GetAddresses(_context).ToArray();
+            var addresses = CreateAddresses(_context).ToArray();
             _context.Addresses.AddRange(addresses);
             _context.SaveChanges();
 
-            var productCategories = GetProductCategories().ToArray();
+            var productCategories = CreateProductCategories().ToArray();
             _context.ProductCategories.AddRange(productCategories);
             _context.SaveChanges();
 
-            var products = GetProducts(_context).ToArray();
+            var products = CreateProducts(_context).ToArray();
             _context.Products.AddRange(products);
             _context.SaveChanges();
 
-            GetOrderStates(_context);
+            CreateOrderStates(_context);
 
-            GetOrderPriorities(_context);
+            CreateOrderPriorities(_context);
 
-            var orderHeaders = GetOrderHeaders().ToArray();
+            var orderHeaders = CreateOrderHeaders().ToArray();
             _context.OrderHeaders.AddRange(orderHeaders);
             _context.SaveChanges();
 
-            var orderLines = GetOrderLines(_context).ToArray();
+            var orderLines = CreateOrderLines(_context).ToArray();
             _context.OrderLines.AddRange(orderLines);
             _context.SaveChanges();
-        }
-            //var role = "Admin";
-            //var roleStore = new RoleStore<IdentityRole>(_context);
-            //roleStore.CreateAsync(new IdentityRole(role));
-        //}
-        //    var user = new ApplicationUser
-        //    {
-        //        Email = "proves@e.com",
-        //        NormalizedEmail = "PROVES@E.COM",
-        //        UserName = "Admin",
-        //        NormalizedUserName = "ADMIN",
-        //        EmailConfirmed = true,
-        //        PhoneNumberConfirmed = true,
-        //        SecurityStamp = Guid.NewGuid().ToString("D")
-        //    };
+        }         
 
-        //    if (!_context.Users.Any(u => u.UserName == user.UserName))
-        //    {
-        //        var password = new PasswordHasher<ApplicationUser>();
-        //        var hashed = password.HashPassword(user, "Aa111111!");
-        //        user.PasswordHash = hashed;
-
-        //        var userStore = new UserStore<ApplicationUser>(_context);
-        //        var result = userStore.CreateAsync(user);
-        //    }
-
-        //    _context.SaveChangesAsync();
-
-        //    AssignRoles(serviceProvider, user.Email, role).Wait();
-
-        //    _context.SaveChangesAsync();
-        //}
-
-        //public static async Task<IdentityResult> AssignRoles(IServiceProvider services, string email, string role)
-        //{
-        //    UserManager<ApplicationUser> _userManager = services.GetService<UserManager<ApplicationUser>>();
-        //    ApplicationUser user = await _userManager.FindByEmailAsync(email);
-        //    var result = await _userManager.AddToRoleAsync(user, role);
-
-        //    return result;
-        //}
-
-        public static List<Person> GetPeople()
+        public static List<Person> CreatePeople()
         {
             List<Person> people = new List<Person>()
             {
@@ -140,7 +98,7 @@ namespace ITAcademyERP.Data
             return people;
         }
 
-        public static List<Client> GetClients(ITAcademyERPContext _context)
+        public static List<Client> CreateClients(ITAcademyERPContext _context)
         {
             List<Client> clients = new List<Client>()
             {
@@ -150,7 +108,7 @@ namespace ITAcademyERP.Data
             return clients;
         }
 
-        public static List<Employee> GetEmployees(ITAcademyERPContext _context)
+        public static List<Employee> CreateEmployees(ITAcademyERPContext _context)
         {
             List<Employee> employees = new List<Employee>()
             {
@@ -182,7 +140,7 @@ namespace ITAcademyERP.Data
             _userManager.AddToRolesAsync(user2, new List<string> { "Employee" }).Wait();
         }
 
-        public static List<Address> GetAddresses(ITAcademyERPContext _context)
+        public static List<Address> CreateAddresses(ITAcademyERPContext _context)
         {           
             List<Address> addresses = new List<Address>()
             {
@@ -198,7 +156,7 @@ namespace ITAcademyERP.Data
             return addresses;
         }
 
-        public static List<ProductCategory> GetProductCategories()
+        public static List<ProductCategory> CreateProductCategories()
         {
             List<ProductCategory> productCategories = new List<ProductCategory>()
             {
@@ -210,7 +168,7 @@ namespace ITAcademyERP.Data
             return productCategories;
         }
 
-        public static List<Product> GetProducts(ITAcademyERPContext _context)
+        public static List<Product> CreateProducts(ITAcademyERPContext _context)
         {
             List<Product> products = new List<Product>()
             {
@@ -222,7 +180,7 @@ namespace ITAcademyERP.Data
             return products;
         }        
         
-        public static void GetOrderStates(ITAcademyERPContext _context)
+        public static void CreateOrderStates(ITAcademyERPContext _context)
         {
             var state1 = new OrderState { State = "Pendent de tractar" };
             _context.OrderStates.Add(state1);           
@@ -242,7 +200,7 @@ namespace ITAcademyERP.Data
             _context.SaveChanges();
         }
 
-        public static void GetOrderPriorities(ITAcademyERPContext _context)
+        public static void CreateOrderPriorities(ITAcademyERPContext _context)
         {
 
             var priority1 = new OrderPriority { Priority = "Baixa" };
@@ -257,7 +215,7 @@ namespace ITAcademyERP.Data
             _context.SaveChanges();
         }
 
-        public static List<OrderHeader> GetOrderHeaders()
+        public static List<OrderHeader> CreateOrderHeaders()
         {
             List<OrderHeader> orderHeaders = new List<OrderHeader>()
             {
@@ -296,7 +254,7 @@ namespace ITAcademyERP.Data
             return orderHeaders;
         }
 
-        public static List<OrderLine> GetOrderLines(ITAcademyERPContext _context)
+        public static List<OrderLine> CreateOrderLines(ITAcademyERPContext _context)
         {
             List<OrderLine> orderLines = new List<OrderLine>()
             {

@@ -109,7 +109,7 @@ namespace ITAcademyERP.Models
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
         {            
-            var personExists = _context.People.FirstOrDefault(p => p.FirstName + ' ' + p.LastName == clientDTO.FirstName + ' ' + clientDTO.LastName);
+            var personExists = _context.People.FirstOrDefault(p => p.Email == clientDTO.Email);
 
             if (personExists == default)
             {

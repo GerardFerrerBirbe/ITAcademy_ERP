@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ITAcademyERP.Controllers
 {
@@ -18,22 +16,22 @@ namespace ITAcademyERP.Controllers
     [ApiController]    
     public class RolesController : ControllerBase
     {
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly UserManager<Person> userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<Person> _userManager;
 
         public RolesController(
             RoleManager<IdentityRole> roleManager,
             UserManager<Person> userManager)
         {
-            this.roleManager = roleManager;
-            this.userManager = userManager;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         //GET: api/Roles
         [HttpGet]
         public IQueryable<IdentityRole> GetRoles()
         {
-            var roles = roleManager.Roles;           
+            var roles = _roleManager.Roles;           
             
             return roles;
         }
@@ -43,7 +41,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public List<UserDTO> GetRoleUsers()
         {
-            var users = userManager.Users;
+            var users = _userManager.Users;
 
             var roleUsers = new List<UserDTO>();
             
@@ -73,7 +71,7 @@ namespace ITAcademyERP.Controllers
             
             if (includeUsers)
             {
-                identityRole = await roleManager
+                identityRole = await _roleManager
                     .FindByIdAsync(id);
 
                 if (identityRole == null)
@@ -83,7 +81,7 @@ namespace ITAcademyERP.Controllers
 
                 var usersInRoleDTO = new List<UserDTO>();
 
-                var usersInRole = await userManager.GetUsersInRoleAsync(identityRole.Name);
+                var usersInRole = await _userManager.GetUsersInRoleAsync(identityRole.Name);
 
                 foreach (var user in usersInRole)
                 {
@@ -108,7 +106,7 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                identityRole = await roleManager
+                identityRole = await _roleManager
                     .FindByIdAsync(id);
 
                 var roleDTO = new RoleDTO
@@ -132,7 +130,7 @@ namespace ITAcademyERP.Controllers
                 return BadRequest();
             }
 
-            var role = await roleManager.FindByIdAsync(id);
+            var role = await _roleManager.FindByIdAsync(id);
 
             if (role == null)
             {
@@ -141,7 +139,7 @@ namespace ITAcademyERP.Controllers
 
             role.Name = roleDTO.Name;
 
-            await roleManager.UpdateAsync(role);           
+            await _roleManager.UpdateAsync(role);           
 
             return NoContent();
         }        
@@ -156,7 +154,7 @@ namespace ITAcademyERP.Controllers
                     Name = roleDTO.Name
                 };
 
-                IdentityResult result = await roleManager.CreateAsync(identityRole);
+                IdentityResult result = await _roleManager.CreateAsync(identityRole);
 
                 if (result.Succeeded)
                 {
@@ -176,13 +174,13 @@ namespace ITAcademyERP.Controllers
         public async Task<ActionResult<IdentityRole>> DeleteRole(string id)
         {
 
-            var role = await roleManager.FindByIdAsync(id);
+            var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
                 return NotFound();
             }
 
-            await roleManager.DeleteAsync(role);
+            await _roleManager.DeleteAsync(role);
 
             return role;
         }
@@ -196,14 +194,14 @@ namespace ITAcademyERP.Controllers
         {
             
             var roleId = id.Substring(9);
-            var role = await roleManager.FindByIdAsync(roleId);
+            var role = await _roleManager.FindByIdAsync(roleId);
             
             try
             {
                 foreach (var userId in ids)
                 {
-                    var roleUser = await userManager.FindByIdAsync(userId);
-                    await userManager.RemoveFromRoleAsync(roleUser, role.Name);             
+                    var roleUser = await _userManager.FindByIdAsync(userId);
+                    await _userManager.RemoveFromRoleAsync(roleUser, role.Name);             
                 }                
             }
             catch (Exception ex)
@@ -221,18 +219,18 @@ namespace ITAcademyERP.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateRoleUser(UserDTO userDTO, string addOrRemove)
         {
-            var role = await roleManager.FindByIdAsync(userDTO.RoleId);
+            var role = await _roleManager.FindByIdAsync(userDTO.RoleId);
 
-            var user = await userManager.FindByNameAsync(userDTO.Name);
+            var user = await _userManager.FindByNameAsync(userDTO.Name);
 
             if (addOrRemove == "add")
             {
-                await userManager.AddToRoleAsync(user, role.Name);
+                await _userManager.AddToRoleAsync(user, role.Name);
             }
 
             if (addOrRemove == "remove")
             {
-                await userManager.RemoveFromRoleAsync(user, role.Name);
+                await _userManager.RemoveFromRoleAsync(user, role.Name);
             }
             return NoContent();            
         }

@@ -99,14 +99,5 @@ namespace ITAcademyERP.Controllers
 
             return addressDTO;
         }
-
-        public int GetAddressId (string addressName)
-        {
-            var addressId = _context.Addresses
-                            .FirstOrDefault(x => x.Name == addressName)
-                            .Id;
-
-            return addressId;
-        }
     }
 }

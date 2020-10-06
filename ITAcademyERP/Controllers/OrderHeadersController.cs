@@ -22,22 +22,19 @@ namespace ITAcademyERP.Controllers
         private readonly EmployeesController _employeesController;
         private readonly OrderPrioritiesController _orderPrioritiesController;
         private readonly OrderStatesController _orderStatesController;
-        private readonly ProductsController _productsController;
 
         public OrderHeadersController(
             ITAcademyERPContext context,
             ClientsController clientsController,
             EmployeesController employeesController,
             OrderPrioritiesController orderPrioritiesController,
-            OrderStatesController orderStatesController,
-            ProductsController productsController)
+            OrderStatesController orderStatesController)
         {
             _context = context;
             _clientsController = clientsController;
             _employeesController = employeesController;
             _orderPrioritiesController = orderPrioritiesController;
             _orderStatesController = orderStatesController;
-            _productsController = productsController;
         }
 
         // GET: api/OrderHeaders
@@ -166,7 +163,7 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }            
             
-            if (orderHeaderDTO.OrderState == "Complet" && _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState) != orderHeader.OrderStateId)
+            if (orderHeaderDTO.OrderState == "Completat" && _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState) != orderHeader.OrderStateId)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
@@ -254,7 +251,7 @@ namespace ITAcademyERP.Controllers
 
             foreach (var orderLine in orderHeader.OrderLines)
             {
-                var orderLineDTO = OrderLineToDTO(orderLine);
+                var orderLineDTO = OrderLinesController.OrderLineToDTO(orderLine);
                 orderLinesDTO.Add(orderLineDTO);
             }
             
@@ -274,25 +271,6 @@ namespace ITAcademyERP.Controllers
             };
 
             return orderHeaderDTO;
-        }
-
-        private static OrderLineDTO OrderLineToDTO(OrderLine orderLine)
-        {
-
-            var orderLineDTO = new OrderLineDTO
-            {
-                Id = orderLine.Id,
-                OrderHeaderId = orderLine.OrderHeaderId,
-                ProductName = orderLine.Product.ProductName,
-                UnitPrice = orderLine.UnitPrice,
-                Vat = orderLine.Vat,
-                Quantity = orderLine.Quantity
-            };
-
-            return orderLineDTO;
-        }
-
-        
-
+        }        
     }
 }
