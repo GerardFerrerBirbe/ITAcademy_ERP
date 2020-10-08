@@ -17,20 +17,20 @@ export class ProductCategoryService {
   constructor(private http: HttpClient) { }
 
   getProductCategories(): Observable<ProductCategory[]>{
-    return this.http.get<ProductCategory[]>(this.apiUrl);
+    return this.http.get<ProductCategory[]>(this.apiUrl + "/generic/");
   }
 
   getProductCategory(id: string): Observable<ProductCategory> {
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.apiUrl}/generic/${id}`;
     return this.http.get<ProductCategory>(url);
   }
 
   updateProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
-    return this.http.put<ProductCategory>(this.apiUrl + "/" + productCategory.id.toString(), productCategory, this.httpOptions);
+    return this.http.put<ProductCategory>(this.apiUrl + "/generic/" + productCategory.id.toString(), productCategory, this.httpOptions);
   }
 
   addProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
-    return this.http.post<ProductCategory>(this.apiUrl, productCategory, this.httpOptions);
+    return this.http.post<ProductCategory>(this.apiUrl + "/generic/", productCategory, this.httpOptions);
   }
 
   deleteProductCategory(productCategory: ProductCategory | number): Observable<ProductCategory> {

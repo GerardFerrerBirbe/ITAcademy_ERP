@@ -1,9 +1,10 @@
-﻿using System;
+﻿using ITAcademyERP.Data;
+using System;
 using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class Product
+    public partial class Product : IEntity
     {
         public Product()
         {

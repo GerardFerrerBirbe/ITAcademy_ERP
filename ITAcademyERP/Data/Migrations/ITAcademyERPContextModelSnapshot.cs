@@ -273,11 +273,15 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductCategoryId");
+
+                    b.HasIndex("ProductName")
+                        .IsUnique()
+                        .HasFilter("[ProductName] IS NOT NULL");
 
                     b.ToTable("Products");
                 });

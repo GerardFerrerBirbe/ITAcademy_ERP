@@ -8,38 +8,35 @@ using ITAcademyERP.Models;
 using ITAcademyERP.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ITAcademyERP.Data.Repositories;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : GenericController<Product, ProductRepository>
     {
-        private readonly ITAcademyERPContext _context;
-
-        public ProductsController(ITAcademyERPContext context)
+        private readonly ProductRepository _repository;
+        public ProductsController(ProductRepository repository) : base(repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        // GET: api/Products
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProduct()
+        //GET: api/Products
+       [HttpGet]
+        public async Task<IEnumerable<ProductDTO>> GetProduct()
         {
-            return await _context.Products
-                .Include(p => p.ProductCategory)
-                .Select(p => ProductToDTO(p))
-                .ToListAsync();
+            var product = await _repository.GetProducts();
+
+            return product.Select(p => ProductToDTO(p));
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
-            var product = await _context.Products
-                .Include(p => p.ProductCategory)
-                .SingleOrDefaultAsync(p => p.Id == id);
+            var product = await _repository.GetProduct(id);
 
             if (product == null)
             {
@@ -50,101 +47,20 @@ namespace ITAcademyERP.Controllers
         }
 
         // PUT: api/Products/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, ProductDTO productDTO)
+        public async Task<IActionResult> PutProduct(ProductDTO productDTO)
         {
-            var product = await _context.Products
-                .SingleOrDefaultAsync(p => p.Id == id);
-
-            if (product.ProductName != productDTO.ProductName && ProductNameExists(productDTO.ProductName))
-            {
-                ModelState.AddModelError(string.Empty, "Producte ja existent");
-                return BadRequest(ModelState);
-            }
-
-            var productCategoryId = _context.ProductCategories
-                            .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
-                            .Id;
-
-            product.ProductName = productDTO.ProductName;
-            product.ProductCategoryId = productCategoryId;
-            
-            _context.Entry(product).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _repository.UpdateProduct(productDTO);
         }
 
         // POST: api/Products
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
         {
-            if (!ProductNameExists(productDTO.ProductName))
-            {
-                var productCategoryId = _context.ProductCategories
-                                .FirstOrDefault(p => p.ProductCategoryName == productDTO.ProductCategoryName)
-                                .Id;
-
-                var product = new Product
-                {
-                    ProductName = productDTO.ProductName,
-                    ProductCategoryId = productCategoryId
-                };
-
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, ProductToDTO(product));
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Producte ja existent");
-                return BadRequest(ModelState);
-            }
+            return await _repository.AddProduct(productDTO);
         }
 
-        // DELETE: api/Products/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProduct(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-
-            return product;
-        }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.Id == id);
-        }
-
-        private static ProductDTO ProductToDTO(Product product) =>
+        public static ProductDTO ProductToDTO(Product product) =>
             new ProductDTO
             {
                 Id = product.Id,
@@ -152,16 +68,11 @@ namespace ITAcademyERP.Controllers
                 ProductCategoryName = product.ProductCategory.ProductCategoryName
             };
 
-        public int GetProductId (string productName)
+        public int GetProductId(string productName)
         {
-            var productId = _context.Products.FirstOrDefault(x => x.ProductName == productName).Id;
+            var productId = /*_repository.Products.FirstOrDefault(x => x.ProductName == productName).Id;*/ 9;
 
             return productId;
-        }
-
-        private bool ProductNameExists(string name)
-        {
-            return _context.Products.Any(p => p.ProductName == name);
-        }
+        }        
     }
 }

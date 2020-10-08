@@ -23,14 +23,17 @@ namespace ITAcademyERP.Controllers
         }
 
         // GET: api/[controller]
+
         [HttpGet]
+        [Route("generic/")]
         public async Task<ActionResult<IEnumerable<TEntity>>> Get()
         {
             return await _repository.GetAll();
         }
 
         // GET: api/[controller]/5
-        [HttpGet("{id}")]
+
+        [HttpGet("generic/{id}")]
         public async Task<ActionResult<TEntity>> Get(int id)
         {
             var entity = await _repository.Get(id);
@@ -42,18 +45,14 @@ namespace ITAcademyERP.Controllers
         }
 
         // PUT: api/[controller]/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, TEntity entity)
+        [HttpPut("generic/{id}")]
+        public async Task<IActionResult> Put(TEntity entity)
         {
-            if (id != entity.Id)
-            {
-                return BadRequest();
-            }
-
             return await _repository.Update(entity);
         }
 
         // POST: api/[controller]
+        [Route("generic/")]
         [HttpPost]
         public async Task<ActionResult<TEntity>> Post(TEntity entity)
         {

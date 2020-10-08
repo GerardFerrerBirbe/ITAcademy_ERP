@@ -34,6 +34,7 @@ namespace ITAcademyERP
                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ProductCategoriesRepository>();
+            services.AddScoped<ProductRepository>();
 
             services.AddIdentity<Person, IdentityRole>()
                 .AddEntityFrameworkStores<ITAcademyERPContext>()
