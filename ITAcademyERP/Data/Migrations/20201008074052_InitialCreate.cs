@@ -436,6 +436,13 @@ namespace ITAcademyERP.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_ProductCategoryName",
+                table: "ProductCategories",
+                column: "ProductCategoryName",
+                unique: true,
+                filter: "[ProductCategoryName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductCategoryId",
                 table: "Products",
                 column: "ProductCategoryId");

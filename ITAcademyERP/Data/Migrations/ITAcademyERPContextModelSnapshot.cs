@@ -290,9 +290,13 @@ namespace ITAcademyERP.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ProductCategoryName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductCategoryName")
+                        .IsUnique()
+                        .HasFilter("[ProductCategoryName] IS NOT NULL");
 
                     b.ToTable("ProductCategories");
                 });

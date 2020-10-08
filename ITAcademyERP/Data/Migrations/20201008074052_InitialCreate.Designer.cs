@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITAcademyERP.Data.Migrations
 {
     [DbContext(typeof(ITAcademyERPContext))]
-    [Migration("20201005163615_InitialCreate")]
+    [Migration("20201008074052_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -292,9 +292,13 @@ namespace ITAcademyERP.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ProductCategoryName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductCategoryName")
+                        .IsUnique()
+                        .HasFilter("[ProductCategoryName] IS NOT NULL");
 
                     b.ToTable("ProductCategories");
                 });

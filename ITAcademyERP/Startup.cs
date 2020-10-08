@@ -14,6 +14,7 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using ITAcademyERP.Data;
+using ITAcademyERP.Data.Repositories;
 
 namespace ITAcademyERP
 {
@@ -31,6 +32,8 @@ namespace ITAcademyERP
         {
             services.AddDbContext<ITAcademyERPContext>(opt =>
                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<ProductCategoriesRepository>();
 
             services.AddIdentity<Person, IdentityRole>()
                 .AddEntityFrameworkStores<ITAcademyERPContext>()
