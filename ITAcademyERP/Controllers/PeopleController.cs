@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITAcademyERP.Data;
+using ITAcademyERP.Data.Repositories;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,70 +15,32 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class PeopleController : ControllerBase
+    public class PeopleController : GenericController<Person, PeopleRepository>
     {
-        private readonly ITAcademyERPContext _context;
         private readonly AddressesController _addressesController;
+        private readonly PeopleRepository _repository;
 
         public PeopleController(
-            ITAcademyERPContext context,
-            AddressesController addressesController)
+            AddressesController addressesController,
+            PeopleRepository repository) : base(repository)
         {
-            _context = context;
             _addressesController = addressesController;
+            _repository = repository;
         }
 
-        // GET: api/People
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
+        public async Task<IActionResult> UpdatePerson(PersonDTO personDTO)
         {
-            return await _context.People
-                .ToListAsync();
-        }
-
-        public async Task<IActionResult> UpdatePerson(string id, PersonDTO personDTO)
-        {            
-            var person = await _context.People.FindAsync(id);
-
-            if (person == null)
-            {
-                return NotFound();
-            }
+            var person = await _repository.GetPerson(personDTO.Id);
 
             person.Email = personDTO.Email;
             person.FirstName = personDTO.FirstName;
             person.LastName = personDTO.LastName;
 
-            _context.Entry(person).State = EntityState.Modified;
+            await _repository.Update(person);
 
-            try
-            {
-                await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
 
             return NoContent();
-        }
-
-        private bool PersonExists(string id)
-        {
-            return _context.People.Any(e => e.Id == id);
-        }
-
-        public bool EmailExists(string email)
-        {
-            return _context.People.Any(p => p.Email == email);
         }
     }
 }

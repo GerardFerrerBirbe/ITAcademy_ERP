@@ -123,6 +123,7 @@ export class OrderDetailComponent implements OnInit {
   addOrderLine(){    
     let orderLine: OrderLine = Object.assign({}, this.orderLineFormGroup.value);
     console.table(orderLine);
+    this.orderHeaderId = parseInt(this.orderHeaderId);
     orderLine.orderHeaderId = this.orderHeaderId;
 
     this.orderLineService.addOrderLine(orderLine)

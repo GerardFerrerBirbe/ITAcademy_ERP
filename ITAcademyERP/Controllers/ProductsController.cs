@@ -15,21 +15,25 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class ProductsController : GenericController<Product, ProductRepository>
+    public class ProductsController : GenericController<Product, ProductsRepository>
     {
-        private readonly ProductRepository _repository;
-        public ProductsController(ProductRepository repository) : base(repository)
+        private readonly ProductsRepository _repository;
+        private readonly ProductCategoriesRepository _productCategoriesRepository;
+        public ProductsController(
+            ProductsRepository repository,
+            ProductCategoriesRepository productCategoriesRepository) : base(repository)
         {
             _repository = repository;
+            _productCategoriesRepository = productCategoriesRepository;
         }
 
         //GET: api/Products
        [HttpGet]
-        public async Task<IEnumerable<ProductDTO>> GetProduct()
+        public async Task<IEnumerable<ProductDTO>> GetProducts()
         {
-            var product = await _repository.GetProducts();
+            var products = await _repository.GetProducts();
 
-            return product.Select(p => ProductToDTO(p));
+            return products.Select(p => ProductToDTO(p));
         }
 
         // GET: api/Products/5
@@ -50,14 +54,25 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(ProductDTO productDTO)
         {
-            return await _repository.UpdateProduct(productDTO);
+            var product = await _repository.GetProduct(productDTO.Id);
+
+            product.ProductName = productDTO.ProductName;
+            product.ProductCategoryId = _productCategoriesRepository.GetProductCategoryId(productDTO.ProductCategoryName);
+
+            return await _repository.Update(product);
         }
 
         // POST: api/Products
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
         {
-            return await _repository.AddProduct(productDTO);
+            var product = new Product
+            {
+                ProductName = productDTO.ProductName,
+                ProductCategoryId = _productCategoriesRepository.GetProductCategoryId(productDTO.ProductCategoryName)
+            };
+
+            return await _repository.Add(product);
         }
 
         public static ProductDTO ProductToDTO(Product product) =>
@@ -66,13 +81,6 @@ namespace ITAcademyERP.Controllers
                 Id = product.Id,
                 ProductName = product.ProductName,
                 ProductCategoryName = product.ProductCategory.ProductCategoryName
-            };
-
-        public int GetProductId(string productName)
-        {
-            var productId = /*_repository.Products.FirstOrDefault(x => x.ProductName == productName).Id;*/ 9;
-
-            return productId;
-        }        
+            };      
     }
 }

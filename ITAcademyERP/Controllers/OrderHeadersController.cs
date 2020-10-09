@@ -8,224 +8,105 @@ using ITAcademyERP.Models;
 using ITAcademyERP.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ITAcademyERP.Data.Repositories;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class OrderHeadersController : ControllerBase
+    public class OrderHeadersController : GenericController<OrderHeader, OrderHeadersRepository>
     {
-        private readonly ITAcademyERPContext _context;
-        private readonly ClientsController _clientsController;
-        private readonly EmployeesController _employeesController;
-        private readonly OrderPrioritiesController _orderPrioritiesController;
-        private readonly OrderStatesController _orderStatesController;
+        private readonly OrderHeadersRepository _repository;
+        private readonly ClientsRepository _clientsRepository;
+        private readonly EmployeesRepository _employeesRepository;
+        private readonly OrderPrioritiesRepository _orderPrioritiesRepository;
+        private readonly OrderStatesRepository _orderStatesRepository;
         private readonly OrderLinesController _orderLinesController;
 
         public OrderHeadersController(
-            ITAcademyERPContext context,
-            ClientsController clientsController,
-            EmployeesController employeesController,
-            OrderPrioritiesController orderPrioritiesController,
-            OrderStatesController orderStatesController,
-            OrderLinesController orderLinesController)
+            OrderHeadersRepository repository,
+            ClientsRepository clientsRepository,
+            EmployeesRepository employeesRepository,
+            OrderPrioritiesRepository orderPrioritiesRepository,
+            OrderStatesRepository orderStatesRepository,
+            OrderLinesController orderLinesController) : base(repository)
         {
-            _context = context;
-            _clientsController = clientsController;
-            _employeesController = employeesController;
-            _orderPrioritiesController = orderPrioritiesController;
-            _orderStatesController = orderStatesController;
+            _repository = repository;
+            _clientsRepository = clientsRepository;
+            _employeesRepository = employeesRepository;
+            _orderStatesRepository = orderStatesRepository;
+            _orderPrioritiesRepository = orderPrioritiesRepository;
             _orderLinesController = orderLinesController;
         }
 
         // GET: api/OrderHeaders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeaders()
+        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeaders()
         {
-            var orderHeaders = await _context.OrderHeaders                    
-                    .Include(o => o.Client)
-                    .ThenInclude(c => c.Person)
-                    .ThenInclude(p => p.Addresses)
-                    .Include(o => o.Employee)
-                    .ThenInclude(e => e.Person)
-                    .Include(o => o.OrderState)
-                    .Include(o => o.OrderPriority)
-                    .Include(o => o.OrderLines)
-                    .ThenInclude(o => o.Product)                  
-                    .ToListAsync();
+            var orderHeaders = await _repository.GetOrderHeaders();
 
-            var orderHeadersDTO = new List<OrderHeaderDTO>();
-
-            foreach (var orderHeader in orderHeaders)
-            {
-                var orderHeaderDTO = OrderHeaderToDTO(orderHeader);
-                orderHeadersDTO.Add(orderHeaderDTO);
-            }
-
-            return orderHeadersDTO;
+            return orderHeaders.Select(e => OrderHeaderToDTO(e));
         }
 
         [Route("Employee")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByEmployee(int employeeId)
+        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByEmployee(int employeeId)
         {
-            var orderHeaders = await _context.OrderHeaders
-                    .Include(o => o.Client)
-                    .ThenInclude(c => c.Person)
-                    .ThenInclude(p => p.Addresses)
-                    .Include(o => o.Employee)
-                    .ThenInclude(e => e.Person)
-                    .Include(o => o.OrderState)
-                    .Include(o => o.OrderPriority)
-                    .Include(o => o.OrderLines)
-                    .ThenInclude(o => o.Product)
-                    .Where(o => o.EmployeeId == employeeId)
-                    .ToListAsync();
+            var orderHeaders = await _repository.GetOrderHeadersByEmployee(employeeId);
 
-            var orderHeadersDTO = new List<OrderHeaderDTO>();
-
-            foreach (var orderHeader in orderHeaders)
-            {
-                var orderHeaderDTO = OrderHeaderToDTO(orderHeader);
-                orderHeadersDTO.Add(orderHeaderDTO);
-            }
-
-            return orderHeadersDTO;
+            return orderHeaders.Select(e => OrderHeaderToDTO(e));
         }
 
         [Route("Client")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderHeaderDTO>>> GetOrderHeadersByClient(int clientId)
+        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByClient(int clientId)
         {
-            var orderHeaders = await _context.OrderHeaders
-                    .Include(o => o.Client)
-                    .ThenInclude(c => c.Person)
-                    .ThenInclude(p => p.Addresses)
-                    .Include(o => o.Employee)
-                    .ThenInclude(e => e.Person)
-                    .Include(o => o.OrderState)
-                    .Include(o => o.OrderPriority)
-                    .Include(o => o.OrderLines)
-                    .ThenInclude(o => o.Product)
-                    .Where(o => o.ClientId == clientId)
-                    .ToListAsync();
+            var orderHeaders = await _repository.GetOrderHeadersByClient(clientId);
 
-            var orderHeadersDTO = new List<OrderHeaderDTO>();
-
-            foreach (var orderHeader in orderHeaders)
-            {
-                var orderHeaderDTO = OrderHeaderToDTO(orderHeader);
-                orderHeadersDTO.Add(orderHeaderDTO);
-            } 
-
-            return orderHeadersDTO;
+            return orderHeaders.Select(e => OrderHeaderToDTO(e));
         }
 
         //GET: api/OrderHeaders/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderHeader([FromRoute] int id, bool includeOrderLines = false)
+        public async Task<ActionResult<OrderHeaderDTO>> GetOrderHeader(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            OrderHeader orderHeader;
-
-            if (includeOrderLines)
-            {
-                orderHeader = await _context.OrderHeaders
-                    .Include(o => o.Client)
-                    .ThenInclude(c => c.Person)
-                    .ThenInclude(p => p.Addresses)
-                    .Include(o => o.Employee)
-                    .ThenInclude(e => e.Person)
-                    .Include(o => o.OrderState)
-                    .Include(o => o.OrderPriority)
-                    .Include(o => o.OrderLines)
-                    .ThenInclude(o => o.Product)
-                    .SingleOrDefaultAsync(o => o.Id == id);
-            }
-            else
-            {
-                orderHeader = await _context.OrderHeaders
-                    .Include(o => o.Client)
-                    .ThenInclude(c => c.Person)
-                    .ThenInclude(p => p.Addresses)
-                    .Include(o => o.Employee)
-                    .ThenInclude(e => e.Person)
-                    .Include(o => o.OrderState)
-                    .Include(o => o.OrderPriority)
-                    .SingleOrDefaultAsync(o => o.Id == id);
-            }
+            var orderHeader = await _repository.GetOrderHeader(id);              
 
             if (orderHeader == null)
             {
                 return NotFound();
             }
 
-            return Ok(OrderHeaderToDTO(orderHeader));
+            return OrderHeaderToDTO(orderHeader);
         }
 
         // PUT: api/OrderHeaders/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderHeader(int id, OrderHeaderDTO orderHeaderDTO)
+        public async Task<IActionResult> PutOrderHeader(OrderHeaderDTO orderHeaderDTO)
         {
-            if (id != orderHeaderDTO.Id)
-            {
-                return BadRequest();
-            }
+            var orderHeader = await _repository.GetOrderHeader(orderHeaderDTO.Id);
 
-            var orderHeader = await _context.OrderHeaders.FindAsync(id);
-
-            if (orderHeader == null)
-            {
-                return NotFound();
-            }            
-            
-            if (orderHeaderDTO.OrderState == "Completat" && _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState) != orderHeader.OrderStateId)
+            if (orderHeaderDTO.OrderState == "Completat" && _orderStatesRepository.GetOrderStateId(orderHeaderDTO.OrderState) != orderHeader.OrderStateId)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
 
-            if (_employeesController.GetEmployeeId(orderHeaderDTO.Employee) != orderHeader.EmployeeId)
+            if (_employeesRepository.GetEmployeeId(orderHeaderDTO.Employee) != orderHeader.EmployeeId)
             {
                 orderHeader.AssignToEmployeeDate = DateTime.Now;
             }
 
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
-            orderHeader.ClientId = _clientsController.GetClientId(orderHeaderDTO.Client);
-            orderHeader.EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee);
-            orderHeader.OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState);
-            orderHeader.OrderPriorityId = _orderPrioritiesController.GetOrderPriorityId(orderHeaderDTO.OrderPriority);
+            orderHeader.ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client);
+            orderHeader.EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee);
+            orderHeader.OrderStateId = _orderStatesRepository.GetOrderStateId(orderHeaderDTO.OrderState);
+            orderHeader.OrderPriorityId = _orderPrioritiesRepository.GetOrderPriorityId(orderHeaderDTO.OrderPriority);
 
-            _context.Entry(orderHeader).State = EntityState.Modified;                   
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderHeaderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _repository.Update(orderHeader);
         }       
 
         // POST: api/OrderHeaders
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<OrderHeader>> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
         {            
@@ -233,41 +114,17 @@ namespace ITAcademyERP.Controllers
             var orderHeader = new OrderHeader
             {
                 OrderNumber = orderHeaderDTO.OrderNumber,
-                ClientId = _clientsController.GetClientId(orderHeaderDTO.Client),
-                EmployeeId = _employeesController.GetEmployeeId(orderHeaderDTO.Employee),
-                OrderStateId = _orderStatesController.GetOrderStateId(orderHeaderDTO.OrderState),
-                OrderPriorityId = _orderPrioritiesController.GetOrderPriorityId(orderHeaderDTO.OrderPriority),
+                ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client),
+                EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee),
+                OrderStateId = _orderStatesRepository.GetOrderStateId(orderHeaderDTO.OrderState),
+                OrderPriorityId = _orderPrioritiesRepository.GetOrderPriorityId(orderHeaderDTO.OrderPriority),
                 CreationDate = DateTime.Now,
                 AssignToEmployeeDate = DateTime.Now
             };
 
-            _context.OrderHeaders.Add(orderHeader);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrderHeader", new { id = orderHeader.Id }, OrderHeaderToDTO(orderHeader));
-        }
-
-        //DELETE: api/OrderHeaders/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<OrderHeader>> DeleteOrderHeader(int id)
-        {
-            var orderHeader = await _context.OrderHeaders.FindAsync(id);
-            if (orderHeader == null)
-            {
-                return NotFound();
-            }
-
-            _context.OrderHeaders.Remove(orderHeader);
-            await _context.SaveChangesAsync();
-
-            return orderHeader;
-        }
-
-        private bool OrderHeaderExists(int id)
-        {
-            return _context.OrderHeaders.Any(e => e.Id == id);
-        }
-
+            return await _repository.Add(orderHeader);
+        }        
+        
         public OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
 
             var orderLinesDTO = new List<OrderLineDTO>();

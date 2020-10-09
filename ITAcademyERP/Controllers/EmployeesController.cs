@@ -9,47 +9,45 @@ using ITAcademyERP.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using ITAcademyERP.Data.Repositories;
+using System.Net;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController : GenericController<Employee, EmployeesRepository>
     {
-        private readonly ITAcademyERPContext _context;
+        private readonly EmployeesRepository _repository;
         private readonly PeopleController _peopleController;
-        private readonly UserManager<Person> _userManager;
+        private readonly PeopleRepository _peopleRepository;
+
 
         public EmployeesController(
-            ITAcademyERPContext context,
+            EmployeesRepository repository,
             PeopleController peopleController,
-            UserManager<Person> userManager)
+            PeopleRepository peopleRepository) : base(repository)
         {
-            _context = context;
+            _repository = repository;
+            _peopleRepository = peopleRepository;
             _peopleController = peopleController;
-            _userManager = userManager;
         }
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetEmployees()
-        {            
-            return await _context.Employees
-                .Include(e => e.Person)
-                .ThenInclude(p => p.Addresses)
-                .Select(e => EmployeeToDTO(e))
-                .ToListAsync();
+        public async Task<IEnumerable<EmployeeDTO>> GetEmployees()
+        {
+            var employees = await _repository.GetEmployees();
+
+            return employees.Select(e => EmployeeToDTO(e));
         }
 
         // GET: api/Employees/5
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDTO>> GetEmployee(int id)
-        {              
-            var employee = await _context.Employees
-                .Include(e => e.Person)
-                .ThenInclude(p => p.Addresses)
-                .SingleOrDefaultAsync(e => e.Id == id);
+        {
+            var employee = await _repository.GetEmployee(id);
 
             if (employee == null)
             {
@@ -60,128 +58,71 @@ namespace ITAcademyERP.Controllers
         }
 
         // PUT: api/Employees/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, EmployeeDTO employeeDTO)
+        public async Task<IActionResult> PutEmployee(EmployeeDTO employeeDTO)
         {
-            var employee = await _context.Employees
-                .Include(e => e.Person)
-                .ThenInclude(p => p.Addresses)
-                .SingleOrDefaultAsync(e => e.Id == id);
-
-            if (employeeDTO.Email != employee.Person.Email && _peopleController.EmailExists(employeeDTO.Email))
-            {
-                ModelState.AddModelError(string.Empty, "Email ja existent");
-                return BadRequest(ModelState);
-            }            
-
-            employee.Position = employeeDTO.Position;
-            employee.Salary = employeeDTO.Salary;
-
-            _context.Entry(employee).State = EntityState.Modified;
-
+            var personId = _peopleRepository.GetPersonId(employeeDTO.Email);
+            
             var personDTO = new PersonDTO
             {
+                Id = personId,
                 Email = employeeDTO.Email,
                 FirstName = employeeDTO.FirstName,
                 LastName = employeeDTO.LastName,
                 Addresses = employeeDTO.Addresses
             };
 
-            await _peopleController.UpdatePerson(employee.PersonId, personDTO);           
+            await _peopleController.UpdatePerson(personDTO);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EmployeeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var employee = await _repository.GetEmployee(employeeDTO.Id);
 
-            return NoContent();
+            employee.Position = employeeDTO.Position;
+            employee.Salary = employeeDTO.Salary;
+
+            return await _repository.Update(employee);
         }
 
         // POST: api/Employees
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
-        {                            
-            if (!_peopleController.EmailExists(employeeDTO.Email))
+        {
+            var person = new Person
             {
-                var person = new Person
-                {
-                    Email = employeeDTO.Email,
-                    UserName = employeeDTO.Email,
-                    NormalizedUserName = employeeDTO.Email.ToUpper(),
-                    FirstName = employeeDTO.FirstName,
-                    LastName = employeeDTO.LastName
-                };
+                Email = employeeDTO.Email,
+                FirstName = employeeDTO.FirstName,
+                LastName = employeeDTO.LastName
+            };
 
-                _context.People.Add(person);
+            var addPersonResult = await _peopleRepository.Add(person);
 
-                _context.SaveChanges();
-            }
+            var result = addPersonResult.Result;
 
-            var employeeExists = _context.Employees.FirstOrDefault(e => e.Person.Email == employeeDTO.Email);
+            var statusCode = GetHttpStatusCode(result).ToString();
 
-            if (employeeExists != default)
+            if (statusCode == "OK")
             {
-                ModelState.AddModelError(string.Empty, "Empleat ja existent");
-                return BadRequest(ModelState);
-            }
-            else
-            {
-                var personId = _context.People.FirstOrDefault(p => p.Email == employeeDTO.Email).Id;
-
                 var employee = new Employee
                 {
-                    PersonId = personId,
+                    PersonId = _peopleRepository.GetPersonId(employeeDTO.Email),
                     Position = employeeDTO.Position,
                     Salary = employeeDTO.Salary
                 };
 
-                _context.Employees.Add(employee);
-
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetEmployee), new { id = employee.Id }, EmployeeToDTO(employee));
+                return await _repository.Add(employee);
             }
-           
-        }
-
-        // DELETE: api/Employees/5
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Employee>> DeleteEmployee(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
+            else
             {
-                return NotFound();
+                var employee = new Employee
+                {
+                    PersonId = _peopleRepository.GetPersonId(employeeDTO.Email),
+                    Position = employeeDTO.Position,
+                    Salary = employeeDTO.Salary
+                };
+
+                return await _repository.Add(employee);
             }
-
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-
-            return employee;
-        }
-
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.Id == id);
         }
 
         private static EmployeeDTO EmployeeToDTO(Employee employee) =>
@@ -196,18 +137,20 @@ namespace ITAcademyERP.Controllers
                 Position = employee.Position,
                 Salary = employee.Salary
             };
-
-        public int GetEmployeeId (string employeeName)
+        
+        public static HttpStatusCode GetHttpStatusCode(IActionResult functionResult)
         {
-            var personEmployeeId = _context.People
-                           .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == employeeName)
-                           .Id;
-
-            var employeeId = _context.Employees
-                            .FirstOrDefault(x => x.PersonId == personEmployeeId)
-                            .Id;
-
-            return employeeId;
+            try
+            {
+                return (HttpStatusCode)functionResult
+                    .GetType()
+                    .GetProperty("StatusCode")
+                    .GetValue(functionResult, null);
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
     }
 }

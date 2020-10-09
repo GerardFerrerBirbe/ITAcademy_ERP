@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,7 @@ namespace ITAcademyERP.Data.Repositories
             try
             {
                 await _context.SaveChangesAsync();
-                CreatedAtAction("Get", new { id = entity.Id }, entity);
+                //CreatedAtAction("Get", new { id = entity.Id }, entity);
             }
             catch (Exception e)
             {

@@ -18,12 +18,12 @@ export class PersonService {
   constructor(private http: HttpClient) { }
 
   getPeople(): Observable<Person[]>{
-    var output = this.http.get<Person[]>(this.apiUrl);
+    var output = this.http.get<Person[]>(this.apiUrl  + "/generic/");
     return output;
   }
 
   getPerson(id: string): Observable<Person> {
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.apiUrl}/generic/${id}`;
     return this.http.get<Person>(url)
   }
 
@@ -32,7 +32,7 @@ export class PersonService {
   }
 
   addPerson(person: Person): Observable<Person> {
-    return this.http.post<Person>(this.apiUrl, person, this.httpOptions);
+    return this.http.post<Person>(this.apiUrl  + "/generic/", person, this.httpOptions);
   }
 
   deletePerson(person: Person | number): Observable<Person> {

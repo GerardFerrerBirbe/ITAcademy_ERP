@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITAcademyERP.Data;
+using System;
 
 namespace ITAcademyERP.Models
 {

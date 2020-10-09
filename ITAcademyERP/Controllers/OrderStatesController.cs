@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITAcademyERP.Data;
+using ITAcademyERP.Data.Repositories;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,29 +15,11 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class OrderStatesController : ControllerBase
+    public class OrderStatesController : GenericController<OrderState, OrderStatesRepository>
     {
-        private readonly ITAcademyERPContext _context;
-
-        public OrderStatesController(ITAcademyERPContext context)
+        public OrderStatesController(OrderStatesRepository repository) : base(repository)
         {
-            _context = context;
-        }
-
-        // GET: api/OrderStates
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderState>>> GetOrderState()
-        {
-            return await _context.OrderStates.ToListAsync();
-        }
-
-        public int GetOrderStateId (string orderStateName)
-        {
-            var orderStateId = _context.OrderStates
-                            .FirstOrDefault(x => x.State == orderStateName)
-                            .Id;
-
-            return orderStateId;
-        }
+            
+        }       
     }
 }

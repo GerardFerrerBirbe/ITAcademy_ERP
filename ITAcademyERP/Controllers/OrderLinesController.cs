@@ -8,38 +8,36 @@ using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using ITAcademyERP.Data;
+using ITAcademyERP.Data.Repositories;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
     [ApiController]
-    public class OrderLinesController : ControllerBase
+    public class OrderLinesController : GenericController<OrderLine, OrderLinesRepository>
     {
-        private readonly ITAcademyERPContext _context;
-        private readonly ProductsController _productsController;
-
+        private readonly OrderLinesRepository _repository;
+        private readonly ProductsRepository _productsRepository;
 
         public OrderLinesController(
-            ITAcademyERPContext context,
-            ProductsController productsController)
+            OrderLinesRepository repository,
+            ProductsRepository productsRepository) : base(repository)
         {
-            _context = context;
-            _productsController = productsController;
+            _repository = repository;
+            _productsRepository = productsRepository;
         }
 
         // GET: api/OrderLines
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderLineDTO>>> GetOrderLines()
+        public async Task<IEnumerable<OrderLineDTO>> GetOrderLines()
         {
-            return await _context.OrderLines
-                .Select(p => OrderLineToDTO(p))
-                .ToListAsync();
+            var orderLines = await _repository.GetAll();
+
+            return orderLines.Select(p => OrderLineToDTO(p));                
         }
 
         // POST: api/OrderLines
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<OrderLine>> AddOrderLine(OrderLineDTO orderLineDTO)
         {
@@ -47,33 +45,13 @@ namespace ITAcademyERP.Controllers
             {
                 Id = orderLineDTO.Id,
                 OrderHeaderId = orderLineDTO.OrderHeaderId,
-                ProductId = _productsController.GetProductId(orderLineDTO.ProductName),
+                ProductId = _productsRepository.GetProductId(orderLineDTO.ProductName),
                 UnitPrice = orderLineDTO.UnitPrice,
                 Vat = orderLineDTO.Vat,
                 Quantity = orderLineDTO.Quantity
             };
 
-            _context.OrderLines.Add(orderLine);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrderLine", new { id = orderLine.Id }, OrderLineToDTO(orderLine));
-        }
-
-        // DELETE: api/OrderLines/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<OrderLine>> DeleteOrderLine(int id)
-        {
-            var orderLine = await _context.OrderLines.FindAsync(id);
-
-            if (orderLine == null)
-            {
-                return NotFound();
-            }
-
-            _context.OrderLines.Remove(orderLine);
-            await _context.SaveChangesAsync();
-
-            return orderLine;
+            return await _repository.Add(orderLine);
         }
 
         public OrderLineDTO OrderLineToDTO(OrderLine orderLine)

@@ -39,6 +39,10 @@ namespace ITAcademyERP.Data
             builder.Entity<Product>()
                 .HasIndex(p => p.ProductName)
                 .IsUnique();
+
+            builder.Entity<Person>()
+                .HasIndex(p => p.Email)
+                .IsUnique();
         }
 
     }

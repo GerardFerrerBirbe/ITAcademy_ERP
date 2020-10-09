@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ITAcademyERP.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class Employee
+    public partial class Employee : IEntity
     {
         public Employee()
         {

@@ -17,6 +17,6 @@ export class OrderStateService {
   constructor(private http: HttpClient) { }
 
   getOrderStates(): Observable<OrderState[]>{
-    return this.http.get<OrderState[]>(this.apiUrl);
+    return this.http.get<OrderState[]>(this.apiUrl + "/generic/");
   }
 }

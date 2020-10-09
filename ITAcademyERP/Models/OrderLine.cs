@@ -1,14 +1,15 @@
-﻿using System;
+﻿using ITAcademyERP.Data;
+using System;
 using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class OrderLine
+    public partial class OrderLine : IEntity
     {
         public OrderLine()
         {            
         }
-
+        
         public int Id { get; set; }
         public int OrderHeaderId { get; set; }
         public int ProductId { get; set; }

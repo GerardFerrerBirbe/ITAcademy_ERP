@@ -17,6 +17,6 @@ export class OrderPriorityService {
   constructor(private http: HttpClient) { }
 
   getOrderPriorities(): Observable<OrderPriority[]>{
-    return this.http.get<OrderPriority[]>(this.apiUrl);
+    return this.http.get<OrderPriority[]>(this.apiUrl + "/generic/");
   }
 }

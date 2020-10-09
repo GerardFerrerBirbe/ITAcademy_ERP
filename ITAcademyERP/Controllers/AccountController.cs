@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using ITAcademyERP.Data;
 using Microsoft.EntityFrameworkCore;
+using ITAcademyERP.Data.Repositories;
 
 namespace ITAcademyERP.Controllers
 {
@@ -24,57 +25,50 @@ namespace ITAcademyERP.Controllers
         private readonly UserManager<Person> _userManager;
         private readonly SignInManager<Person> _signInManager;
         private readonly IConfiguration _configuration;
-        private readonly ITAcademyERPContext _context;
+        private readonly PeopleRepository _peopleRepository;
 
         public AccountController(
             UserManager<Person> userManager,
             SignInManager<Person> signInManager,
             IConfiguration configuration,
-            ITAcademyERPContext context)
+            PeopleRepository peopleRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            this._configuration = configuration;
-            _context = context;
+            _configuration = configuration;
+            _peopleRepository = peopleRepository;
         }
 
         [Route("Create")]
         [HttpPost]
         public async Task<IActionResult> CreatePassword([FromBody] UserInfo model)
-        {
-            if (ModelState.IsValid)
+        {            
+            var user = await _peopleRepository.GetPersonByEmail(model.Email);
+
+            if (user == default)
             {
-                var user = _context.People.SingleOrDefault(p => p.Email == model.Email);
-
-                if (user == default)
-                {
-                    ModelState.AddModelError(string.Empty, "Email no registrat. Contacta amb l'administrador");
-                    return BadRequest(ModelState);
-                }
+                ModelState.AddModelError(string.Empty, "Email no registrat. Contacta amb l'administrador");
+                return BadRequest(ModelState);
+            }
                 
-                if (user.PasswordHash != null)
-                {
-                    ModelState.AddModelError(string.Empty, "Usuari ja registrat. Clica al botó de 'Login'");
-                    return BadRequest(ModelState);
-                }
+            if (user.PasswordHash != null)
+            {
+                ModelState.AddModelError(string.Empty, "Usuari ja registrat. Clica al botó de 'Login'");
+                return BadRequest(ModelState);
+            }
 
-                var hasher = new PasswordHasher<IdentityUser>();
+            var hasher = new PasswordHasher<IdentityUser>();
 
-                user.PasswordHash = hasher.HashPassword(user, model.Password);
+            user.PasswordHash = hasher.HashPassword(user, model.Password);
 
-                _context.Entry(user).State = EntityState.Modified;
+            await _peopleRepository.Update(user);
+            
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
 
-                var result = await _userManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    var roles = await _userManager.GetRolesAsync(user);
-
-                    return BuildToken(model, roles);
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
+                return await BuildToken(model, roles);
             }
             else
             {
@@ -85,31 +79,25 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] UserInfo userInfo)
-        {
-            if (ModelState.IsValid)
+        {            
+            var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
+            
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    var user = await _userManager.FindByEmailAsync(userInfo.Email);
+                var user = await _userManager.FindByEmailAsync(userInfo.Email);
 
-                    var roles = await _userManager.GetRolesAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
                     
-                    return BuildToken(userInfo, roles);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Contrasenya incorrecte");
-                    return BadRequest(ModelState);
-                }
+                return await BuildToken(userInfo, roles);
             }
             else
             {
+                ModelState.AddModelError(string.Empty, "Contrasenya incorrecte");
                 return BadRequest(ModelState);
-            }
+            }            
         }
 
-        private IActionResult BuildToken(UserInfo userInfo, IList<string> roles)
+        private async Task<IActionResult> BuildToken(UserInfo userInfo, IList<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -134,7 +122,7 @@ namespace ITAcademyERP.Controllers
                expires: expiration,
                signingCredentials: creds);
 
-            var user = _context.People.FirstOrDefault(p => p.Email == userInfo.Email);
+            var user = await _peopleRepository.GetPersonByEmail(userInfo.Email);
             var userName = user.FirstName + ' ' + user.LastName;
             var isAdminUser = roles.Contains("Admin");
             

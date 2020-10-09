@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ITAcademyERP.Controllers;
 using ITAcademyERP.Data;
+using ITAcademyERP.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,40 +15,38 @@ using Microsoft.EntityFrameworkCore;
 namespace ITAcademyERP.Models
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
     [ApiController]
-    public class ClientsController : ControllerBase
+    public class ClientsController : GenericController<Client, ClientsRepository>
     {
-        private readonly ITAcademyERPContext _context;
+        private readonly ClientsRepository _repository;
         private readonly PeopleController _peopleController;
+        private readonly PeopleRepository _peopleRepository;
 
         public ClientsController(
-            ITAcademyERPContext context,
-            PeopleController peopleController)
+            ClientsRepository repository,
+            PeopleController peopleController,
+            PeopleRepository peopleRepository) : base(repository)
         {
-            _context = context;
+            _repository = repository;
             _peopleController = peopleController;
+            _peopleRepository = peopleRepository;
         }
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClientDTO>>> GetClients()
+        public async Task<IEnumerable<ClientDTO>> GetClients()
         {
-            return await _context.Clients
-                .Include(c => c.Person)
-                .ThenInclude(p => p.Addresses)
-                .Select(c => ClientToDTO(c))
-                .ToListAsync();
+            var client = await _repository.GetClients();
+
+            return client.Select(c => ClientToDTO(c));
         }
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ClientDTO>> GetClient(int id)
         {
-            var client = await _context.Clients
-                .Include(c => c.Person)
-                .ThenInclude(p => p.Addresses)
-                .SingleOrDefaultAsync(c => c.Id == id);
+            var client = await _repository.GetClient(id);
 
             if (client == null)
             {
@@ -57,115 +57,58 @@ namespace ITAcademyERP.Models
         }
 
         // PUT: api/Clients/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(int id, ClientDTO clientDTO)
+        public async Task<IActionResult> PutClient(ClientDTO clientDTO)
         {
-            var client = await _context.Clients
-                .Include(e => e.Person)
-                .ThenInclude(p => p.Addresses)
-                .SingleOrDefaultAsync(e => e.Id == id);
-
-            if (clientDTO.Email != client.Person.Email && _peopleController.EmailExists(clientDTO.Email))
-            {
-                ModelState.AddModelError(string.Empty, "Email ja existent");
-                return BadRequest(ModelState);
-            }            
+            var personId = _peopleRepository.GetPersonId(clientDTO.Email);
 
             var personDTO = new PersonDTO
             {
+                Id = personId,
                 Email = clientDTO.Email,
                 FirstName = clientDTO.FirstName,
                 LastName = clientDTO.LastName,
                 Addresses = clientDTO.Addresses
             };
 
-            await _peopleController.UpdatePerson(client.PersonId, personDTO);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _peopleController.UpdatePerson(personDTO);
         }
 
         // POST: api/Clients
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
-        {            
-            if (!_peopleController.EmailExists(clientDTO.Email))
+        {               
+            var person = new Person
             {
-                var person = new Person
+                Email = clientDTO.Email,
+                FirstName = clientDTO.FirstName,
+                LastName = clientDTO.LastName
+            };            
+            
+            var addPersonResult = await _peopleRepository.Add(person);
+
+            var result = addPersonResult.Result;
+
+            var statusCode = GetHttpStatusCode(result).ToString();
+
+            if (statusCode == "OK")
+            {
+                var client = new Client
                 {
-                    Email = clientDTO.Email,
-                    FirstName = clientDTO.FirstName,
-                    LastName = clientDTO.LastName
+                    PersonId = _peopleRepository.GetPersonId(clientDTO.Email)
                 };
 
-                _context.People.Add(person);
-
-                _context.SaveChanges();
-            }
-
-            var clientExists = _context.Clients.FirstOrDefault(e => e.Person.Email == clientDTO.Email);
-
-            if (clientExists != default)
-            {
-                ModelState.AddModelError(string.Empty, "Client ja existent");
-                return BadRequest(ModelState);
+                return await _repository.Add(client);
             }
             else
             {
-                var personId = _context.People.FirstOrDefault(p => p.Email == clientDTO.Email).Id;
-
                 var client = new Client
                 {
-                    PersonId = personId
+                    PersonId = _peopleRepository.GetPersonId(clientDTO.Email)
                 };
 
-                _context.Clients.Add(client);
-
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetClient), new { id = client.Id }, ClientToDTO(client));
-            }
-        }
-
-        // DELETE: api/Clients/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Client>> DeleteClient(int id)
-        {
-            var client = await _context.Clients.FindAsync(id);
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            _context.Clients.Remove(client);
-            await _context.SaveChangesAsync();
-
-            return client;
-        }
-
-        private bool ClientExists(int id)
-        {
-            return _context.Clients.Any(e => e.Id == id);
+                return await _repository.Add(client);
+            }           
         }
 
         private static ClientDTO ClientToDTO(Client client) =>
@@ -178,18 +121,20 @@ namespace ITAcademyERP.Models
                 LastName = client.Person.LastName,
                 Addresses = client.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList()
             };       
-        
-        public int GetClientId (string clientName)
+
+        public static HttpStatusCode GetHttpStatusCode(IActionResult functionResult)
         {
-            var personClientId = _context.People
-                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == clientName)
-                            .Id;
-
-            var clientId = _context.Clients
-                            .FirstOrDefault(x => x.PersonId == personClientId)
-                            .Id;
-
-            return clientId;
+            try
+            {
+                return (HttpStatusCode)functionResult
+                    .GetType()
+                    .GetProperty("StatusCode")
+                    .GetValue(functionResult, null);
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
     }
 }
