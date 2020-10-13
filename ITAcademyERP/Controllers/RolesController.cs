@@ -216,7 +216,7 @@ namespace ITAcademyERP.Controllers
         {
             var role = await _roleManager.FindByIdAsync(userDTO.RoleId);
 
-            var user = await _userManager.FindByNameAsync(userDTO.Name);
+            var user = await _userManager.FindByIdAsync(userDTO.Id);
 
             if (addOrRemove == "add")
             {
