@@ -15,7 +15,7 @@ using System.Net;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class EmployeesController : GenericController<Employee, EmployeesRepository>
     {
@@ -58,7 +58,7 @@ namespace ITAcademyERP.Controllers
         }
 
         // PUT: api/Employees/5
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(EmployeeDTO employeeDTO)
         {
@@ -93,7 +93,7 @@ namespace ITAcademyERP.Controllers
         }
 
         // POST: api/Employees
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult> PostEmployee(EmployeeDTO employeeDTO)
         {

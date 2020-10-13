@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ITAcademyERP.Models
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
     [ApiController]
     public class ClientsController : GenericController<Client, ClientsRepository>
     {

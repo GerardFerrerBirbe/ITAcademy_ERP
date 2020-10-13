@@ -13,7 +13,7 @@ using ITAcademyERP.Data.Repositories;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class OrderHeadersController : GenericController<OrderHeader, OrderHeadersRepository>
     {
