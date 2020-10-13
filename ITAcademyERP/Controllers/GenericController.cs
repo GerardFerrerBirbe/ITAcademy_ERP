@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ITAcademyERP.Data;
 using ITAcademyERP.Data.Repositories;
@@ -54,7 +55,7 @@ namespace ITAcademyERP.Controllers
         // POST: api/[controller]
         [Route("generic/")]
         [HttpPost]
-        public async Task<ActionResult<TEntity>> Post(TEntity entity)
+        public async Task<ActionResult> Post(TEntity entity)
         {
             return await _repository.Add(entity);            
         }
@@ -69,6 +70,21 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
             return entity;
+        }
+
+        public static HttpStatusCode GetHttpStatusCode(IActionResult functionResult)
+        {
+            try
+            {
+                return (HttpStatusCode)functionResult
+                    .GetType()
+                    .GetProperty("StatusCode")
+                    .GetValue(functionResult, null);
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
     }
 }

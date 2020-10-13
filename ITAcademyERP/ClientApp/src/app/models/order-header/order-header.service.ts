@@ -32,9 +32,8 @@ export class OrderHeaderService {
   }
   
   getOrderHeader(id: string): Observable<OrderHeader> {
-    let params = new HttpParams().set('includeOrderLines', "true");
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<OrderHeader>(url, {params: params});
+    return this.http.get<OrderHeader>(url);
   }
 
   updateOrderHeader(orderHeader: OrderHeader): Observable<OrderHeader> {

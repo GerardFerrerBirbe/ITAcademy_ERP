@@ -11,7 +11,7 @@ namespace ITAcademyERP.Data.Repositories
         Task<List<T>> GetAll();
         Task<T> Get(int id);
         Task<IActionResult> Update(T entity);
-        Task<ActionResult<T>> Add(T entity);
+        Task<ActionResult> Add(T entity);
         Task<T> Delete(int id);
     }
 }

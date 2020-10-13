@@ -39,7 +39,7 @@ namespace ITAcademyERP.Controllers
 
         // POST: api/OrderLines
         [HttpPost]
-        public async Task<ActionResult<OrderLine>> AddOrderLine(OrderLineDTO orderLineDTO)
+        public async Task<ActionResult> AddOrderLine(OrderLineDTO orderLineDTO)
         {
             var orderLine = new OrderLine
             {

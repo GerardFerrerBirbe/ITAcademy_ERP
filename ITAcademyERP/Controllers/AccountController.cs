@@ -79,22 +79,30 @@ namespace ITAcademyERP.Controllers
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] UserInfo userInfo)
-        {            
-            var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
-            
-            if (result.Succeeded)
-            {
-                var user = await _userManager.FindByEmailAsync(userInfo.Email);
+        {
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
 
-                var roles = await _userManager.GetRolesAsync(user);
-                    
-                return await BuildToken(userInfo, roles);
+            if (user.PasswordHash == null)
+            {
+                ModelState.AddModelError(string.Empty, "És la primera vegada que entres? Si us plau, registra't");
+                return BadRequest(ModelState);
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Contrasenya incorrecte");
-                return BadRequest(ModelState);
-            }            
+                var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
+            
+                if (result.Succeeded)
+                {                
+                    var roles = await _userManager.GetRolesAsync(user);
+                    
+                    return await BuildToken(userInfo, roles);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Contrasenya incorrecte");
+                    return BadRequest(ModelState);
+                }
+            }
         }
 
         private async Task<IActionResult> BuildToken(UserInfo userInfo, IList<string> roles)

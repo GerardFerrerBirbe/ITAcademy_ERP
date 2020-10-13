@@ -36,11 +36,19 @@ namespace ITAcademyERP.Controllers
             person.FirstName = personDTO.FirstName;
             person.LastName = personDTO.LastName;
 
-            await _repository.Update(person);
+            var update = await _repository.Update(person);
 
-            await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
+            var statusCode = GetHttpStatusCode(update).ToString();
 
-            return NoContent();
+            if (statusCode != "OK")
+            {
+                return update;
+            }
+            else
+            {
+                await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
+                return Ok();
+            }
         }
     }
 }

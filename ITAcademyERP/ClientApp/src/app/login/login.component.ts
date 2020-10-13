@@ -26,17 +26,17 @@ export class LoginComponent implements OnInit {
 
   login() {
     let userInfo: IUserInfo = Object.assign({}, this.formGroup.value);
-    this.accountService.login(userInfo).subscribe(token => this.getToken(token),
+    this.accountService.login(userInfo).subscribe(token => this.setToken(token),
       error => this.manageError(error));
   }
 
   register() {
     let userInfo: IUserInfo = Object.assign({}, this.formGroup.value);
-    this.accountService.create(userInfo).subscribe(token => this.getToken(token),
+    this.accountService.create(userInfo).subscribe(token => this.setToken(token),
       error => this.manageError(error));
   }
 
-  getToken(token) {
+  setToken(token) {
     localStorage.setItem('token', token.token);
     localStorage.setItem('tokenExpiration', token.expiration);
     localStorage.setItem('userName', token.userName);

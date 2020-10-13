@@ -60,7 +60,7 @@ namespace ITAcademyERP.Models
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClient(ClientDTO clientDTO)
         {
-            var personId = _peopleRepository.GetPersonId(clientDTO.Email);
+            var personId = (await _peopleRepository.GetPerson(clientDTO.PersonId)).Id;
 
             var personDTO = new PersonDTO
             {
@@ -85,20 +85,13 @@ namespace ITAcademyERP.Models
                 LastName = clientDTO.LastName
             };            
             
-            var addPersonResult = await _peopleRepository.Add(person);
+            var addPerson = await _peopleRepository.Add(person);
 
-            var result = addPersonResult.Result;
+            var statusCode = GetHttpStatusCode(addPerson).ToString();
 
-            var statusCode = GetHttpStatusCode(result).ToString();
-
-            if (statusCode == "OK")
+            if (statusCode != "OK")
             {
-                var client = new Client
-                {
-                    PersonId = _peopleRepository.GetPersonId(clientDTO.Email)
-                };
-
-                return await _repository.Add(client);
+                return addPerson;
             }
             else
             {
@@ -120,21 +113,6 @@ namespace ITAcademyERP.Models
                 FirstName = client.Person.FirstName,
                 LastName = client.Person.LastName,
                 Addresses = client.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList()
-            };       
-
-        public static HttpStatusCode GetHttpStatusCode(IActionResult functionResult)
-        {
-            try
-            {
-                return (HttpStatusCode)functionResult
-                    .GetType()
-                    .GetProperty("StatusCode")
-                    .GetValue(functionResult, null);
-            }
-            catch
-            {
-                return HttpStatusCode.InternalServerError;
-            }
-        }
+            };        
     }
 }

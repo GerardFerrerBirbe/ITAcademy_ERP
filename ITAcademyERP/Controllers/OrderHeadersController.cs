@@ -108,7 +108,7 @@ namespace ITAcademyERP.Controllers
 
         // POST: api/OrderHeaders
         [HttpPost]
-        public async Task<ActionResult<OrderHeader>> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
+        public async Task<ActionResult> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
         {            
             
             var orderHeader = new OrderHeader

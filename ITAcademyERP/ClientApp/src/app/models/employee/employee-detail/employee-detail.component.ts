@@ -119,7 +119,8 @@ export class EmployeeDetailComponent implements OnInit {
     if (this.editionMode){
       //edit employee     
       this.employeeId = parseInt(this.employeeId);
-      employee.id = this.employeeId;      
+      employee.id = this.employeeId;
+      employee.personId = this.personId;     
       this.employeeService.updateEmployee(employee)
       .subscribe(
         () => { this.deleteAddresses();
@@ -130,7 +131,7 @@ export class EmployeeDetailComponent implements OnInit {
       //add employee
       this.employeeService.addEmployee(employee)
       .subscribe(
-        employee => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
+        () => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
         error => alert(error.error[""])
         );
     }    

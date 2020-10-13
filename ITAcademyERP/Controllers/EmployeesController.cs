@@ -62,7 +62,7 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(EmployeeDTO employeeDTO)
         {
-            var personId = _peopleRepository.GetPersonId(employeeDTO.Email);
+            var personId = (await _peopleRepository.GetPerson(employeeDTO.PersonId)).Id;
             
             var personDTO = new PersonDTO
             {
@@ -73,20 +73,29 @@ namespace ITAcademyERP.Controllers
                 Addresses = employeeDTO.Addresses
             };
 
-            await _peopleController.UpdatePerson(personDTO);
+            var updatePerson = await _peopleController.UpdatePerson(personDTO);
 
-            var employee = await _repository.GetEmployee(employeeDTO.Id);
+            var statusCode = GetHttpStatusCode(updatePerson).ToString();
 
-            employee.Position = employeeDTO.Position;
-            employee.Salary = employeeDTO.Salary;
+            if (statusCode != "OK")
+            {
+                return updatePerson;
+            }
+            else
+            {
+                var employee = await _repository.GetEmployee(employeeDTO.Id);
 
-            return await _repository.Update(employee);
+                employee.Position = employeeDTO.Position;
+                employee.Salary = employeeDTO.Salary;
+
+                return await _repository.Update(employee);
+            }            
         }
 
         // POST: api/Employees
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO employeeDTO)
+        public async Task<ActionResult> PostEmployee(EmployeeDTO employeeDTO)
         {
             var person = new Person
             {
@@ -95,22 +104,13 @@ namespace ITAcademyERP.Controllers
                 LastName = employeeDTO.LastName
             };
 
-            var addPersonResult = await _peopleRepository.Add(person);
+            var addPerson = await _peopleRepository.Add(person);
 
-            var result = addPersonResult.Result;
+            var statusCode = GetHttpStatusCode(addPerson).ToString();
 
-            var statusCode = GetHttpStatusCode(result).ToString();
-
-            if (statusCode == "OK")
+            if (statusCode != "OK")
             {
-                var employee = new Employee
-                {
-                    PersonId = _peopleRepository.GetPersonId(employeeDTO.Email),
-                    Position = employeeDTO.Position,
-                    Salary = employeeDTO.Salary
-                };
-
-                return await _repository.Add(employee);
+                return addPerson;
             }
             else
             {
@@ -136,21 +136,6 @@ namespace ITAcademyERP.Controllers
                 Addresses = employee.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList(),
                 Position = employee.Position,
                 Salary = employee.Salary
-            };
-        
-        public static HttpStatusCode GetHttpStatusCode(IActionResult functionResult)
-        {
-            try
-            {
-                return (HttpStatusCode)functionResult
-                    .GetType()
-                    .GetProperty("StatusCode")
-                    .GetValue(functionResult, null);
-            }
-            catch
-            {
-                return HttpStatusCode.InternalServerError;
-            }
-        }
+            };        
     }
 }

@@ -44,17 +44,16 @@ namespace ITAcademyERP.Data.Repositories
                 return BadRequest(ModelState);
             }
 
-            return NoContent();
+            return Ok();
         }
 
-        public async Task<ActionResult<TEntity>> Add(TEntity entity)
+        public async Task<ActionResult> Add(TEntity entity)
         {
             _context.Set<TEntity>().Add(entity);            
 
             try
             {
                 await _context.SaveChangesAsync();
-                //CreatedAtAction("Get", new { id = entity.Id }, entity);
             }
             catch (Exception e)
             {

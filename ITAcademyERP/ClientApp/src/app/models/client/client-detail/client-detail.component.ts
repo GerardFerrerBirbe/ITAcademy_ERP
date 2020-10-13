@@ -128,7 +128,7 @@ export class ClientDetailComponent implements OnInit {
       //add client
       this.clientService.addClient(client)
       .subscribe(
-        client => alert("Client " + client.firstName + " " + client.lastName + " creat correctament"),
+        () => alert("Client " + client.firstName + " " + client.lastName + " creat correctament"),
         error => alert(error.error[""])
       );
     }    

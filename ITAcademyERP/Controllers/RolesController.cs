@@ -49,7 +49,7 @@ namespace ITAcademyERP.Controllers
             {
                 var roleUserDTO = new UserDTO
                 {
-                    Name = user.UserName
+                    Name = user.FirstName + " " + user.LastName
                 };
 
                 roleUsers.Add(roleUserDTO);
@@ -89,7 +89,7 @@ namespace ITAcademyERP.Controllers
                     {
                         Id = user.Id,
                         RoleId = identityRole.Id,
-                        Name = user.UserName
+                        Name = user.FirstName + " " + user.LastName
                     };                  
 
                     usersInRoleDTO.Add(roleUserDTO);                                       

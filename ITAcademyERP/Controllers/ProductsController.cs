@@ -64,7 +64,7 @@ namespace ITAcademyERP.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
+        public async Task<ActionResult> PostProduct(ProductDTO productDTO)
         {
             var product = new Product
             {

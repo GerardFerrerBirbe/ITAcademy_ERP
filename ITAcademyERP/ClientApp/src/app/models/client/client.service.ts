@@ -22,8 +22,7 @@ export class ClientService {
 
   getClient(id: string): Observable<Client> {
     const url = `${this.apiUrl}/${id}`;
-    let params = new HttpParams().set('includePerson', "true");
-    return this.http.get<Client>(url, {params: params});
+    return this.http.get<Client>(url);
   }
 
   updateClient(client: Client): Observable<Client> {
