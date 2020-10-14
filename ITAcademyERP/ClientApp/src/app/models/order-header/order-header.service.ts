@@ -46,7 +46,7 @@ export class OrderHeaderService {
 
   deleteOrderHeader(orderHeader: OrderHeader | number): Observable<OrderHeader> {
     const id = typeof orderHeader === 'number' ? orderHeader : orderHeader.id;
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<OrderHeader>(url, this.httpOptions);
   }  

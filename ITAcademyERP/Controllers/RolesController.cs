@@ -49,7 +49,8 @@ namespace ITAcademyERP.Controllers
             {
                 var roleUserDTO = new UserDTO
                 {
-                    Name = user.FirstName + " " + user.LastName
+                    Name = user.FirstName + " " + user.LastName,
+                    Email = user.Email
                 };
 
                 roleUsers.Add(roleUserDTO);
@@ -89,7 +90,8 @@ namespace ITAcademyERP.Controllers
                     {
                         Id = user.Id,
                         RoleId = identityRole.Id,
-                        Name = user.FirstName + " " + user.LastName
+                        Name = user.FirstName + " " + user.LastName,
+                        Email = user.Email
                     };                  
 
                     usersInRoleDTO.Add(roleUserDTO);                                       
@@ -214,17 +216,25 @@ namespace ITAcademyERP.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateRoleUser(UserDTO userDTO, string addOrRemove)
         {
-            var role = await _roleManager.FindByIdAsync(userDTO.RoleId);
-
-            var user = await _userManager.FindByIdAsync(userDTO.Id);
-
             if (addOrRemove == "add")
             {
+                var role = await _roleManager.FindByIdAsync(userDTO.RoleId);
+
+                var splitAction = userDTO.Name.Split("- ");
+
+                var email = splitAction[1];
+
+                var user = await _userManager.FindByEmailAsync(email);
+
                 await _userManager.AddToRoleAsync(user, role.Name);
             }
 
             if (addOrRemove == "remove")
             {
+                var role = await _roleManager.FindByIdAsync(userDTO.RoleId);
+
+                var user = await _userManager.FindByEmailAsync(userDTO.Email);
+
                 await _userManager.RemoveFromRoleAsync(user, role.Name);
             }
             return NoContent();            

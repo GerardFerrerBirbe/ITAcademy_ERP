@@ -35,7 +35,15 @@ namespace ITAcademyERP.Data.Repositories
                 .Include(e => e.Person)
                 .ThenInclude(p => p.Addresses)
                 .SingleOrDefaultAsync(e => e.Id == id);
-        }        
+        }
+
+        public async Task<Employee> GetEmployee(string personId)
+        {
+            return await _context.Employees
+                .Include(e => e.Person)
+                .ThenInclude(p => p.Addresses)
+                .SingleOrDefaultAsync(e => e.PersonId == personId);
+        }
 
         public int GetEmployeeId(string employeeName)
         {

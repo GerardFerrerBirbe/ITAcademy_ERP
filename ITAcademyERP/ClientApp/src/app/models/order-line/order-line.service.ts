@@ -26,7 +26,7 @@ export class OrderLineService {
 
   deleteOrderLine(orderLine: OrderLine | number): Observable<OrderLine> {
     const id = typeof orderLine === 'number' ? orderLine : orderLine.id;
-    let url = `${this.apiUrl}/${id}`;
+    let url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<OrderLine>(url, this.httpOptions);
   }

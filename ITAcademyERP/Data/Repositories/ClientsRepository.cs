@@ -37,6 +37,14 @@ namespace ITAcademyERP.Data.Repositories
                 .SingleOrDefaultAsync(e => e.Id == id);
         }
 
+        public async Task<Client> GetClient(string personId)
+        {
+            return await _context.Clients
+                .Include(e => e.Person)
+                .ThenInclude(p => p.Addresses)
+                .SingleOrDefaultAsync(e => e.PersonId == personId);
+        }
+
         public int GetClientId(string clientName)
         {
             var personId = _peopleRepository.GetPersonIdByName(clientName);

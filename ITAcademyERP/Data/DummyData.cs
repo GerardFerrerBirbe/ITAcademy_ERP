@@ -68,6 +68,7 @@ namespace ITAcademyERP.Data
             {
                 new Person{
                     Email = "jp@it.com",
+                    NormalizedEmail = "JP@IT.COM",
                     UserName = "jp@it.com",
                     NormalizedUserName = "JP@IT.COM",
                     FirstName = "Jake",
@@ -75,6 +76,7 @@ namespace ITAcademyERP.Data
                 },
                 new Person{
                     Email = "gf@it.com",
+                    NormalizedEmail = "GF@IT.COM",
                     UserName = "gf@it.com",
                     NormalizedUserName = "GF@IT.COM",
                     FirstName = "Gerard",
@@ -82,6 +84,7 @@ namespace ITAcademyERP.Data
                 },
                 new Person{
                     Email = "sj@it.com",
+                    NormalizedEmail = "SJ@IT.COM",
                     UserName = "sj@it.com",
                     NormalizedUserName = "SJ@IT.COM",
                     FirstName = "Steve",
@@ -89,6 +92,7 @@ namespace ITAcademyERP.Data
                 },
                 new Person{
                     Email = "mz@it.com",
+                    NormalizedEmail = "MZ@IT.COM",
                     UserName = "mz@it.com",
                     NormalizedUserName = "MZ@IT.COM",
                     FirstName = "Mark",

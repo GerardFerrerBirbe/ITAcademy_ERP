@@ -9,6 +9,7 @@ using ITAcademyERP.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,15 +23,21 @@ namespace ITAcademyERP.Models
         private readonly ClientsRepository _repository;
         private readonly PeopleController _peopleController;
         private readonly PeopleRepository _peopleRepository;
+        private readonly EmployeesRepository _employeesRepository;
+        private readonly UserManager<Person> _userManager;
 
         public ClientsController(
             ClientsRepository repository,
             PeopleController peopleController,
-            PeopleRepository peopleRepository) : base(repository)
+            PeopleRepository peopleRepository,
+            EmployeesRepository employeesRepository,
+            UserManager<Person> userManager) : base(repository)
         {
             _repository = repository;
             _peopleController = peopleController;
             _peopleRepository = peopleRepository;
+            _employeesRepository = employeesRepository;
+            _userManager = userManager;
         }
 
         // GET: api/Clients
@@ -77,31 +84,57 @@ namespace ITAcademyERP.Models
         // POST: api/Clients
         [HttpPost]
         public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
-        {               
-            var person = new Person
-            {
-                Email = clientDTO.Email,
-                FirstName = clientDTO.FirstName,
-                LastName = clientDTO.LastName
-            };            
-            
-            var addPerson = await _peopleRepository.Add(person);
+        {
+            var person = await _peopleRepository.GetPersonByEmail(clientDTO.Email);
 
-            var statusCode = GetHttpStatusCode(addPerson).ToString();
-
-            if (statusCode != "OK")
+            if (person == null)
             {
-                return addPerson;
+                var newPerson = new Person
+                {
+                    Email = clientDTO.Email,
+                    UserName = clientDTO.Email,
+                    FirstName = clientDTO.FirstName,
+                    LastName = clientDTO.LastName
+                };
+
+                await _peopleRepository.Add(newPerson);
+                await _userManager.UpdateAsync(newPerson);
             }
             else
             {
-                var client = new Client
-                {
-                    PersonId = _peopleRepository.GetPersonId(clientDTO.Email)
-                };
+                person.FirstName = clientDTO.FirstName;
+                person.LastName = clientDTO.LastName;
 
-                return await _repository.Add(client);
-            }           
+                await _peopleRepository.Update(person);
+            }      
+                       
+            var client = new Client
+            {
+                PersonId = _peopleRepository.GetPersonId(clientDTO.Email)
+            };
+
+            return await _repository.Add(client);                      
+        }
+
+        // DELETE: api/[controller]/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Client>> DeleteClient(int id)
+        {
+            var client = await _repository.Delete(id);
+
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var employee = await _employeesRepository.GetEmployee(client.PersonId);
+
+            if (employee == null)
+            {
+                await _peopleRepository.Delete(client.PersonId);
+            }
+
+            return client;
         }
 
         private static ClientDTO ClientToDTO(Client client) =>

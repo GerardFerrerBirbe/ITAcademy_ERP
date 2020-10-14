@@ -35,7 +35,7 @@ export class ProductCategoryService {
 
   deleteProductCategory(productCategory: ProductCategory | number): Observable<ProductCategory> {
     const id = typeof productCategory === 'number' ? productCategory : productCategory.id;
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<ProductCategory>(url, this.httpOptions);
   }

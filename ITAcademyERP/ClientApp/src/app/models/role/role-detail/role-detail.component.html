@@ -44,7 +44,7 @@
       formControlName="name"
       size="1">
         <option disabled selected value>-- Usuari --</option>
-        <option *ngFor="let user of users">{{ user.name }}</option>
+        <option *ngFor="let user of users">{{ user.name }} - {{ user.email }}</option>
     </select>
     </div>    
   </div>

@@ -61,7 +61,7 @@ namespace ITAcademyERP.Controllers
         }
 
         // DELETE: api/[controller]/5
-        [HttpDelete("{id}")]
+        [HttpDelete("generic/{id}")]
         public async Task<ActionResult<TEntity>> Delete(int id)
         {
             var entity = await _repository.Delete(id);

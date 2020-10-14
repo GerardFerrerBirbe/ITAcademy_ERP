@@ -35,7 +35,7 @@ export class ProductService {
 
   deleteProduct(product: Product | number): Observable<Product> {
     const id = typeof product === 'number' ? product : product.id;
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<Product>(url, this.httpOptions);
   }
