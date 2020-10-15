@@ -11,7 +11,6 @@ import { ClientComponent } from './models/client/client.component';
 import { AddressComponent } from './models/address/address.component';
 import { ProductComponent } from './models/product/product.component';
 import { ProductCategoryComponent } from './models/product-category/product-category.component';
-import { PersonComponent } from './models/person/person.component';
 import { OrderHeaderComponent } from './models/order-header/order-header.component';
 import { RoleComponent } from './models/role/role.component';
 
@@ -37,7 +36,6 @@ const routes: Routes = [
   { path: 'client', component: ClientComponent },
   { path: 'client-detail', component: ClientDetailComponent },
   { path: 'client-detail/:id', component: ClientDetailComponent },
-  { path: 'person', component: PersonComponent },
   { path: 'address', component: AddressComponent },
   { path: 'order', component: OrderHeaderComponent },
   { path: 'order-detail', component: OrderDetailComponent },

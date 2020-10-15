@@ -15,7 +15,6 @@ export class OrderHeaderComponent implements OnInit {
   
   constructor(
     private orderHeaderService: OrderHeaderService,
-    private datePipe: DatePipe
     ) { }
 
   ngOnInit(): void {
