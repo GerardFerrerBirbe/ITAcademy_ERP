@@ -1,57 +1,67 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nou'}} Rol</h2>
-<form class="form-horizontal" novalidate
-  (ngSubmit)="save()" [formGroup]="roleFormGroup">
-  <div class="form-group">
-    <label for="nameId">Nom Rol</label>
-    <div>
+<form
+  class="form-horizontal"
+  novalidate
+  (ngSubmit)="save()"
+  [formGroup]="roleFormGroup">
+  <div class="row">
+    <div class="form-group col-auto">
+      <label for="nameId">Rol</label>
       <input class="form-control"
-      id="nameId"
-      type="text"
-      required
-      formControlName="name"/>
+        id="nameId"
+        type="text"
+        required
+        formControlName="name"/>
     </div>
   </div>
-
   <div class="form-group">
     <div>
-      <button type="submit">Guardar</button>
+      <button
+      class="btn btn-info"
+        type="submit">Guardar</button>
     </div>
-  </div>
+  </div>  
 </form>
 
-<button (click)="goBack()">Tornar</button>
+<button class="btn btn-info" (click)="goBack()">Tornar</button>
 
-<fieldset>Usuaris:
-  <table *ngIf="currentRoleUsers">
-      <tr *ngFor="let currentRoleUser of currentRoleUsers">
-        <td>{{ currentRoleUser.name }}</td>
-        <td>
-          <button class="btn-delete" title="remove userInRole"
-            (click)="removeUserInRole(currentRoleUser)">Borrar</button>
+<fieldset *ngIf="currentRoleUsers" ><h4>Usuaris:</h4>
+  <table class="table">
+      <tr class="row" *ngFor="let currentRoleUser of currentRoleUsers">
+        <td class="col-2">{{ currentRoleUser.name }}</td>
+        <td class="col-auto">
+          <button
+            class="btn btn-danger"
+            title="remove userInRole"
+            (click)="removeUserInRole(currentRoleUser)">
+            Borrar
+          </button>
         </td>
       </tr>
   </table>
 </fieldset>
 
-<form class="form-horizontal" novalidate
-  (ngSubmit)="addRoleUserLine()" [formGroup]="roleUserFormGroup">
-  <div class="form-group">
+<form
+  class="form-row"
+  novalidate
+  (ngSubmit)="addRoleUserLine()"
+  [formGroup]="roleUserFormGroup">
+  <div class="form-group col-2">
     <label for="nameId">Usuari</label>
-    <div>
-      <select
+    <select
       class="form-control"
       id="nameId"
       formControlName="name"
       size="1">
         <option disabled selected value>-- Usuari --</option>
         <option *ngFor="let user of users">{{ user.name }} - {{ user.email }}</option>
-    </select>
-    </div>    
+    </select>    
   </div>
 
   <div class="form-group">
+    <label class="col">&nbsp;</label>
     <div>
-      <button type="submit">Afegir Usuari</button>
+      <button class="btn btn-info" type="submit">Afegir Usuari</button>
     </div>
   </div>
 </form>
