@@ -1,32 +1,53 @@
 <h2 id="tableLabel">Empleats</h2>
 
-<button [routerLink]='["/employee-detail"]' class="btn-add">Nou empleat</button>
+<button
+  type="button"
+  class="btn btn-outline-primary"
+  [routerLink]='["/employee-detail"]'
+  >Nou empleat
+</button>
 
 <p *ngIf="!employees"><em>Loading...</em></p>
 
-<table *ngIf="employees">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Email</th>
-      <th>Nom</th>
-      <th>Cognoms</th>
-      <th>Càrrec</th>
-      <th *ngIf="isAdminUser()">Salari</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let employee of employees">
-      <td>{{ employee.id }}</td>
-      <td>{{ employee.email }}</td>
-      <td>{{ employee.firstName }}</td>
-      <td>{{ employee.lastName }}</td>
-      <td>{{ employee.position }}</td>
-      <td *ngIf="isAdminUser()">{{ employee.salary }}</td>        
-      <td><button routerLink="/employee-detail/{{employee.id}}"
-        class="btn-update" title="update employee">Seleccionar</button></td>
-      <td><button class="btn-delete" title="delete employee"
-        (click)="delete(employee)">Borrar</button></td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive-md">
+  <table class="table table-hover table-md" *ngIf="employees">
+    <thead>
+      <tr class="row justify-content-start">
+        <th class="col-2 border-0">Email</th>
+        <th class="col-1 border-0">Nom</th>
+        <th class="col-2 border-0">Cognoms</th>
+        <th class="col-1 border-0">Càrrec</th>
+        <th class="col-1 border-0" *ngIf="isAdminUser()">Salari</th>
+        <th class="border-0"></th>
+        <th class="border-0"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row justify-content-start" *ngFor="let employee of employees">
+        <td class="col-2">{{ employee.email }}</td>
+        <td class="col-1">{{ employee.firstName }}</td>
+        <td class="col-2">{{ employee.lastName }}</td>
+        <td class="col-1">{{ employee.position }}</td>
+        <td class="col-1" *ngIf="isAdminUser()">{{ employee.salary }}</td>        
+        <td class="col-auto">
+          <button
+            routerLink="/employee-detail/{{employee.id}}"
+            type="button"
+            class="btn btn-outline-info"
+            title="update employee"
+            >Seleccionar
+          </button>
+        </td>
+        <td class="col-auto">
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            title="delete employee"
+            (click)="delete(employee)"
+            >Borrar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

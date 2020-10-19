@@ -1,22 +1,41 @@
 <h2 id="tableLabel">Rols</h2>
 
-<button [routerLink]='["/role-detail"]' class="btn-add">Nou rol</button>
+<button
+  [routerLink]='["/role-detail"]'
+  class="btn btn-outline-primary">Nou rol</button>
 
 <p *ngIf="!roles"><em>Loading...</em></p>
 
-<table *ngIf="roles">
-  <thead>
-    <tr>
-      <th>Rol</th>      
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let role of roles">
-      <td>{{ role.name }}</td>      
-      <td><button routerLink="/role-detail/{{role.id}}"
-        class="btn-update" title="update role">Seleccionar</button></td>
-      <td><button class="btn-delete" title="delete role"
-        (click)="delete(role)">Borrar</button></td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive-md">
+  <table class="table table-hover table-md" *ngIf="roles">
+    <thead>
+      <tr class="row justify-content-start">
+        <th class="col-2 border-0">Rol</th>
+        <th class="border-0"></th>
+        <th class="border-0"></th>   
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row  justify-content-start"
+        *ngFor="let role of roles"
+        >
+        <td class="col-2">{{ role.name }}</td>      
+        <td class="col-auto">
+          <button
+            routerLink="/role-detail/{{role.id}}"
+            class="btn btn-outline-info"
+            title="update role"
+            >Seleccionar
+          </button></td>
+        <td class="col-auto">
+          <button
+            class="btn btn-outline-danger"
+            title="delete role"
+            (click)="delete(role)"
+            >Borrar
+          </button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

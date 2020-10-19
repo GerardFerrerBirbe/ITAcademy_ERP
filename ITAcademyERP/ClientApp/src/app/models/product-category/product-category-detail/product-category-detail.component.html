@@ -1,22 +1,28 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nova'}} Categoria</h2>
-<form class="form-horizontal" novalidate
-    (ngSubmit)="save()" [formGroup]="formGroup">
-      <div class="form-group">
-        <label for="nameId">Nom Categoria</label>
-        <div>
-          <input class="form-control"
-          id="nameId"
-          type="text"
-          required
-          formControlName="productCategoryName"/>
-        </div>
-      </div>        
-      <div class="form-group">
-        <div>
-          <button type="submit" [disabled]="!formGroup.valid">Guardar</button>
-        </div>
-      </div>
+<form
+  class="form-horizontal"
+  novalidate
+  (ngSubmit)="save()"
+  [formGroup]="formGroup">
+  <div class="row">
+    <div class="form-group col-auto">
+      <label for="nameId">Nom Categoria</label>
+      <input class="form-control"
+        id="nameId"
+        type="text"
+        required
+        formControlName="productCategoryName"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <button
+      class="btn btn-info"
+      type="submit"
+      [disabled]="!formGroup.valid">
+      Guardar
+    </button>
+  </div>
 </form>
 
-<button (click)="goBack()">Tornar</button>
+<button class="btn btn-info" (click)="goBack()">Tornar</button>
 

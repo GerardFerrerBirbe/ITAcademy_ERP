@@ -1,196 +1,188 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nova'}} Comanda</h2>
-<form class="form-horizontal" novalidate
-  (ngSubmit)="save()" [formGroup]="orderHeaderFormGroup">
-  <table>
-    <tr>
-      <td>
-        <div class="form-group">
-          <label for="orderNumberId">Número Comanda</label>
-          <div>
-            <input class="form-control"
-            id="orderNumberId"
-            type="text"
-            required
-            formControlName="orderNumber"/>
-          </div>
+<form
+  class="form-horizontal"
+  novalidate
+  (ngSubmit)="save()"
+  [formGroup]="orderHeaderFormGroup">
+  <div class="row">
+    <div class="form-group col">
+      <label for="orderNumberId">Número Comanda</label>
+      <input class="form-control"
+        id="orderNumberId"
+        type="text"
+        required
+        formControlName="orderNumber"/>
+    </div>
+    <div class="form-group col">
+      <label for="orderStateId">Estat</label>
+      <select
+      class="form-control"
+      id="orderStateId"
+      formControlName="orderState"
+      size="1">
+        <option disabled selected value> -- Estat -- </option>
+        <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
+      </select>
+    </div>
+    <div class="form-group col">
+      <label for="orderPriorityId">Prioritat</label>
+      <select
+      class="form-control"
+      id="orderPriorityId"
+      formControlName="orderPriority"
+      size="1">
+      <option disabled selected value> -- Prioritat -- </option>
+      <option *ngFor="let orderPriority of orderPriorities">{{ orderPriority.priority }}</option>
+    </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col">
+      <label for="clientId">Client</label>
+      <select
+        class="form-control"
+        id="clientId"
+        formControlName="client"
+        size="1">
+        <option disabled selected value> -- Client -- </option>
+        <option *ngFor="let client of clients">{{ client.firstName }} {{ client.lastName }}</option>
+      </select>
+    </div>
+    <div class="col" *ngIf="orderHeader">
+      <label for="addressId">Adreça d'entrega</label>
+      <div>
+        {{ orderHeader.address }}
+      </div>
+    </div>
+  </div>   
+  <div class="row">
+    <div class="col" *ngIf="orderHeader">
+      <label for="creationDateId">Data Creació</label>
+      <div>
+        {{ orderHeader.creationDate | date: 'dd/MM/yyyy'}}
+      </div>
+    </div>
+    <div class="col" *ngIf="orderHeader">
+      <label for="assignToEmployeeDateId">Data Assignació Empleat</label>
+      <div>
+        {{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy'}}
+      </div>
+    </div>
+    <div class="col" *ngIf="orderHeader">
+      <label for="finalisationDateId">Data Finalització</label>
+      <div>
+        {{ orderHeader.finalisationDate | date: 'dd/MM/yyyy'}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" *ngIf="!editionMode">
+      <div *ngIf="orderHeader">
+        <label for="employeeId">Empleat</label>
+        <div>
+          {{ orderHeader.employee }}
         </div>
-      </td>
-      <td>
-        <div class="form-group">
-          <label for="orderStateId">Estat</label>
-          <select
+      </div>     
+    </div>
+    <div *ngIf="editionMode">
+      <div *ngIf="isAdminUser()" class="form-group col">
+        <label for="employeeId">Empleat</label>
+        <select            
           class="form-control"
-          id="orderStateId"
-          formControlName="orderState"
+          id="employeeId"
+          formControlName="employee"
           size="1">
-            <option disabled selected value> -- Estat -- </option>
-            <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
-          </select>
-        </div>
-      </td>
-      <td>
-        <div class="form-group">
-          <label for="orderPriorityId">Prioritat</label>
-          <select
-          class="form-control"
-          id="orderPriorityId"
-          formControlName="orderPriority"
-          size="1">
-          <option disabled selected value> -- Prioritat -- </option>
-          <option *ngFor="let orderPriority of orderPriorities">{{ orderPriority.priority }}</option>
+          <option disabled selected value> -- Empleat -- </option>
+          <option *ngFor="let employee of employees">{{ employee.firstName }} {{ employee.lastName }}</option>
         </select>
-        </div>
-      </td>
-      <td>
-        <div *ngIf="orderHeader">
-          <label for="addressId">Adreça d'entrega</label>
-          <div>
-            {{ orderHeader.address }}
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr *ngIf="!editionMode">      
-      <td>
-        <div *ngIf="orderHeader">
-          <label for="employeeId">Empleat</label>
-          <div>
-            {{ orderHeader.employee }}
-          </div>
-        </div>
-      </td>      
-    </tr>
-    <tr *ngIf="editionMode">      
-      <td>
-        <div *ngIf="isAdminUser()" class="form-group">
-          <label for="employeeId">Empleat</label>
-          <select            
-            class="form-control"
-            id="employeeId"
-            formControlName="employee"
-            size="1">
-            <option disabled selected value> -- Empleat -- </option>
-            <option *ngFor="let employee of employees">{{ employee.firstName }} {{ employee.lastName }}</option>
-          </select>
-        </div>
-        <div *ngIf="!isAdminUser()" class="form-group">
-          <label for="employeeId">Empleat</label>
-          <select            
-            class="form-control"
-            id="employeeId"
-            formControlName="employee"
-            size="1">
-            <option disabled selected value> -- Empleat -- </option>
-            <option *ngIf="orderHeader">{{ orderHeader.employee }}</option>
-            <option *ngIf="userName">{{ userName }}</option>
-          </select>
-        </div>
-      </td>      
-    </tr>
-    <tr>      
-      <td>
-        <div class="form-group">
-          <label for="clientId">Client</label>
-          <select
+      </div>
+      <div *ngIf="!isAdminUser()" class="form-group col">
+        <label for="employeeId">Empleat</label>
+        <select            
           class="form-control"
-          id="clientId"
-          formControlName="client"
+          id="employeeId"
+          formControlName="employee"
           size="1">
-          <option disabled selected value> -- Client -- </option>
-          <option *ngFor="let client of clients">{{ client.firstName }} {{ client.lastName }}</option>
+          <option disabled selected value> -- Empleat -- </option>
+          <option *ngIf="orderHeader">{{ orderHeader.employee }}</option>
+          <option *ngIf="userName">{{ userName }}</option>
         </select>
-        </div>
-      </td>      
-    </tr>
-    <tr>
-      <td>
-        <div *ngIf="orderHeader">
-          <label for="creationDateId">Data Creació</label>
-          <div>
-            {{ orderHeader.creationDate | date: 'dd/MM/yyyy'}}
-          </div>
-        </div>
-      </td>
-      <td>
-        <div *ngIf="orderHeader">
-          <label for="assignToEmployeeDateId">Data Assignació Empleat</label>
-          <div>
-            {{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy'}}
-          </div>
-        </div>        
-      </td>
-      <td>
-        <div *ngIf="orderHeader">
-          <label for="finalisationDateId">Data Finalització</label>
-          <div>
-            {{ orderHeader.finalisationDate | date: 'dd/MM/yyyy'}}
-          </div>
-        </div>
-      </td>
-    </tr>   
-  </table>
-
+      </div>    
+    </div>
+  </div>
   <div class="form-group">
     <div>
-      <button type="submit" [disabled]="!orderHeaderFormGroup.valid">Guardar</button>
+      <button
+        class="btn btn-info"
+        type="submit"
+        [disabled]="!orderHeaderFormGroup.valid">
+        Guardar
+      </button>
     </div>
   </div>
 
 </form>
 
-<button (click)="goBack()">Tornar</button>
+<button class="btn btn-info" (click)="goBack()">Tornar</button>
 
-<fieldset>Detall Comanda:
-  <table *ngIf="orderLines">
+<fieldset  *ngIf="orderLines"><h4>Detall Comanda:</h4>
+  <table class="table">
     <thead>
-      <tr>
-        <th>Producte</th>
-        <th>Preu Unitari</th>
-        <th>IVA</th>
-        <th>Preu Unitari IVA</th>
-        <th>Quantitat</th>
-        <th>Preu Total IVA</th>     
+      <tr class="row">
+        <th class="col-2 border-0">Producte</th>
+        <th class="col-1 border-0">Preu Unitari</th>
+        <th class="col-1 border-0">IVA</th>
+        <th class="col-1 border-0">Preu Unitari IVA</th>
+        <th class="col-1 border-0">Quantitat</th>
+        <th class="col-1 border-0">Preu Total IVA</th>
+        <th class="col-auto border-0"></th>    
       </tr>
     </thead>
     <tbody>  
-      <tr *ngFor="let orderLine of orderLines">
-        <td>{{ orderLine.productName }}</td>
-        <td>{{ orderLine.unitPrice }}</td>
-        <td>{{ orderLine.vat | percent }}</td>
-        <td>{{ orderLine.unitPrice * (1 + orderLine.vat) }}</td>
-        <td>{{ orderLine.quantity }}</td>
-        <td>{{ (orderLine.unitPrice * orderLine.quantity) * (1 + orderLine.vat) | currency: 'EUR'}}</td>
-        <td>
-          <button class="btn-delete" title="delete OrderLine"
-            (click)="deleteOrderLine(orderLine)">Borrar</button>
+      <tr class="row" *ngFor="let orderLine of orderLines">
+        <td class="col-2">{{ orderLine.productName }}</td>
+        <td class="col-1">{{ orderLine.unitPrice  | currency: 'EUR'}}</td>
+        <td class="col-1">{{ orderLine.vat | percent }}</td>
+        <td class="col-1">{{ orderLine.unitPrice * (1 + orderLine.vat)  | currency: 'EUR'}}</td>
+        <td class="col-1">{{ orderLine.quantity }}</td>
+        <td class="col-1">{{ (orderLine.unitPrice * orderLine.quantity) * (1 + orderLine.vat) | currency: 'EUR'}}</td>
+        <td class="col-auto">
+          <button
+            class="btn btn-danger"
+            title="delete OrderLine"
+            (click)="deleteOrderLine(orderLine)">
+            Borrar
+          </button>
         </td>
       </tr>
-      <tr>
-        <td></td>
-        <td><b>TOTAL sense IVA</b></td>
-        <td></td>
-        <td><b>IVA</b></td>
-        <td></td>
-        <td><b>TOTAL amb IVA</b></td>
+      <tr class="row">
+        <td class="col-2"></td>
+        <td class="col-1"><b>TOTAL sense IVA</b></td>
+        <td class="col-1"></td>
+        <td class="col-1"><b>IVA</b></td>
+        <td class="col-1"></td>
+        <td class="col-1"><b>TOTAL amb IVA</b></td>
       </tr>
-      <tr>
-        <td></td>
-        <td>{{ totalOrderNoVat }}</td>
-        <td></td>
-        <td>{{ totalVat }}</td>
-        <td></td>
-        <td>{{ totalOrderVat }}</td>
+      <tr class="row">
+        <td class="col-2"></td>
+        <td class="col-1">{{ totalOrderNoVat  | currency: 'EUR'}}</td>
+        <td class="col-1"></td>
+        <td class="col-1">{{ totalVat  | currency: 'EUR'}}</td>
+        <td class="col-1"></td>
+        <td class="col-1">{{ totalOrderVat  | currency: 'EUR'}}</td>
       </tr>
     </tbody>
   </table>
 </fieldset>
 
-<form class="form-horizontal" novalidate
-  (ngSubmit)="addOrderLine()" [formGroup]="orderLineFormGroup">
-  <div class="form-group">
+<form
+  class="form-row"
+  novalidate
+  (ngSubmit)="addOrderLine()"
+  [formGroup]="orderLineFormGroup">
+  <div class="form-group col-2">
     <label for="productNameId">Producte</label>
-    <div>
-      <select
+    <select
       class="form-control"
       id="productNameId"
       formControlName="productName"
@@ -198,46 +190,46 @@
       size="1">
         <option disabled selected value>-- Producte --</option>
         <option *ngFor="let product of products">{{ product.productName }}</option>
-    </select>
-    </div>    
+    </select>    
   </div>
-  <div class="form-group">
+  <div class="form-group col-1">
     <label for="unitPriceId">Preu unitari</label>
-    <div>
-      <input
+    <input
       class="form-control"
       id="unitPriceId"
       formControlName="unitPrice"
       type="number"
-      required/>
-    </div>    
+      required/>   
   </div>
-  <div class="form-group">
+  <div class="form-group col-1">
     <label for="vatId">IVA</label>
-    <div>
-      <input
+    <input
       class="form-control"
       id="vatId"
       formControlName="vat"
       type="number"
-      required/>
-    </div>    
+      required/>   
   </div>
-  <div class="form-group">
+  <div class="form-group col-1">
     <label for="quantityId">Quantity</label>
-    <div>
-      <input
+    <input
       class="form-control"
       id="quantityId"
       formControlName="quantity"
       type="number"
-      required/>
-    </div>    
+      required/>  
   </div>
-
   <div class="form-group">
     <div>
-      <button type="submit" [disabled]="!orderLineFormGroup.valid">Afegir línia comanda</button>
+      <label class="col">&nbsp;</label>
+      <div class="col">
+        <button
+          class="btn btn-info"
+          type="submit"
+          [disabled]="!orderLineFormGroup.valid">
+          Afegir línia comanda
+        </button>
+      </div>  
     </div>
   </div>
 </form>

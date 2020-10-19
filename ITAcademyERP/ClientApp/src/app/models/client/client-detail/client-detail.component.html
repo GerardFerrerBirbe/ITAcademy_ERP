@@ -1,93 +1,105 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nou'}} Client</h2>
-<form class="form-horizontal" novalidate
-  (ngSubmit)="save()" [formGroup]="formGroup">
-  <div class="form-group">
-    <label for="emailId">Email</label>
-    <div>
+<form
+  class="form-horizontal"
+  novalidate
+  (ngSubmit)="save()"
+  [formGroup]="formGroup">
+  <div class="row">
+    <div class="form-group col-auto">
+      <label for="emailId">Email</label>
+        <input class="form-control"
+          id="emailId"
+          type="string"
+          required
+          formControlName="email"/>
+    </div>
+  </div>
+  <div class="row"> 
+    <div class="form-group col-auto">
+      <label for="firstNameId">Nom</label>
       <input class="form-control"
-      id="emailId"
-      type="string"
-      required
-      formControlName="email"/>
+        id="firstNameId"
+        type="string"
+        required
+        formControlName="firstName"/>
+    </div>
+    <div class="form-group col-4">
+      <label for="lastNameId">Cognoms</label>
+      <input class="form-control"
+        id="lastNameId"
+        type="string"
+        required
+        formControlName="lastName"/>
     </div>
   </div>  
   <div class="form-group">
-    <label for="firstNameId">Nom</label>
-    <div>
-      <input class="form-control"
-      id="firstNameId"
-      type="string"
-      required
-      formControlName="firstName"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="lastNameId">Cognoms</label>
-    <div>
-      <input class="form-control"
-      id="lastNameId"
-      type="string"
-      required
-      formControlName="lastName"/>
-    </div>
-  </div> 
-  
-  <div class="form-group">
-    <label>Direccions</label>
-    <button class="btn btn-primary" (click)="addAddress()">Afegir adreça</button>
+    <label><h4>Direccions</h4></label>
   </div>
   
   <div formArrayName="addresses"
         *ngFor="let address of addresses.controls; let i = index;">
-    <div [formGroupName]="i">      
-      <div class="form-group">    
-        <label class="col-md-2 control-label" [attr.for]="'name' + i">
+    <div [formGroupName]="i" class="form-row">      
+      <div class="form-group col-4">    
+        <label class="col control-label" [attr.for]="'name' + i">
           Nom adreça
-        </label>            
-        <div class="col-md-8">
-          <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name" />
-        </div>
+        </label>
+        <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name"/>
       </div>    
-      <div class="form-group">  
-        <label class="col-md-2 control-label" [attr.for]="'type' + i">
+      <div class="form-group col-auto">  
+        <label class="col control-label" [attr.for]="'type' + i">
           Tipus adreça
-        </label>              
-        <div class="col-md-8">
-          <input class="form-control" [attr.id]="'type' + i" type="text" formControlName="type" />
-        </div>
+        </label>
+        <input class="form-control" [attr.id]="'type' + i" type="text" formControlName="type"/>
       </div>               
-      <div class="form-group">
-        <div class="col-md-10">
-          <button type="button" class="btn btn-danger pull-right" (click)="deleteAddress(i)">Borrar adreça</button>
+      <div class="form-group col-auto">
+        <label class="col">&nbsp;</label>
+        <div class="col">  
+          <button
+            type="button"
+            class="btn btn-danger pull-right"
+            (click)="deleteAddress(i)">
+            Borrar adreça
+          </button>
         </div>
       </div>             
     </div>  
   </div>
-  
+  <div>
+    <button
+      class="btn btn-info"
+      (click)="addAddress()">
+      Afegir adreça
+    </button>
+  </div>  
   <div class="form-group">
     <div>
-      <button type="submit">Guardar</button>
+      <button
+        class="btn btn-info"
+        type="submit"
+        [disabled]="!formGroup.valid">
+        Guardar
+      </button>
     </div>
   </div>
 </form>
 
-<button (click)="goBack()">Tornar</button>
+<button class="btn btn-info" (click)="goBack()">Tornar</button>
 
 <fieldset *ngIf="isAdminUser()">
-  <div>
+  <div *ngIf="totalOrderNumberByClient > 0">
     <label><b>Nº comandes:</b></label>
     <div>{{ totalOrderNumberByClient }}</div>
   </div>
-  <div>
+  <div *ngIf="totalOrderAmountByClient > 0">
     <label><b>Total facturat:</b></label>
     <div>{{ totalOrderAmountByClient | currency:'EUR'}}</div>
   </div>
 </fieldset>
-<fieldset>Comandes actuals
-  <table *ngIf="currentOhs">
+
+<fieldset *ngIf="currentOhs.length > 0"><h4>Comandes actuals</h4>
+  <table class="table">
     <thead>
       <tr>
-        <th>Id</th>
         <th>Número Comanda</th>
         <th>Adreça</th>
         <th>Client</th>
@@ -101,7 +113,6 @@
     </thead>
     <tbody>
       <tr *ngFor="let currentOh of currentOhs">
-        <td>{{ currentOh.id }}</td>
         <td>{{ currentOh.orderNumber }}</td>
         <td>{{ currentOh.address }}</td>
         <td>{{ currentOh.client }}</td>
@@ -116,11 +127,10 @@
   </table>
 </fieldset>
 
-<fieldset>Històric de comandes
-  <table *ngIf="oldOhs">
+<fieldset *ngIf="oldOhs.length > 0"><h4>Històric de comandes</h4>
+  <table class="table">
     <thead>
       <tr>
-        <th>Id</th>
         <th>Número Comanda</th>
         <th>Adreça</th>
         <th>Client</th>
@@ -134,7 +144,6 @@
     </thead>
     <tbody>
       <tr *ngFor="let oldOh of oldOhs">
-        <td>{{ oldOh.id }}</td>
         <td>{{ oldOh.orderNumber }}</td>
         <td>{{ oldOh.address }}</td>
         <td>{{ oldOh.client }}</td>

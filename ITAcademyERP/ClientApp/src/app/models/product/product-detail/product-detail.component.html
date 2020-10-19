@@ -1,35 +1,43 @@
 <h2>{{editionMode ? 'Fitxa' : 'Nou'}} Producte</h2>
-<form class="form-horizontal" novalidate
-    (ngSubmit)="save()" [formGroup]="formGroup">
-      <div class="form-group">
-        <label for="nameId">Producte</label>
-        <div>
-          <input class="form-control"
-          id="nameId"
-          type="text"
-          required
-          formControlName="productName"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="categoryNameId">Categoria</label>
-        <div>
-          <select
-          class="form-control"
-          id="categoryNameId"
-          required
-          formControlName="productCategoryName"
-          size="1">
-          <option disabled selected value>-- Categoria --</option>
-          <option *ngFor="let productCategory of productCategories">{{ productCategory.productCategoryName }}</option>
-        </select>
-        </div>
-      </div>      
-      <div class="form-group">
-        <div>
-          <button type="submit" [disabled]="!formGroup.valid">Guardar</button>
-        </div>
-      </div>
+<form
+  class="form-horizontal"
+  novalidate
+  (ngSubmit)="save()"
+  [formGroup]="formGroup">
+  <div class="row">
+    <div class="form-group col-auto">
+      <label for="nameId">Producte</label>
+      <input class="form-control"
+        id="nameId"
+        type="text"
+        required
+        formControlName="productName"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-auto">
+      <label for="categoryNameId">Categoria</label>
+      <select
+        class="form-control"
+        id="categoryNameId"
+        required
+        formControlName="productCategoryName"
+        size="1">
+        <option disabled selected value>-- Categoria --</option>
+        <option *ngFor="let productCategory of productCategories">{{ productCategory.productCategoryName }}</option>
+      </select>
+    </div>
+  </div>      
+  <div class="form-group">
+    <div>
+      <button
+        class="btn btn-info"
+        type="submit"
+        [disabled]="!formGroup.valid">
+        Guardar
+      </button>
+    </div>
+  </div>
 </form>
 
-<button (click)="goBack()">Tornar</button>
+<button class="btn btn-info" (click)="goBack()">Tornar</button>

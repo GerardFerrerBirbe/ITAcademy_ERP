@@ -3,25 +3,25 @@
   <ul>
     <li *ngIf="!isLogged()" [routerLinkActive]='["link-active"]'>
       <a [routerLink]='["/login"]' (click)='collapse()'>
-        <span class='glyphicon glyphicon-th-list'></span> Registre / Login
+        <span></span> Registre / Login
       </a>
     </li>
     <li *ngIf="isLogged()">{{ userName }}</li>
     <li *ngIf="isLogged()" [routerLinkActive]='["link-active"]'>
       <a [routerLink]='["/login"]' (click)='logout()'>
-        <span class='glyphicon glyphicon-th-list'></span> Logout
+        <span></span> Logout
       </a>
     </li>
 </ul>
 </div>
-<nav *ngIf="isAdminUser == 'true'">
-  <button routerLink="/hhrr">Recursos Humans</button>
-  <button routerLink="/sales">Vendes</button>
-  <button routerLink="/statistics">Estadístiques</button>
+<nav class="nav nav-tabs" *ngIf="isAdminUser == 'true'">
+  <a class="nav-item nav-link" routerLink="/hhrr">Recursos Humans</a>
+  <a class="nav-item nav-link" routerLink="/sales">Vendes</a>
+  <a class="nav-item nav-link" routerLink="/statistics">Estadístiques</a>
 </nav>
-<nav *ngIf="isAdminUser == 'false' && isLogged()">
-  <button routerLink="/hhrr">Recursos Humans</button>
-  <button routerLink="/sales">Vendes</button>
+<nav class="nav" *ngIf="isAdminUser == 'false' && isLogged()">
+  <a class="nav-item nav-link" routerLink="/hhrr">Recursos Humans</a>
+  <a class="nav-item nav-link" routerLink="/sales">Vendes</a>
 </nav>
-<nav *ngIf="!isLogged()"></nav>
+<nav class="nav" *ngIf="!isLogged()"></nav>
 <router-outlet></router-outlet>

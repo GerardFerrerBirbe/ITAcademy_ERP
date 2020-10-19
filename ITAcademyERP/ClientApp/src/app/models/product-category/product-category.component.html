@@ -1,25 +1,45 @@
 <h2 id="tableLabel">Categories Productes</h2>
 
-<button [routerLink]='["/product-cat-detail"]' class="btn-add">Nova Categoria</button>
-<button [routerLink]='["/product"]' class="btn-add">Tornar a Productes</button>
+<button
+  [routerLink]='["/product-cat-detail"]'
+  class="btn btn-outline-primary"
+  >Nova Categoria
+</button>
+<button
+  [routerLink]='["/product"]'
+  class="btn btn-outline-primary"
+  >Tornar a Productes
+</button>
 
 <p *ngIf="!productCategories"><em>Loading...</em></p>
 
-<table *ngIf="productCategories">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Categoria</th>      
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let productCategory of productCategories">
-      <td>{{ productCategory.id }}</td>
-      <td>{{ productCategory.productCategoryName }}</td>      
-      <td><button routerLink="/product-cat-detail/{{productCategory.id}}"
-        class="btn-update" title="update productCategory">Seleccionar</button></td>
-      <td><button class="btn-delete" title="delete productCategory"
-        (click)="delete(productCategory)">Borrar</button></td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive-md">
+  <table class="table table-hover table-md" *ngIf="productCategories">
+    <thead>
+      <tr class="row justify-content-start">
+        <th class="col-2 border-0">Categoria</th>      
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row justify-content-start" *ngFor="let productCategory of productCategories">
+        <td class="col-2">{{ productCategory.productCategoryName }}</td>      
+        <td class="col-auto">
+          <button
+            routerLink="/product-cat-detail/{{productCategory.id}}"
+            class="btn btn-outline-info"
+            title="update productCategory"
+            >Seleccionar
+          </button>
+        </td>
+        <td class="col-auto">
+          <button
+            class="btn btn-outline-danger"
+            title="delete productCategory"
+            (click)="delete(productCategory)"
+            >Borrar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
