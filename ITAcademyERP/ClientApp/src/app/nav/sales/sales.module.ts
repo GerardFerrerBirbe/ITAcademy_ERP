@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppRoutingModule } from '../../app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -22,6 +21,7 @@ import { ProductCategoryService } from '../../models/product-category/product-ca
 import { OrderLineService } from '../../models/order-line/order-line.service';
 import { OrderPriorityService } from '../../models/order-priority/order-priority.service';
 import { OrderStateService } from '../../models/order-state/order-state.service';
+import { AppRoutingModule } from 'src/app/app-routing.module';
 
 
 @NgModule({
@@ -35,8 +35,7 @@ import { OrderStateService } from '../../models/order-state/order-state.service'
     OrderStateComponent,
     ClientDetailComponent,
     ProductDetailComponent,
-    ProductCategoryDetailComponent,
-    
+    ProductCategoryDetailComponent    
   ],
   imports: [
     CommonModule,

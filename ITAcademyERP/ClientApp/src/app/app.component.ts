@@ -14,17 +14,9 @@ export class AppComponent {
     private router: Router) {}
 
     isExpanded = false;
+    navMenu = '';
     public userName = '';
-    public isAdminUser = 'false';
-    
-
-    collapse() {
-      this.isExpanded = false;
-    }
-
-    toggle() {
-      this.isExpanded = !this.isExpanded;
-    }
+    public isAdminUser = 'false';    
 
     logout() {
       this.accountService.logout();

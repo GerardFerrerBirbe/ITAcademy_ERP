@@ -14,14 +14,18 @@
     </li>
 </ul>
 </div>
-<nav class="nav nav-tabs" *ngIf="isAdminUser == 'true'">
-  <a class="nav-item nav-link" routerLink="/hhrr">Recursos Humans</a>
-  <a class="nav-item nav-link" routerLink="/sales">Vendes</a>
-  <a class="nav-item nav-link" routerLink="/statistics">Estadístiques</a>
+<nav class="nav nav-tabs">
+  <a *ngIf="isLogged()" class="nav-item nav-link" routerLink="" (click)="navMenu = 'hhrrMenu'">Recursos Humans</a>
+  <a *ngIf="isLogged()"class="nav-item nav-link" routerLink="" (click)="navMenu = 'salesMenu'">Vendes</a>
+  <a *ngIf="isLogged() && isAdminUser == 'true'" class="nav-item nav-link" routerLink="/statistics" (click)="navMenu = ''">Estadístiques</a>
 </nav>
-<nav class="nav" *ngIf="isAdminUser == 'false' && isLogged()">
-  <a class="nav-item nav-link" routerLink="/hhrr">Recursos Humans</a>
-  <a class="nav-item nav-link" routerLink="/sales">Vendes</a>
+<nav *ngIf="navMenu == 'hhrrMenu'" class="nav nav-tabs">
+  <a class="nav-item nav-link" routerLink="/employee">Empleats</a>
+  <a class="nav-item nav-link" routerLink="/role">Rols</a>
 </nav>
-<nav class="nav" *ngIf="!isLogged()"></nav>
+<nav *ngIf="navMenu == 'salesMenu'" class="nav nav-tabs">
+  <a class="nav-item nav-link" routerLink="/client">Clients</a>
+  <a class="nav-item nav-link" routerLink="/product">Productes</a>
+  <a class="nav-item nav-link" routerLink="/order">Comandes</a>
+</nav>
 <router-outlet></router-outlet>
