@@ -25,7 +25,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { RoleDetailComponent } from './models/role/role-detail/role-detail.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'hhrr', component: HhrrComponent },
   { path: 'sales', component: SalesComponent },

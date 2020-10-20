@@ -70,7 +70,8 @@
       (click)="addAddress()">
       Afegir adreça
     </button>
-  </div>  
+  </div> 
+  <div>&nbsp;</div> 
   <div class="form-group">
     <div>
       <button
@@ -84,7 +85,7 @@
 </form>
 
 <button class="btn btn-info" (click)="goBack()">Tornar</button>
-
+<div>&nbsp;</div> 
 <fieldset *ngIf="isAdminUser()">
   <div *ngIf="totalOrderNumberByClient > 0">
     <label><b>Nº comandes:</b></label>
@@ -95,7 +96,7 @@
     <div>{{ totalOrderAmountByClient | currency:'EUR'}}</div>
   </div>
 </fieldset>
-
+<div>&nbsp;</div> 
 <fieldset *ngIf="currentOhs.length > 0"><h4>Comandes actuals</h4>
   <table class="table">
     <thead>

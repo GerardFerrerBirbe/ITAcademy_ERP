@@ -4,8 +4,8 @@
   novalidate
   (ngSubmit)="save()"
   [formGroup]="orderHeaderFormGroup">
-  <div class="row">
-    <div class="form-group col">
+  <div class="row justify-content-start">
+    <div class="form-group col-2">
       <label for="orderNumberId">Número Comanda</label>
       <input class="form-control"
         id="orderNumberId"
@@ -13,7 +13,7 @@
         required
         formControlName="orderNumber"/>
     </div>
-    <div class="form-group col">
+    <div class="form-group col-2">
       <label for="orderStateId">Estat</label>
       <select
       class="form-control"
@@ -24,7 +24,7 @@
         <option *ngFor="let orderState of orderStates">{{ orderState.state }}</option>
       </select>
     </div>
-    <div class="form-group col">
+    <div class="form-group col-2">
       <label for="orderPriorityId">Prioritat</label>
       <select
       class="form-control"
@@ -36,8 +36,8 @@
     </select>
     </div>
   </div>
-  <div class="row">
-    <div class="form-group col">
+  <div class="row justify-content-start">
+    <div class="form-group col-3">
       <label for="clientId">Client</label>
       <select
         class="form-control"
@@ -48,27 +48,27 @@
         <option *ngFor="let client of clients">{{ client.firstName }} {{ client.lastName }}</option>
       </select>
     </div>
-    <div class="col" *ngIf="orderHeader">
+    <div class="col-3" *ngIf="orderHeader">
       <label for="addressId">Adreça d'entrega</label>
       <div>
         {{ orderHeader.address }}
       </div>
     </div>
   </div>   
-  <div class="row">
-    <div class="col" *ngIf="orderHeader">
+  <div class="row justify-content-start">
+    <div class="col-2" *ngIf="orderHeader">
       <label for="creationDateId">Data Creació</label>
       <div>
         {{ orderHeader.creationDate | date: 'dd/MM/yyyy'}}
       </div>
     </div>
-    <div class="col" *ngIf="orderHeader">
+    <div class="col-2" *ngIf="orderHeader">
       <label for="assignToEmployeeDateId">Data Assignació Empleat</label>
       <div>
         {{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy'}}
       </div>
     </div>
-    <div class="col" *ngIf="orderHeader">
+    <div class="col-2" *ngIf="orderHeader">
       <label for="finalisationDateId">Data Finalització</label>
       <div>
         {{ orderHeader.finalisationDate | date: 'dd/MM/yyyy'}}
@@ -76,7 +76,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col" *ngIf="!editionMode">
+    <div class="col-3" *ngIf="!editionMode">
       <div *ngIf="orderHeader">
         <label for="employeeId">Empleat</label>
         <div>
