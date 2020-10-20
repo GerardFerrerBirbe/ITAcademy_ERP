@@ -9,34 +9,30 @@ using ITAcademyERP.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ITAcademyERP.Data.Repositories;
+using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class OrderHeadersController : GenericController<OrderHeader, OrderHeadersRepository>
     {
         private readonly OrderHeadersRepository _repository;
         private readonly ClientsRepository _clientsRepository;
         private readonly EmployeesRepository _employeesRepository;
-        private readonly OrderPrioritiesRepository _orderPrioritiesRepository;
-        private readonly OrderStatesRepository _orderStatesRepository;
         private readonly OrderLinesController _orderLinesController;
 
         public OrderHeadersController(
             OrderHeadersRepository repository,
             ClientsRepository clientsRepository,
             EmployeesRepository employeesRepository,
-            OrderPrioritiesRepository orderPrioritiesRepository,
-            OrderStatesRepository orderStatesRepository,
             OrderLinesController orderLinesController) : base(repository)
         {
             _repository = repository;
             _clientsRepository = clientsRepository;
             _employeesRepository = employeesRepository;
-            _orderStatesRepository = orderStatesRepository;
-            _orderPrioritiesRepository = orderPrioritiesRepository;
             _orderLinesController = orderLinesController;
         }
 
@@ -87,7 +83,7 @@ namespace ITAcademyERP.Controllers
         {
             var orderHeader = await _repository.GetOrderHeader(orderHeaderDTO.Id);
 
-            if (orderHeaderDTO.OrderState == "Completat" && _orderStatesRepository.GetOrderStateId(orderHeaderDTO.OrderState) != orderHeader.OrderStateId)
+            if (orderHeaderDTO.OrderState.ToString() == "Completada" && (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState) != orderHeader.OrderState)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
@@ -100,8 +96,8 @@ namespace ITAcademyERP.Controllers
             orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
             orderHeader.ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client);
             orderHeader.EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee);
-            orderHeader.OrderStateId = _orderStatesRepository.GetOrderStateId(orderHeaderDTO.OrderState);
-            orderHeader.OrderPriorityId = _orderPrioritiesRepository.GetOrderPriorityId(orderHeaderDTO.OrderPriority);
+            orderHeader.OrderState = GetEnumValue<OrderState>(orderHeaderDTO.OrderState);
+            orderHeader.OrderPriority = GetEnumValue<OrderPriority>(orderHeaderDTO.OrderPriority);
 
             return await _repository.Update(orderHeader);
         }       
@@ -116,8 +112,8 @@ namespace ITAcademyERP.Controllers
                 OrderNumber = orderHeaderDTO.OrderNumber,
                 ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client),
                 EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee),
-                OrderStateId = _orderStatesRepository.GetOrderStateId(orderHeaderDTO.OrderState),
-                OrderPriorityId = _orderPrioritiesRepository.GetOrderPriorityId(orderHeaderDTO.OrderPriority),
+                OrderState = (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState),
+                OrderPriority = (OrderPriority)Enum.Parse(typeof(OrderPriority), orderHeaderDTO.OrderPriority),
                 CreationDate = DateTime.Now,
                 AssignToEmployeeDate = DateTime.Now
             };
@@ -133,8 +129,8 @@ namespace ITAcademyERP.Controllers
             {
                 var orderLineDTO = _orderLinesController.OrderLineToDTO(orderLine);
                 orderLinesDTO.Add(orderLineDTO);
-            }
-            
+            }           
+
             var orderHeaderDTO = new OrderHeaderDTO
             {
                 Id = orderHeader.Id,
@@ -142,8 +138,8 @@ namespace ITAcademyERP.Controllers
                 Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == "Delivery")?.Name,
                 Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
                 Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
-                OrderState = orderHeader.OrderState.State,
-                OrderPriority = orderHeader.OrderPriority.Priority,
+                OrderState = GetEnumString(orderHeader.OrderState),
+                OrderPriority = GetEnumString(orderHeader.OrderPriority),
                 CreationDate = orderHeader.CreationDate,
                 AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
                 FinalisationDate = orderHeader.FinalisationDate == null ? null : orderHeader.FinalisationDate,
@@ -151,6 +147,26 @@ namespace ITAcademyERP.Controllers
             };
 
             return orderHeaderDTO;
-        }        
+        }
+        
+        public string GetEnumString<T>(T enumInput)
+        {
+            var enumType = typeof(T);
+            var name = Enum.GetName(enumType, enumInput);
+            var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
+            
+            return enumMemberAttribute.Value;          
+        }
+
+        public static T GetEnumValue<T>(string enumName)
+        {
+            var enumType = typeof(T);
+            foreach (var name in Enum.GetNames(enumType))
+            {
+                var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
+                if (enumMemberAttribute.Value == enumName) return (T)Enum.Parse(enumType, name);
+            }
+            return default;
+        }
     }
 }

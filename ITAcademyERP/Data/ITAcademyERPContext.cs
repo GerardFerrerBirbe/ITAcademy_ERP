@@ -24,8 +24,6 @@ namespace ITAcademyERP.Data
         public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
-        public virtual DbSet<OrderState> OrderStates { get; set; }
-        public virtual DbSet<OrderPriority> OrderPriorities { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

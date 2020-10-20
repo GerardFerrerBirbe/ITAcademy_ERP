@@ -4,12 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { OrderHeaderService }  from '../../../models/order-header/order-header.service';
 import { OrderLineService } from '../../order-line/order-line.service';
-import { OrderStateService } from '../../order-state/order-state.service';
-import { OrderPriorityService } from '../../order-priority/order-priority.service';
 import { ClientService } from '../../client/client.service';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
-import { OrderState } from '../../order-state/order-state';
-import { OrderPriority } from '../../order-priority/order-priority';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Client } from '../../client/client';
 import { Product } from '../../product/product';
 import { ProductService } from 'src/app/models/product/product.service';
@@ -30,8 +26,6 @@ export class OrderDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private orderHeaderService: OrderHeaderService,
     private orderLineService: OrderLineService,
-    private orderStateService: OrderStateService,
-    private orderPriorityService: OrderPriorityService,
     private clientService: ClientService,
     private employeeService: EmployeeService,
     private productService: ProductService,
@@ -49,8 +43,6 @@ export class OrderDetailComponent implements OnInit {
   orderHeaders: OrderHeader[];
   orderLines: OrderLine[];
 
-  orderStates: OrderState[];
-  orderPriorities: OrderPriority[];
   employees: Employee[];
   clients: Client[];
   products: Product[];
@@ -77,12 +69,6 @@ export class OrderDetailComponent implements OnInit {
 
     this.getUser();
     
-    this.orderStateService.getOrderStates()
-    .subscribe(orderStates => this.orderStates = orderStates);
-
-    this.orderPriorityService.getOrderPriorities()
-    .subscribe(orderPriorities => this.orderPriorities = orderPriorities);
-
     this.employeeService.getEmployees()
     .subscribe(employees => this.employees = employees);
 

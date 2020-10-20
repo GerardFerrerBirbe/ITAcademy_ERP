@@ -49,10 +49,6 @@ namespace ITAcademyERP.Data
             _context.Products.AddRange(products);
             _context.SaveChanges();
 
-            CreateOrderStates(_context);
-
-            CreateOrderPriorities(_context);
-
             var orderHeaders = CreateOrderHeaders().ToArray();
             _context.OrderHeaders.AddRange(orderHeaders);
             _context.SaveChanges();
@@ -184,52 +180,17 @@ namespace ITAcademyERP.Data
             return products;
         }        
         
-        public static void CreateOrderStates(ITAcademyERPContext _context)
-        {
-            var state1 = new OrderState { State = "Pendent de tractar" };
-            _context.OrderStates.Add(state1);           
-
-            var state2 = new OrderState { State = "En tractament" };
-            _context.OrderStates.Add(state2);
-
-            var state3 = new OrderState { State = "En repartiment" };
-            _context.OrderStates.Add(state3);
-
-            var state4 = new OrderState { State = "Completat" };
-            _context.OrderStates.Add(state4);
-
-            var state5 = new OrderState { State = "Cancel·lat" };
-            _context.OrderStates.Add(state5);
-
-            _context.SaveChanges();
-        }
-
-        public static void CreateOrderPriorities(ITAcademyERPContext _context)
-        {
-
-            var priority1 = new OrderPriority { Priority = "Baixa" };
-            _context.OrderPriorities.Add(priority1);
-
-            var priority2 = new OrderPriority { Priority = "Mitjana" };
-            _context.OrderPriorities.Add(priority2);
-
-            var priority3 = new OrderPriority { Priority = "Alta" };
-            _context.OrderPriorities.Add(priority3);
-
-            _context.SaveChanges();
-        }
-
         public static List<OrderHeader> CreateOrderHeaders()
         {
             List<OrderHeader> orderHeaders = new List<OrderHeader>()
             {
                 new OrderHeader
                 {
-                    OrderNumber = "2020-01",
+                    OrderNumber = "2020-03",
                     EmployeeId = 1,
                     ClientId = 1,
-                    OrderPriorityId = 1,
-                    OrderStateId = 5,
+                    OrderPriority = OrderPriority.Baixa,
+                    OrderState = OrderState.Completada,
                     CreationDate = new DateTime(2020,07,09),
                     AssignToEmployeeDate = new DateTime(2020,08,09),
                     FinalisationDate = new DateTime(2020,09,09)
@@ -239,18 +200,18 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-02",
                     EmployeeId = 2,
                     ClientId = 2,
-                    OrderPriorityId = 3,
-                    OrderStateId = 2,
+                    OrderPriority = OrderPriority.Alta,
+                    OrderState = OrderState.PendentTractar,
                     CreationDate = new DateTime(2020,08,09),
                     AssignToEmployeeDate = new DateTime(2020,09,09)
                 },
                 new OrderHeader
                 {
-                    OrderNumber = "2020-03",
+                    OrderNumber = "2020-01",
                     EmployeeId = 2,
                     ClientId = 1,
-                    OrderPriorityId = 2,
-                    OrderStateId = 1,
+                    OrderPriority = OrderPriority.Mitjana,
+                    OrderState = OrderState.EnTractament,
                     CreationDate = new DateTime(2020,08,11),
                     AssignToEmployeeDate = new DateTime(2020,08,20)
                 }

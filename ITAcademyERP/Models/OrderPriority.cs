@@ -2,20 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace ITAcademyERP.Models
 {
-    public class OrderPriority : IEntity
+    public enum OrderPriority
     {
-        public OrderPriority()
-        {
-            OrderHeaders = new HashSet<OrderHeader>();
-
-        }
-        public int Id { get; set; }
-        public string Priority { get; set; }
-
-        public virtual ICollection<OrderHeader> OrderHeaders { get; set; }
+        [EnumMember(Value = "Baixa")]
+        Baixa,
+        [EnumMember(Value = "Mitjana")]
+        Mitjana,
+        [EnumMember(Value = "Alta")]
+        Alta
     }
 }

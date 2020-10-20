@@ -14,8 +14,8 @@ namespace ITAcademyERP.Models
         public string OrderNumber { get; set; }
         public int ClientId { get; set; }
         public int EmployeeId { get; set; }
-        public int OrderStateId { get; set; }
-        public int OrderPriorityId { get; set; }
+        public OrderState OrderState { get; set; }
+        public OrderPriority OrderPriority { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime AssignToEmployeeDate { get; set; }
         public DateTime? FinalisationDate { get; set; }
@@ -23,8 +23,6 @@ namespace ITAcademyERP.Models
 
         public virtual Client Client { get; set; }
         public virtual Employee Employee { get; set; }
-        public virtual OrderState OrderState { get; set; }
-        public virtual OrderPriority OrderPriority { get; set; }
         public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }
