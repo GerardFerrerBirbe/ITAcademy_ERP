@@ -49,7 +49,7 @@ namespace ITAcademyERP.Data
             _context.Products.AddRange(products);
             _context.SaveChanges();
 
-            var orderHeaders = CreateOrderHeaders().ToArray();
+            var orderHeaders = CreateOrderHeaders(_context).ToArray();
             _context.OrderHeaders.AddRange(orderHeaders);
             _context.SaveChanges();
 
@@ -180,15 +180,15 @@ namespace ITAcademyERP.Data
             return products;
         }        
         
-        public static List<OrderHeader> CreateOrderHeaders()
+        public static List<OrderHeader> CreateOrderHeaders(ITAcademyERPContext _context)
         {
             List<OrderHeader> orderHeaders = new List<OrderHeader>()
             {
                 new OrderHeader
                 {
                     OrderNumber = "2020-03",
-                    EmployeeId = 1,
-                    ClientId = 1,
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Steve").Id,
                     OrderPriority = OrderPriority.Baixa,
                     OrderState = OrderState.Completada,
                     CreationDate = new DateTime(2020,07,09),
@@ -198,8 +198,8 @@ namespace ITAcademyERP.Data
                 new OrderHeader
                 {
                     OrderNumber = "2020-02",
-                    EmployeeId = 2,
-                    ClientId = 2,
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Mark").Id,
                     OrderPriority = OrderPriority.Alta,
                     OrderState = OrderState.PendentTractar,
                     CreationDate = new DateTime(2020,08,09),
@@ -208,8 +208,8 @@ namespace ITAcademyERP.Data
                 new OrderHeader
                 {
                     OrderNumber = "2020-01",
-                    EmployeeId = 2,
-                    ClientId = 1,
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Gerard").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Mark").Id,
                     OrderPriority = OrderPriority.Mitjana,
                     OrderState = OrderState.EnTractament,
                     CreationDate = new DateTime(2020,08,11),
@@ -223,9 +223,9 @@ namespace ITAcademyERP.Data
         {
             List<OrderLine> orderLines = new List<OrderLine>()
             {
-                new OrderLine{ProductId = 1, UnitPrice = 100, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = 2, UnitPrice = 200, Vat = 0.21, Quantity = 5, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = 3, UnitPrice = 300, Vat = 0.21, Quantity = 8, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id}
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Trek").Id, UnitPrice = 100, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Montesa").Id, UnitPrice = 200, Vat = 0.21, Quantity = 5, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Fiat").Id, UnitPrice = 300, Vat = 0.21, Quantity = 8, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-02").Id}
             };
             return orderLines;
         }

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data
 {
-    public interface IEntity
+    public interface IEntity<TProperty>
     {
-
+         TProperty Id { get; set; }
     }
 }

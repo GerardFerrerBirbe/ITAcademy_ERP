@@ -16,23 +16,20 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class AddressesController : GenericController<Address, AddressesRepository>
+    public class AddressesController : GenericController<Guid, Address, AddressesRepository>
     {
-        private readonly ITAcademyERPContext _context;
         private readonly AddressesRepository _repository;
 
         public AddressesController(
-            ITAcademyERPContext context,
             AddressesRepository repository) : base(repository)
         {
-            _context = context;
             _repository = repository;
         }        
 
         public async Task CreateOrEditAddresses(ICollection<AddressDTO> addressesDTO)
         {
-            ICollection<AddressDTO> addressesToCreate = addressesDTO.Where(x => x.Id == 0).ToList();
-            ICollection<AddressDTO> addressesToEdit = addressesDTO.Where(x => x.Id != 0).ToList();
+            ICollection<AddressDTO> addressesToCreate = addressesDTO.Where(x => x.Id == "").ToList();
+            ICollection<AddressDTO> addressesToEdit = addressesDTO.Where(x => x.Id != "").ToList();
 
             if (addressesToCreate.Any())
             {
@@ -43,7 +40,6 @@ namespace ITAcademyERP.Controllers
 
                     var address = new Address
                     {
-                        Id = addressToCreate.Id,
                         PersonId = addressToCreate.PersonId,
                         Name = addressToCreate.Name,
                         Type = addressToCreate.Type
@@ -57,9 +53,9 @@ namespace ITAcademyERP.Controllers
             {
                 foreach (var addressToEdit in addressesToEdit)
                 {
-                    var address = await _repository.GetAddress(addressToEdit.Id);
+                    var address = await _repository.GetAddress(Guid.Parse(addressToEdit.Id));
 
-                    address.Id = addressToEdit.Id;
+                    address.Id = Guid.Parse(addressToEdit.Id);
                     address.PersonId = addressToEdit.PersonId;
                     address.Name = addressToEdit.Name;
                     address.Type = addressToEdit.Type;
@@ -71,16 +67,16 @@ namespace ITAcademyERP.Controllers
 
         // POST: api/Addresses
         [HttpPost]
-        public IActionResult DeleteList([FromBody] List<int> ids)
+        public IActionResult DeleteList([FromBody] List<string> addressesDTO)
         {
-            return _repository.DeleteList(ids);
+            return _repository.DeleteList(addressesDTO);
         }
 
         public static AddressDTO AddressToDTO(Address address)
         {
             var addressDTO = new AddressDTO
             {
-                Id = address.Id,
+                Id = address.Id.ToString(),
                 PersonId = address.PersonId,
                 Name = address.Name,
                 Type = address.Type

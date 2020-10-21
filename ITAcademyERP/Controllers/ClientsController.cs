@@ -18,7 +18,7 @@ namespace ITAcademyERP.Models
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
     [ApiController]
-    public class ClientsController : GenericController<Client, ClientsRepository>
+    public class ClientsController : GenericController<Guid, Client, ClientsRepository>
     {
         private readonly ClientsRepository _repository;
         private readonly PeopleController _peopleController;
@@ -51,7 +51,7 @@ namespace ITAcademyERP.Models
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ClientDTO>> GetClient(int id)
+        public async Task<ActionResult<ClientDTO>> GetClient(Guid id)
         {
             var client = await _repository.GetClient(id);
 
@@ -118,7 +118,7 @@ namespace ITAcademyERP.Models
 
         // DELETE: api/[controller]/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Client>> DeleteClient(int id)
+        public async Task<ActionResult<Client>> DeleteClient(Guid id)
         {
             var client = await _repository.Delete(id);
 

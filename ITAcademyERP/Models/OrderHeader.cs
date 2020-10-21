@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class OrderHeader : IEntity
+    public partial class OrderHeader : IEntity<Guid>
     {
         public OrderHeader()
         {
             OrderLines = new HashSet<OrderLine>();
         }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string OrderNumber { get; set; }
-        public int ClientId { get; set; }
-        public int EmployeeId { get; set; }
+        public Guid ClientId { get; set; }
+        public Guid EmployeeId { get; set; }
         public OrderState OrderState { get; set; }
         public OrderPriority OrderPriority { get; set; }
         public DateTime CreationDate { get; set; }

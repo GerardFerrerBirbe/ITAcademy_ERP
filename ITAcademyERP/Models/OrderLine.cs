@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class OrderLine : IEntity
+    public partial class OrderLine : IEntity<Guid>
     {
         public OrderLine()
         {            
         }
         
-        public int Id { get; set; }
-        public int OrderHeaderId { get; set; }
-        public int ProductId { get; set; }
+        public Guid Id { get; set; }
+        public Guid OrderHeaderId { get; set; }
+        public Guid ProductId { get; set; }
         public double UnitPrice { get; set; }
         public double Vat { get; set; }
         public double Quantity { get; set; }

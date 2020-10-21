@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Address } from './address';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ httpOptions = {
 
   constructor(private http: HttpClient) { }
 
-  deleteAddresses(ids: number[]): Observable<void>{
-    return this.http.post<void>(this.apiUrl, ids, this.httpOptions);
+  deleteAddresses(addresses: string[]): Observable<void>{
+    return this.http.post<void>(this.apiUrl, addresses, this.httpOptions);
   }
 }

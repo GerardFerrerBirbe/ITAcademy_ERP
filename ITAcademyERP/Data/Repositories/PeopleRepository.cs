@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public class PeopleRepository : GenericRepository<Person, ITAcademyERPContext>
+    public class PeopleRepository : GenericRepository<string, Person, ITAcademyERPContext>
     {
         private readonly ITAcademyERPContext _context;
 

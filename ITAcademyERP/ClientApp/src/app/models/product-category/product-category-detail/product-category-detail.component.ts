@@ -38,7 +38,7 @@ export class ProductCategoryDetailComponent implements OnInit {
 
       this.productCategoryId = params["id"];
 
-      this.productCategoryService.getProductCategory(this.productCategoryId.toString())
+      this.productCategoryService.getProductCategory(this.productCategoryId)
       .subscribe(productCategory => this.loadForm(productCategory));
     });
   }
@@ -55,7 +55,6 @@ export class ProductCategoryDetailComponent implements OnInit {
 
     if (this.editionMode){
       //edit productCategory     
-      this.productCategoryId = parseInt(this.productCategoryId);
       productCategory.id = this.productCategoryId;      
       this.productCategoryService.updateProductCategory(productCategory)
       .subscribe(

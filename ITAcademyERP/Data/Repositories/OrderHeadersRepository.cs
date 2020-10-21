@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public class OrderHeadersRepository : GenericRepository<OrderHeader, ITAcademyERPContext>
+    public class OrderHeadersRepository : GenericRepository<Guid, OrderHeader, ITAcademyERPContext>
     {
         private readonly ITAcademyERPContext _context;
 
@@ -32,7 +32,7 @@ namespace ITAcademyERP.Data.Repositories
                     .ToListAsync();
         }
 
-        public async Task<List<OrderHeader>> GetOrderHeadersByEmployee(int employeeId)
+        public async Task<List<OrderHeader>> GetOrderHeadersByEmployee(Guid employeeId)
         {
             return await _context.OrderHeaders
                     .Include(o => o.Client)
@@ -46,7 +46,7 @@ namespace ITAcademyERP.Data.Repositories
                     .ToListAsync();
         }
 
-        public async Task<List<OrderHeader>> GetOrderHeadersByClient(int clientId)
+        public async Task<List<OrderHeader>> GetOrderHeadersByClient(Guid clientId)
         {
             return await _context.OrderHeaders
                     .Include(o => o.Client)
@@ -60,7 +60,7 @@ namespace ITAcademyERP.Data.Repositories
                     .ToListAsync();
         }
 
-        public async Task<OrderHeader> GetOrderHeader(int id)
+        public async Task<OrderHeader> GetOrderHeader(Guid id)
         {
             return await _context.OrderHeaders
                     .Include(o => o.Client)

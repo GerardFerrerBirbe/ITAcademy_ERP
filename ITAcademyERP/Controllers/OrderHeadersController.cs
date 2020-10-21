@@ -17,7 +17,7 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class OrderHeadersController : GenericController<OrderHeader, OrderHeadersRepository>
+    public class OrderHeadersController : GenericController<Guid, OrderHeader, OrderHeadersRepository>
     {
         private readonly OrderHeadersRepository _repository;
         private readonly ClientsRepository _clientsRepository;
@@ -47,7 +47,7 @@ namespace ITAcademyERP.Controllers
 
         [Route("Employee")]
         [HttpGet]
-        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByEmployee(int employeeId)
+        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByEmployee(Guid employeeId)
         {
             var orderHeaders = await _repository.GetOrderHeadersByEmployee(employeeId);
 
@@ -56,7 +56,7 @@ namespace ITAcademyERP.Controllers
 
         [Route("Client")]
         [HttpGet]
-        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByClient(int clientId)
+        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByClient(Guid clientId)
         {
             var orderHeaders = await _repository.GetOrderHeadersByClient(clientId);
 
@@ -65,7 +65,7 @@ namespace ITAcademyERP.Controllers
 
         //GET: api/OrderHeaders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderHeaderDTO>> GetOrderHeader(int id)
+        public async Task<ActionResult<OrderHeaderDTO>> GetOrderHeader(Guid id)
         {
             var orderHeader = await _repository.GetOrderHeader(id);              
 

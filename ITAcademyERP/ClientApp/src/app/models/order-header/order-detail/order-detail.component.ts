@@ -109,7 +109,6 @@ export class OrderDetailComponent implements OnInit {
   addOrderLine(){    
     let orderLine: OrderLine = Object.assign({}, this.orderLineFormGroup.value);
     console.table(orderLine);
-    this.orderHeaderId = parseInt(this.orderHeaderId);
     orderLine.orderHeaderId = this.orderHeaderId;
 
     this.orderLineService.addOrderLine(orderLine)
@@ -142,8 +141,7 @@ export class OrderDetailComponent implements OnInit {
     console.table(orderHeader);
 
     if (this.editionMode){
-      //edit order     
-      this.orderHeaderId = parseInt(this.orderHeaderId);
+      //edit order
       orderHeader.id = this.orderHeaderId;     
       this.orderHeaderService.updateOrderHeader(orderHeader)
       .subscribe(() => alert("Actualització realitzada"));

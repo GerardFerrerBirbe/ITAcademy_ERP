@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public interface IRepository<T> where T : class, IEntity
+    public interface IRepository<TProperty, TEntity> where TEntity : class, IEntity<TProperty>
     {
-        Task<List<T>> GetAll();
-        Task<T> Get(int id);
-        Task<IActionResult> Update(T entity);
-        Task<ActionResult> Add(T entity);
-        Task<T> Delete(int id);
+        Task<List<TEntity>> GetAll();
+        Task<TEntity> Get(Guid id);
+        Task<IActionResult> Update(TEntity entity);
+        Task<ActionResult> Add(TEntity entity);
+        Task<TEntity> Delete(Guid id);
     }
 }

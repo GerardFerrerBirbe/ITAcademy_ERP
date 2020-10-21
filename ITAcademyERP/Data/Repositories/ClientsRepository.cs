@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public class ClientsRepository : GenericRepository<Client, ITAcademyERPContext>
+    public class ClientsRepository : GenericRepository<Guid, Client, ITAcademyERPContext>
     {
         private readonly ITAcademyERPContext _context;
         private readonly PeopleRepository _peopleRepository;
@@ -29,7 +29,7 @@ namespace ITAcademyERP.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Client> GetClient(int id)
+        public async Task<Client> GetClient(Guid id)
         {
             return await _context.Clients
                 .Include(e => e.Person)
@@ -45,7 +45,7 @@ namespace ITAcademyERP.Data.Repositories
                 .SingleOrDefaultAsync(e => e.PersonId == personId);
         }
 
-        public int GetClientId(string clientName)
+        public Guid GetClientId(string clientName)
         {
             var personId = _peopleRepository.GetPersonIdByName(clientName);
 

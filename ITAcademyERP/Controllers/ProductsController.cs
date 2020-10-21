@@ -15,7 +15,7 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class ProductsController : GenericController<Product, ProductsRepository>
+    public class ProductsController : GenericController<Guid, Product, ProductsRepository>
     {
         private readonly ProductsRepository _repository;
         private readonly ProductCategoriesRepository _productCategoriesRepository;
@@ -38,7 +38,7 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDTO>> GetProduct(int id)
+        public async Task<ActionResult<ProductDTO>> GetProduct(Guid id)
         {
             var product = await _repository.GetProduct(id);
 

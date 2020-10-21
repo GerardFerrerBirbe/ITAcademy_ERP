@@ -26,15 +26,15 @@ export class ProductCategoryService {
   }
 
   updateProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
-    return this.http.put<ProductCategory>(this.apiUrl + "/generic/" + productCategory.id.toString(), productCategory, this.httpOptions);
+    return this.http.put<ProductCategory>(this.apiUrl + "/generic/" + productCategory.id, productCategory, this.httpOptions);
   }
 
   addProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
     return this.http.post<ProductCategory>(this.apiUrl + "/generic/", productCategory, this.httpOptions);
   }
 
-  deleteProductCategory(productCategory: ProductCategory | number): Observable<ProductCategory> {
-    const id = typeof productCategory === 'number' ? productCategory : productCategory.id;
+  deleteProductCategory(productCategory: ProductCategory | string): Observable<ProductCategory> {
+    const id = typeof productCategory === 'string' ? productCategory : productCategory.id;
     const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<ProductCategory>(url, this.httpOptions);

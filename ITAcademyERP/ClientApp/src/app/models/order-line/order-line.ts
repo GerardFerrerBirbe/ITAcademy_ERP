@@ -1,6 +1,6 @@
 export interface OrderLine {
-  id: number;
-  orderHeaderId: number;
+  id: string;
+  orderHeaderId: string;
   productName: string;
   unitPrice: number;
   vat: number;

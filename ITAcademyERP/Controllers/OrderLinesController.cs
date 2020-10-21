@@ -15,7 +15,7 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
     [ApiController]
-    public class OrderLinesController : GenericController<OrderLine, OrderLinesRepository>
+    public class OrderLinesController : GenericController<Guid, OrderLine, OrderLinesRepository>
     {
         private readonly OrderLinesRepository _repository;
         private readonly ProductsRepository _productsRepository;

@@ -24,8 +24,8 @@ export class OrderLineService {
     return this.http.post<OrderLine>(this.apiUrl, orderLine, this.httpOptions);
   }
 
-  deleteOrderLine(orderLine: OrderLine | number): Observable<OrderLine> {
-    const id = typeof orderLine === 'number' ? orderLine : orderLine.id;
+  deleteOrderLine(orderLine: OrderLine | string): Observable<OrderLine> {
+    const id = typeof orderLine === 'string' ? orderLine : orderLine.id;
     let url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<OrderLine>(url, this.httpOptions);

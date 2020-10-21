@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public class OrderLinesRepository : GenericRepository<OrderLine, ITAcademyERPContext>
+    public class OrderLinesRepository : GenericRepository<Guid, OrderLine, ITAcademyERPContext>
     {
-        private readonly ITAcademyERPContext _context;
-
         public OrderLinesRepository(ITAcademyERPContext context) : base(context)
         {
-            _context = context;
+
         }
 
 

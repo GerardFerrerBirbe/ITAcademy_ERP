@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public class AddressesRepository : GenericRepository<Address, ITAcademyERPContext>
+    public class AddressesRepository : GenericRepository<Guid, Address, ITAcademyERPContext>
     {
         private readonly ITAcademyERPContext _context;
 
@@ -18,17 +18,17 @@ namespace ITAcademyERP.Data.Repositories
             _context = context;
         }
 
-        public async Task<Address> GetAddress(int id)
+        public async Task<Address> GetAddress(Guid id)
         {
             return await _context.Addresses
                 .SingleOrDefaultAsync(p => p.Id == id);
         }
 
-        public IActionResult DeleteList([FromBody] List<int> ids)
+        public IActionResult DeleteList([FromBody] List<string> ids)
         {
             try
             {
-                List<Address> addresses = ids.Select(id => new Address() { Id = id }).ToList();
+                List<Address> addresses = ids.Select(id => new Address() { Id = Guid.Parse(id) }).ToList();
                 _context.RemoveRange(addresses);
                 _context.SaveChanges();
             }

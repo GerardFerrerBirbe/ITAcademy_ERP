@@ -15,7 +15,7 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class ProductCategoriesController : GenericController<ProductCategory, ProductCategoriesRepository>
+    public class ProductCategoriesController : GenericController<Guid, ProductCategory, ProductCategoriesRepository>
     {
        public ProductCategoriesController(ProductCategoriesRepository repository) : base(repository)
         {

@@ -15,14 +15,14 @@ namespace ITAcademyERP.Controllers
     [Route("api/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class PeopleController : GenericController<Person, PeopleRepository>
+    public class PeopleController : GenericController<string, Person, PeopleRepository>
     {
         private readonly AddressesController _addressesController;
         private readonly PeopleRepository _repository;
 
         public PeopleController(
             AddressesController addressesController,
-            PeopleRepository repository) : base(repository)
+            PeopleRepository repository) : base (repository)
         {
             _addressesController = addressesController;
             _repository = repository;

@@ -1,7 +1,7 @@
 import { OrderLine } from '../order-line/order-line';
 
 export interface OrderHeader {
-  id: number;
+  id: string;
   orderNumber: string;
   address: string;
   client: string;

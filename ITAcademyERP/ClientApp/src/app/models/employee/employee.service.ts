@@ -26,15 +26,15 @@ export class EmployeeService {
   }
 
   updateEmployee(employee: Employee): Observable<Employee> {
-    return this.http.put<Employee>(this.apiUrl + "/" + employee.id.toString(), employee, this.httpOptions);
+    return this.http.put<Employee>(this.apiUrl + "/" + employee.id, employee, this.httpOptions);
   }
 
   addEmployee(employee: Employee): Observable<Employee> {
     return this.http.post<Employee>(this.apiUrl, employee, this.httpOptions);
   }
 
-  deleteEmployee(employee: Employee | number): Observable<Employee> {
-    const id = typeof employee === 'number' ? employee : employee.id;
+  deleteEmployee(employee: Employee | string): Observable<Employee> {
+    const id = typeof employee === 'string' ? employee : employee.id;
     const url = `${this.apiUrl}/${id}`;
 
     return this.http.delete<Employee>(url, this.httpOptions);

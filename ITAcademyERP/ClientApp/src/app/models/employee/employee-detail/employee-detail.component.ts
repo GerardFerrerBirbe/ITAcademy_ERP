@@ -8,6 +8,7 @@ import { OrderHeaderService } from 'src/app/models/order-header/order-header.ser
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
+import { Address } from '../../address/address';
 
 @Component({
   selector: 'app-employee-detail',
@@ -30,7 +31,7 @@ export class EmployeeDetailComponent implements OnInit {
   formGroup: FormGroup;
   employeeId: any;
   personId: any;
-  addressesToDelete: number[] = [];
+  addressesToDelete: string[] = [];
 
   employees: Employee[];  
   currentOhs: OrderHeader[];
@@ -59,7 +60,7 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.employeeId = params["id"];
 
-      this.employeeService.getEmployee(this.employeeId.toString())
+      this.employeeService.getEmployee(this.employeeId)
       .subscribe(employee => {
         this.loadForm(employee);
         this.personId = employee.personId;
@@ -68,7 +69,7 @@ export class EmployeeDetailComponent implements OnInit {
       this.orderHeaderService.getOHByEmployee(this.employeeId)
       .subscribe(orderHeaders => {
         this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completat" || oh.orderState == "Cancel·lat");
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completada" || oh.orderState == "Cancel·lada");
       }
       );   
     });
@@ -81,7 +82,7 @@ export class EmployeeDetailComponent implements OnInit {
 
   buildAddress(){
     return this.fb.group({
-      id: 0,
+      id: '',
       personId: this.personId != null ? this.personId : '',
       name: '',
       type: ''
@@ -91,7 +92,7 @@ export class EmployeeDetailComponent implements OnInit {
   deleteAddress(index: number){
     let addressToDelete = this.addresses.at(index) as FormGroup;
     if (addressToDelete.controls['id'].value != 0) {
-      this.addressesToDelete.push(<number>addressToDelete.controls['id'].value);
+      this.addressesToDelete.push(<string>addressToDelete.controls['id'].value);
     }
     this.addresses.removeAt(index);
   }
@@ -117,8 +118,7 @@ export class EmployeeDetailComponent implements OnInit {
     console.table(employee);
 
     if (this.editionMode){
-      //edit employee     
-      this.employeeId = parseInt(this.employeeId);
+      //edit employee
       employee.id = this.employeeId;
       employee.personId = this.personId;     
       this.employeeService.updateEmployee(employee)

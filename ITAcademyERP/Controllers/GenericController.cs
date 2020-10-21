@@ -12,9 +12,9 @@ namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public abstract class GenericController<TEntity, TRepository> : ControllerBase
-        where TEntity : class, IEntity
-        where TRepository : IRepository<TEntity>
+    public abstract class GenericController<TProperty, TEntity, TRepository> : ControllerBase
+        where TEntity : class, IEntity<TProperty>
+        where TRepository : IRepository<TProperty, TEntity>
     {
         private readonly TRepository _repository;
 
@@ -35,7 +35,7 @@ namespace ITAcademyERP.Controllers
         // GET: api/[controller]/5
 
         [HttpGet("generic/{id}")]
-        public async Task<ActionResult<TEntity>> Get(int id)
+        public async Task<ActionResult<TEntity>> Get(Guid id)
         {
             var entity = await _repository.Get(id);
             if (entity == null)
@@ -62,7 +62,7 @@ namespace ITAcademyERP.Controllers
 
         // DELETE: api/[controller]/5
         [HttpDelete("generic/{id}")]
-        public async Task<ActionResult<TEntity>> Delete(int id)
+        public async Task<ActionResult<TEntity>> Delete(Guid id)
         {
             var entity = await _repository.Delete(id);
             if (entity == null)

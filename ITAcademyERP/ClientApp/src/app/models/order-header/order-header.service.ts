@@ -21,13 +21,13 @@ export class OrderHeaderService {
     return this.http.get<OrderHeader[]>(this.apiUrl);
   }
 
-  getOHByEmployee(employeeId: number): Observable<OrderHeader[]>{
-    let params = new HttpParams().set('employeeId', employeeId.toString());    
+  getOHByEmployee(employeeId: string): Observable<OrderHeader[]>{
+    let params = new HttpParams().set('employeeId', employeeId);    
     return this.http.get<OrderHeader[]>(this.apiUrl + "/Employee", {params: params});
   }
 
-  getOHByClient(clientId: number): Observable<OrderHeader[]>{
-    let params = new HttpParams().set('clientId', clientId.toString());    
+  getOHByClient(clientId: string): Observable<OrderHeader[]>{
+    let params = new HttpParams().set('clientId', clientId);    
     return this.http.get<OrderHeader[]>(this.apiUrl + "/Client", {params: params});
   }
   
@@ -37,15 +37,15 @@ export class OrderHeaderService {
   }
 
   updateOrderHeader(orderHeader: OrderHeader): Observable<OrderHeader> {
-    return this.http.put<OrderHeader>(this.apiUrl + "/" + orderHeader.id.toString(), orderHeader, this.httpOptions);
+    return this.http.put<OrderHeader>(this.apiUrl + "/" + orderHeader.id, orderHeader, this.httpOptions);
   }
 
   addOrderHeader(orderHeader: OrderHeader): Observable<OrderHeader> {
     return this.http.post<OrderHeader>(this.apiUrl, orderHeader, this.httpOptions);
   }
 
-  deleteOrderHeader(orderHeader: OrderHeader | number): Observable<OrderHeader> {
-    const id = typeof orderHeader === 'number' ? orderHeader : orderHeader.id;
+  deleteOrderHeader(orderHeader: OrderHeader | string): Observable<OrderHeader> {
+    const id = typeof orderHeader === 'string' ? orderHeader : orderHeader.id;
     const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<OrderHeader>(url, this.httpOptions);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public class ProductCategoriesRepository : GenericRepository<ProductCategory, ITAcademyERPContext>
+    public class ProductCategoriesRepository : GenericRepository<Guid, ProductCategory, ITAcademyERPContext>
     {
         private readonly ITAcademyERPContext _context;
         public ProductCategoriesRepository(ITAcademyERPContext context) : base(context)
@@ -15,7 +15,7 @@ namespace ITAcademyERP.Data.Repositories
             _context = context;
         }
         
-        public int GetProductCategoryId(string name)
+        public Guid GetProductCategoryId(string name)
         {
             return _context.ProductCategories
                 .FirstOrDefault(p => p.ProductCategoryName == name)

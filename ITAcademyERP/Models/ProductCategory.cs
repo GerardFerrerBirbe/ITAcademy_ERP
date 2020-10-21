@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class ProductCategory : IEntity
+    public partial class ProductCategory : IEntity<Guid>
     {
         public ProductCategory()
         {
             Products = new HashSet<Product>();
         }
         
-        public int Id { get; set; }        
+        public Guid Id { get; set; }        
         
         public string ProductCategoryName { get; set; }
 

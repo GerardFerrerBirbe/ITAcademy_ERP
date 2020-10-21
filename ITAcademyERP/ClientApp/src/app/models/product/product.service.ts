@@ -26,15 +26,15 @@ export class ProductService {
   }
 
   updateProduct(product: Product): Observable<Product> {
-    return this.http.put<Product>(this.apiUrl + "/" + product.id.toString(), product, this.httpOptions);
+    return this.http.put<Product>(this.apiUrl + "/" + product.id, product, this.httpOptions);
   }
 
   addProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(this.apiUrl, product, this.httpOptions);
   }
 
-  deleteProduct(product: Product | number): Observable<Product> {
-    const id = typeof product === 'number' ? product : product.id;
+  deleteProduct(product: Product | string): Observable<Product> {
+    const id = typeof product === 'string' ? product : product.id;
     const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<Product>(url, this.httpOptions);

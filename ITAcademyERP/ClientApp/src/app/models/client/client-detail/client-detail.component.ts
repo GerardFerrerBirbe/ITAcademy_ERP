@@ -8,6 +8,7 @@ import { OrderHeaderService } from 'src/app/models/order-header/order-header.ser
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
+import { Address } from '../../address/address';
 
 @Component({
   selector: 'app-client-detail',
@@ -30,7 +31,7 @@ export class ClientDetailComponent implements OnInit {
   formGroup: FormGroup;
   clientId: any;
   personId: any;
-  addressesToDelete: number[] = [];
+  addressesToDelete: string[] = [];
 
   clients: Client[];
   currentOhs: OrderHeader[];
@@ -59,7 +60,7 @@ export class ClientDetailComponent implements OnInit {
 
       this.clientId = params["id"];      
 
-      this.clientService.getClient(this.clientId.toString())
+      this.clientService.getClient(this.clientId)
       .subscribe(client => {
         this.loadForm(client);
         this.personId = client.personId;
@@ -69,7 +70,7 @@ export class ClientDetailComponent implements OnInit {
       .subscribe(orderHeaders => {
         this.calculateTotalClient(orderHeaders);
         this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completat" || oh.orderState == "Cancel·lat");
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completada" || oh.orderState == "Cancel·lada");
       }
       );
     });
@@ -82,7 +83,7 @@ export class ClientDetailComponent implements OnInit {
 
   buildAddress(){
     return this.fb.group({
-      id: 0,
+      id: '',
       personId: this.personId != null ? this.personId : '',
       name: '',
       type: ''
@@ -92,7 +93,7 @@ export class ClientDetailComponent implements OnInit {
   deleteAddress(index: number){
     let addressToDelete = this.addresses.at(index) as FormGroup;
     if (addressToDelete.controls['id'].value != 0) {
-      this.addressesToDelete.push(<number>addressToDelete.controls['id'].value);
+      this.addressesToDelete.push(<string>addressToDelete.controls['id'].value);
     }
     this.addresses.removeAt(index);
   }
@@ -117,11 +118,12 @@ export class ClientDetailComponent implements OnInit {
 
     if (this.editionMode){
       //edit client     
-      this.clientId = parseInt(this.clientId);
-      client.id = this.clientId;      
+      client.id = this.clientId;
+      client.personId = this.personId;    
       this.clientService.updateClient(client)
       .subscribe(
-        () => alert("Actualització realitzada"),
+        () => { this.deleteAddresses();
+          alert("Actualització realitzada")},
         error => alert(error.error[""])
       );
     } else {

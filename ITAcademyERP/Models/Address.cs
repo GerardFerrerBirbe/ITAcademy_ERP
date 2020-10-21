@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class Address : IEntity
+    public partial class Address : IEntity<Guid>
     {
         public Address()
         {
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string PersonId { get; set; }

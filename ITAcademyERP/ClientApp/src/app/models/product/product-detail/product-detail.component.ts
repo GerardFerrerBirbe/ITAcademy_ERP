@@ -46,7 +46,7 @@ export class ProductDetailComponent implements OnInit {
 
       this.productId = params["id"];
 
-      this.productService.getProduct(this.productId.toString())
+      this.productService.getProduct(this.productId)
       .subscribe(product => this.loadForm(product));
     });
   }
@@ -64,7 +64,6 @@ export class ProductDetailComponent implements OnInit {
 
     if (this.editionMode){
       //edit product     
-      this.productId = parseInt(this.productId);
       product.id = this.productId;      
       this.productService.updateProduct(product)
       .subscribe(

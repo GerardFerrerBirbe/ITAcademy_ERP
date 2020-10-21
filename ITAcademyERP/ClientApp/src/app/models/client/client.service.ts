@@ -26,15 +26,15 @@ export class ClientService {
   }
 
   updateClient(client: Client): Observable<Client> {
-    return this.http.put<Client>(this.apiUrl + "/" + client.id.toString(), client, this.httpOptions);
+    return this.http.put<Client>(this.apiUrl + "/" + client.id, client, this.httpOptions);
   }
 
   addClient(client: Client): Observable<Client> {
     return this.http.post<Client>(this.apiUrl, client, this.httpOptions);
   }
 
-  deleteClient(client: Client | number): Observable<Client> {
-    const id = typeof client === 'number' ? client : client.id;
+  deleteClient(client: Client | string): Observable<Client> {
+    const id = typeof client === 'string' ? client : client.id;
     const url = `${this.apiUrl}/${id}`;
 
     return this.http.delete<Client>(url, this.httpOptions);

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class Person: IdentityUser, IEntity
+    public partial class Person: IdentityUser, IEntity<string>
     {
         public Person()
         {

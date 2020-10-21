@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace ITAcademyERP.Models
 {
-    public partial class Employee : IEntity
+    public partial class Employee : IEntity<Guid>
     {
         public Employee()
         {
             OrderHeaders = new HashSet<OrderHeader>();
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string PersonId { get; set; }
         public string Position { get; set; }
         public double Salary { get; set; }

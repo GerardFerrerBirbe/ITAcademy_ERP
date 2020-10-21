@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace ITAcademyERP.Data.Repositories
 {
-    public abstract class GenericRepository<TEntity, TContext> : ControllerBase, IRepository<TEntity>
-        where TEntity : class, IEntity
+    public abstract class GenericRepository<TProperty, TEntity, TContext> : ControllerBase, IRepository<TProperty, TEntity>
+        where TEntity : class, IEntity<TProperty>
         where TContext : IdentityDbContext<Person>
     {
         private readonly TContext _context;
@@ -25,7 +25,7 @@ namespace ITAcademyERP.Data.Repositories
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<TEntity> Get(int id)
+        public async Task<TEntity> Get(Guid id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
@@ -64,7 +64,7 @@ namespace ITAcademyERP.Data.Repositories
             return Ok(entity);
         }
 
-        public async Task<TEntity> Delete(int id)
+        public async Task<TEntity> Delete(Guid id)
         {
             var entity = await _context.Set<TEntity>().FindAsync(id);
             if (entity == null)

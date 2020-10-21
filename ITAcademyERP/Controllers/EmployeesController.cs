@@ -15,9 +15,9 @@ using System.Net;
 namespace ITAcademyERP.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
-    public class EmployeesController : GenericController<Employee, EmployeesRepository>
+    public class EmployeesController : GenericController<Guid, Employee, EmployeesRepository>
     {
         private readonly EmployeesRepository _repository;
         private readonly PeopleController _peopleController;
@@ -50,7 +50,7 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeDTO>> GetEmployee(int id)
+        public async Task<ActionResult<EmployeeDTO>> GetEmployee(Guid id)
         {
             var employee = await _repository.GetEmployee(id);
 
@@ -137,7 +137,7 @@ namespace ITAcademyERP.Controllers
 
         // DELETE: api/[controller]/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Employee>> DeleteEmployee(int id)
+        public async Task<ActionResult<Employee>> DeleteEmployee(Guid id)
         {
             var employee = await _repository.Delete(id);
             

@@ -5,7 +5,7 @@ namespace ITAcademyERP.Models
 {
     public class OrderHeaderDTO
     {        
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string OrderNumber { get; set; }
         public string Address { get; set; }
         public string Client { get; set; }
