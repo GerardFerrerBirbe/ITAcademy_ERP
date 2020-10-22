@@ -40,7 +40,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeaders()
         {
-            var orderHeaders = await _repository.GetOrderHeaders();
+            var orderHeaders = await _repository.GetAll();
 
             return orderHeaders.Select(e => OrderHeaderToDTO(e));
         }
@@ -67,7 +67,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderHeaderDTO>> GetOrderHeader(Guid id)
         {
-            var orderHeader = await _repository.GetOrderHeader(id);              
+            var orderHeader = await _repository.Get(id);              
 
             if (orderHeader == null)
             {
@@ -81,7 +81,7 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrderHeader(OrderHeaderDTO orderHeaderDTO)
         {
-            var orderHeader = await _repository.GetOrderHeader(orderHeaderDTO.Id);
+            var orderHeader = await _repository.Get(orderHeaderDTO.Id);
 
             if (orderHeaderDTO.OrderState.ToString() == "Completada" && (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState) != orderHeader.OrderState)
             {

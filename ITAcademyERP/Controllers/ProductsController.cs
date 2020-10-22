@@ -31,7 +31,7 @@ namespace ITAcademyERP.Controllers
        [HttpGet]
         public async Task<IEnumerable<ProductDTO>> GetProducts()
         {
-            var products = await _repository.GetProducts();
+            var products = await _repository.GetAll();
 
             return products.Select(p => ProductToDTO(p));
         }
@@ -40,7 +40,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(Guid id)
         {
-            var product = await _repository.GetProduct(id);
+            var product = await _repository.Get(id);
 
             if (product == null)
             {
@@ -54,7 +54,7 @@ namespace ITAcademyERP.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(ProductDTO productDTO)
         {
-            var product = await _repository.GetProduct(productDTO.Id);
+            var product = await _repository.Get(productDTO.Id);
 
             product.ProductName = productDTO.ProductName;
             product.ProductCategoryId = _productCategoriesRepository.GetProductCategoryId(productDTO.ProductCategoryName);

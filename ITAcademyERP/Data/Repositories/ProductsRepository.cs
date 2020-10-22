@@ -18,18 +18,18 @@ namespace ITAcademyERP.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<Product>> GetProducts()
+        public override async Task<List<Product>> GetAll()
         {
             return await _context.Products
                .Include(p => p.ProductCategory)
                .ToListAsync();
         }
 
-        public async Task<Product> GetProduct(Guid id)
+        public override async Task<Product> Get(Guid id)
         {
             return await _context.Products
                 .Include(p => p.ProductCategory)
-                .SingleOrDefaultAsync(p => p.Id == id);           
+                .SingleOrDefaultAsync(p => p.Id == id);         
         }
 
         public Guid GetProductId(string productName)

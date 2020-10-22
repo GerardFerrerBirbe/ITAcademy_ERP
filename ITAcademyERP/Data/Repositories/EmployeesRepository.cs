@@ -21,7 +21,7 @@ namespace ITAcademyERP.Data.Repositories
             _peopleRepository = peopleRepository;
         }
 
-        public async Task<List<Employee>> GetEmployees()
+        public override async Task<List<Employee>> GetAll()
         {
             return await _context.Employees
                 .Include(c => c.Person)
@@ -29,7 +29,7 @@ namespace ITAcademyERP.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Employee> GetEmployee(Guid id)
+        public override async Task<Employee> Get(Guid id)
         {
             return await _context.Employees
                 .Include(e => e.Person)

@@ -19,7 +19,7 @@ namespace ITAcademyERP.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<OrderHeader>> GetOrderHeaders()
+        public override async Task<List<OrderHeader>> GetAll()
         {
             return await _context.OrderHeaders
                     .Include(o => o.Client)
@@ -60,7 +60,7 @@ namespace ITAcademyERP.Data.Repositories
                     .ToListAsync();
         }
 
-        public async Task<OrderHeader> GetOrderHeader(Guid id)
+        public override async Task<OrderHeader> Get(Guid id)
         {
             return await _context.OrderHeaders
                     .Include(o => o.Client)

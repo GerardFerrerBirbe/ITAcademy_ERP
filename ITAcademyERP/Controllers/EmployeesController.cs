@@ -43,7 +43,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet]
         public async Task<IEnumerable<EmployeeDTO>> GetEmployees()
         {
-            var employees = await _repository.GetEmployees();
+            var employees = await _repository.GetAll();
 
             return employees.Select(e => EmployeeToDTO(e));
         }
@@ -52,7 +52,7 @@ namespace ITAcademyERP.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDTO>> GetEmployee(Guid id)
         {
-            var employee = await _repository.GetEmployee(id);
+            var employee = await _repository.Get(id);
 
             if (employee == null)
             {
@@ -88,7 +88,7 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                var employee = await _repository.GetEmployee(employeeDTO.Id);
+                var employee = await _repository.Get(employeeDTO.Id);
 
                 employee.Position = employeeDTO.Position;
                 employee.Salary = employeeDTO.Salary;

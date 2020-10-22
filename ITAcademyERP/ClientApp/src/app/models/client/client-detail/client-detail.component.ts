@@ -34,8 +34,8 @@ export class ClientDetailComponent implements OnInit {
   addressesToDelete: string[] = [];
 
   clients: Client[];
-  currentOhs: OrderHeader[];
-  oldOhs: OrderHeader[];
+  currentOhs: OrderHeader[] = [];
+  oldOhs: OrderHeader[] = [];
   totalOrderAmountByClient: number;
   totalOrderNumberByClient: number;
   
@@ -76,7 +76,7 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  addAddress(){
+  addAddress(){    
     let addressFG = this.buildAddress();
     this.addresses.push(addressFG);
   }

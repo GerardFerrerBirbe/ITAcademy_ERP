@@ -27,7 +27,7 @@ namespace ITAcademyERP.Controllers
 
         [HttpGet]
         [Route("generic/")]
-        public async Task<ActionResult<IEnumerable<TEntity>>> Get()
+        public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
             return await _repository.GetAll();
         }

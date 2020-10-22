@@ -44,16 +44,16 @@ namespace ITAcademyERP.Models
         [HttpGet]
         public async Task<IEnumerable<ClientDTO>> GetClients()
         {
-            var client = await _repository.GetClients();
+            var clients = await _repository.GetAll();
 
-            return client.Select(c => ClientToDTO(c));
-        }
+            return clients.Select(c => ClientToDTO(c));
+        }        
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ClientDTO>> GetClient(Guid id)
         {
-            var client = await _repository.GetClient(id);
+            var client = await _repository.Get(id);
 
             if (client == null)
             {
@@ -67,6 +67,11 @@ namespace ITAcademyERP.Models
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClient(ClientDTO clientDTO)
         {
+            if(clientDTO.Addresses.Any(a => a.Name == ""))
+            {
+                return Ok();
+            }
+            
             var personId = (await _peopleRepository.GetPerson(clientDTO.PersonId)).Id;
 
             var personDTO = new PersonDTO

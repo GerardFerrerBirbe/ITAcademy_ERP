@@ -20,12 +20,12 @@ namespace ITAcademyERP.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<TEntity>> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<TEntity> Get(Guid id)
+        public virtual async Task<TEntity> Get(Guid id)
         {
             return await _context.Set<TEntity>().FindAsync(id);
         }
