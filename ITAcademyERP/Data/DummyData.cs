@@ -144,14 +144,14 @@ namespace ITAcademyERP.Data
         {           
             List<Address> addresses = new List<Address>()
             {
-                new Address{Name = "C/ Montjuic, 127", Type = "Personal", PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
-                new Address{Name = "C/ Barcelona, 328", Type = "Delivery",  PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
-                new Address{Name = "C/ Perill, 12", Type = "Personal",  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
-                new Address{Name = "C/ Girona, 124", Type = "Delivery",  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
-                new Address{Name = "C/ Granollers, 12", Type = "Personal",  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
-                new Address{Name = "C/ Major, 8", Type = "Delivery",  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
-                new Address{Name = "C/ Tort, 12", Type = "Personal",  PersonId = _context.People.First(p => p.FirstName == "Mark").Id},
-                new Address{Name = "C/ Llarg, 124", Type = "Delivery",  PersonId = _context.People.First(p => p.FirstName == "Mark").Id}
+                new Address{Name = "C/ Montjuic, 127", Type = AddressType.Personal, PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
+                new Address{Name = "C/ Barcelona, 328", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
+                new Address{Name = "C/ Perill, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
+                new Address{Name = "C/ Girona, 124", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
+                new Address{Name = "C/ Granollers, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
+                new Address{Name = "C/ Major, 8", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
+                new Address{Name = "C/ Tort, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Mark").Id},
+                new Address{Name = "C/ Llarg, 124", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Mark").Id}
             };
             return addresses;
         }

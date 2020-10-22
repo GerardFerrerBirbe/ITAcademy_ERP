@@ -105,15 +105,14 @@ namespace ITAcademyERP.Controllers
         // POST: api/OrderHeaders
         [HttpPost]
         public async Task<ActionResult> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
-        {            
-            
+        {
             var orderHeader = new OrderHeader
             {
                 OrderNumber = orderHeaderDTO.OrderNumber,
                 ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client),
                 EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee),
-                OrderState = (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState),
-                OrderPriority = (OrderPriority)Enum.Parse(typeof(OrderPriority), orderHeaderDTO.OrderPriority),
+                OrderState = GetEnumValue<OrderState>(orderHeaderDTO.OrderState),
+                OrderPriority = GetEnumValue<OrderPriority>(orderHeaderDTO.OrderPriority),
                 CreationDate = DateTime.Now,
                 AssignToEmployeeDate = DateTime.Now
             };
@@ -135,7 +134,7 @@ namespace ITAcademyERP.Controllers
             {
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
-                Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == "Delivery")?.Name,
+                Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == AddressType.Entrega)?.Name,
                 Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
                 Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
                 OrderState = GetEnumString(orderHeader.OrderState),

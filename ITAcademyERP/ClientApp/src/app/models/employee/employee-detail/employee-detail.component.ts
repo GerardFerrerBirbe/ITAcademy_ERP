@@ -32,14 +32,14 @@ export class EmployeeDetailComponent implements OnInit {
   employeeId: any;
   personId: any;
   addressesToDelete: string[] = [];
+  isAdminUserbool: string = 'proves';
 
   employees: Employee[];  
   currentOhs: OrderHeader[];
   oldOhs: OrderHeader[];
 
   get addresses(): FormArray {
-    return this.formGroup.get('addresses') as FormArray;
-    
+    return this.formGroup.get('addresses') as FormArray;    
   }
 
   ngOnInit(): void {
@@ -49,8 +49,8 @@ export class EmployeeDetailComponent implements OnInit {
       lastName: '',
       addresses: this.fb.array([]),
       position: '',
-      salary: ''
-    });  
+      salary: 0
+    });
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
@@ -128,7 +128,7 @@ export class EmployeeDetailComponent implements OnInit {
         error => alert(error.error[""])
       );
     } else {
-      //add employee
+      //add employee 
       this.employeeService.addEmployee(employee)
       .subscribe(
         () => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
@@ -141,7 +141,6 @@ export class EmployeeDetailComponent implements OnInit {
     if (this.addressesToDelete.length === 0) {
       return;
     }
-
     this.addressService.deleteAddresses(this.addressesToDelete)
     .subscribe();
   }
@@ -151,7 +150,7 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   isAdminUser() {
-    if (this.accountService.isLogged() && localStorage.getItem('isAdminUser') == 'true') {
+    if (this.accountService.isLogged() && localStorage.getItem('isAdminUser') == 'true') {      
       return true;
     }
     return false;

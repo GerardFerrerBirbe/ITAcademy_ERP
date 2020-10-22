@@ -40,8 +40,8 @@ namespace ITAcademyERP.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(maxLength: 30, nullable: false),
+                    LastName = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +53,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ProductCategoryName = table.Column<string>(nullable: true)
+                    ProductCategoryName = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,9 +86,9 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    PersonId = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 20, nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,7 +98,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,7 +191,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PersonId = table.Column<string>(nullable: true)
+                    PersonId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -201,7 +201,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,8 +209,8 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PersonId = table.Column<string>(nullable: true),
-                    Position = table.Column<string>(nullable: true),
+                    PersonId = table.Column<string>(nullable: false),
+                    Position = table.Column<string>(maxLength: 30, nullable: true),
                     Salary = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
@@ -221,7 +221,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,7 +229,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ProductName = table.Column<string>(nullable: true),
+                    ProductName = table.Column<string>(maxLength: 50, nullable: false),
                     ProductCategoryId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -248,7 +248,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    OrderNumber = table.Column<string>(nullable: true),
+                    OrderNumber = table.Column<string>(nullable: false),
                     ClientId = table.Column<Guid>(nullable: false),
                     EmployeeId = table.Column<Guid>(nullable: false),
                     OrderState = table.Column<int>(nullable: false),
@@ -271,7 +271,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -357,15 +357,13 @@ namespace ITAcademyERP.Data.Migrations
                 name: "IX_Clients_PersonId",
                 table: "Clients",
                 column: "PersonId",
-                unique: true,
-                filter: "[PersonId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_PersonId",
                 table: "Employees",
                 column: "PersonId",
-                unique: true,
-                filter: "[PersonId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderHeaders_ClientId",
@@ -391,8 +389,7 @@ namespace ITAcademyERP.Data.Migrations
                 name: "IX_ProductCategories_ProductCategoryName",
                 table: "ProductCategories",
                 column: "ProductCategoryName",
-                unique: true,
-                filter: "[ProductCategoryName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProductCategoryId",
@@ -403,8 +400,7 @@ namespace ITAcademyERP.Data.Migrations
                 name: "IX_Products_ProductName",
                 table: "Products",
                 column: "ProductName",
-                unique: true,
-                filter: "[ProductName] IS NOT NULL");
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -7,6 +7,6 @@ export interface Employee {
   firstName: string;
   lastName: string;
   position: string;
-  salary: number;  
+  salary: number;
   addresses: Address[];
 }

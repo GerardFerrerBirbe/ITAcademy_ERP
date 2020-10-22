@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITAcademyERP.Models
 {
@@ -12,8 +14,11 @@ namespace ITAcademyERP.Models
             OrderHeaders = new HashSet<OrderHeader>();
         }
 
+        [Key]
         public Guid Id { get; set; }
+        [Required, ForeignKey("PersonId")]
         public string PersonId { get; set; }
+        [StringLength(30)]
         public string Position { get; set; }
         public double Salary { get; set; }
 

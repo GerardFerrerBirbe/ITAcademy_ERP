@@ -26,13 +26,17 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.Property<string>("PersonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnName("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -48,13 +52,13 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PersonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("[PersonId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
@@ -66,10 +70,12 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PersonId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Position")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<double>("Salary")
                         .HasColumnType("float");
@@ -77,8 +83,7 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("[PersonId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });
@@ -105,6 +110,7 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderPriority")
@@ -172,10 +178,14 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -237,15 +247,16 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductCategoryId");
 
                     b.HasIndex("ProductName")
-                        .IsUnique()
-                        .HasFilter("[ProductName] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -257,13 +268,14 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProductCategoryName")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductCategoryName")
-                        .IsUnique()
-                        .HasFilter("[ProductCategoryName] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("ProductCategories");
                 });
@@ -403,21 +415,27 @@ namespace ITAcademyERP.Data.Migrations
                 {
                     b.HasOne("ITAcademyERP.Models.Person", "Person")
                         .WithMany("Addresses")
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.Client", b =>
                 {
                     b.HasOne("ITAcademyERP.Models.Person", "Person")
                         .WithOne("Client")
-                        .HasForeignKey("ITAcademyERP.Models.Client", "PersonId");
+                        .HasForeignKey("ITAcademyERP.Models.Client", "PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.Employee", b =>
                 {
                     b.HasOne("ITAcademyERP.Models.Person", "Person")
                         .WithOne("Employee")
-                        .HasForeignKey("ITAcademyERP.Models.Employee", "PersonId");
+                        .HasForeignKey("ITAcademyERP.Models.Employee", "PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.OrderHeader", b =>

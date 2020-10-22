@@ -1,6 +1,8 @@
 ﻿using ITAcademyERP.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITAcademyERP.Models
 {
@@ -10,9 +12,13 @@ namespace ITAcademyERP.Models
         {
             OrderLines = new HashSet<OrderLine>();
         }
+        [Key]
         public Guid Id { get; set; }
+        [Required]
         public string OrderNumber { get; set; }
+        [Required, ForeignKey("ClientId")]
         public Guid ClientId { get; set; }
+        [ForeignKey("EmployeeId")]
         public Guid EmployeeId { get; set; }
         public OrderState OrderState { get; set; }
         public OrderPriority OrderPriority { get; set; }

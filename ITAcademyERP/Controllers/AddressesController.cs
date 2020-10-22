@@ -42,7 +42,7 @@ namespace ITAcademyERP.Controllers
                     {
                         PersonId = addressToCreate.PersonId,
                         Name = addressToCreate.Name,
-                        Type = addressToCreate.Type
+                        Type = (AddressType) Enum.Parse(typeof(AddressType), addressToCreate.Type)
                     };
 
                     await _repository.Add(address);
@@ -58,7 +58,7 @@ namespace ITAcademyERP.Controllers
                     address.Id = Guid.Parse(addressToEdit.Id);
                     address.PersonId = addressToEdit.PersonId;
                     address.Name = addressToEdit.Name;
-                    address.Type = addressToEdit.Type;
+                    address.Type = (AddressType)Enum.Parse(typeof(AddressType), addressToEdit.Type);
 
                     await _repository.Update(address);                   
                 }
@@ -79,7 +79,7 @@ namespace ITAcademyERP.Controllers
                 Id = address.Id.ToString(),
                 PersonId = address.PersonId,
                 Name = address.Name,
-                Type = address.Type
+                Type = Enum.GetName(typeof(AddressType), address.Type)
             };
 
             return addressDTO;
