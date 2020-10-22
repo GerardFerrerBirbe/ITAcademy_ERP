@@ -32,11 +32,10 @@ export class EmployeeDetailComponent implements OnInit {
   employeeId: any;
   personId: any;
   addressesToDelete: string[] = [];
-  isAdminUserbool: string = 'proves';
 
   employees: Employee[];  
-  currentOhs: OrderHeader[];
-  oldOhs: OrderHeader[];
+  currentOhs: OrderHeader[] = [];
+  oldOhs: OrderHeader[] = [];
 
   get addresses(): FormArray {
     return this.formGroup.get('addresses') as FormArray;    

@@ -106,7 +106,7 @@
 
 <button class="btn btn-info" (click)="goBack()">Tornar</button>
 
-<fieldset *ngIf="editionMode && currentOhs.length > 0"><h4>Comandes actuals</h4>
+<fieldset *ngIf="currentOhs.length > 0"><h4>Comandes actuals</h4>
   <table class="table">
     <thead>
       <tr>
@@ -137,7 +137,7 @@
   </table>
 </fieldset>
 
-<fieldset *ngIf="editionMode && oldOhs.length > 0"><h4>Històric de comandes</h4>
+<fieldset *ngIf="oldOhs.length > 0"><h4>Històric de comandes</h4>
   <table class="table">
     <thead>
       <tr>
