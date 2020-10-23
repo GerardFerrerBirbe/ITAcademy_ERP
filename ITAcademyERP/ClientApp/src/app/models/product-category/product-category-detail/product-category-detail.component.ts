@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ProductCategoryService }  from '../../product-category/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-product-category-detail',
@@ -24,6 +25,8 @@ export class ProductCategoryDetailComponent implements OnInit {
   productCategoryId: any;
 
   productCategories: ProductCategory[];
+
+  errors: Errors;
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
@@ -50,6 +53,7 @@ export class ProductCategoryDetailComponent implements OnInit {
   }
 
   save() {
+    this.errors = {};
     let productCategory: ProductCategory = Object.assign({}, this.formGroup.value);
     console.table(productCategory);
 
@@ -59,15 +63,25 @@ export class ProductCategoryDetailComponent implements OnInit {
       this.productCategoryService.updateProductCategory(productCategory)
       .subscribe(
         () => alert("Actualització realitzada"),
-        error => alert(error.error[""])
-      );
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     } else {
       //add productCategory
       this.productCategoryService.addProductCategory(productCategory)
       .subscribe(
         pc => alert("Categoria " + pc.productCategoryName + " creada correctament"),
-        error => alert(error.error[""])
-      );
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     }    
   }
   

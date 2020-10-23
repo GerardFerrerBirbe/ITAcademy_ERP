@@ -38,9 +38,9 @@ namespace ITAcademyERP.Data.Repositories
             {
                 await _context.SaveChangesAsync();
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                ModelState.AddModelError(string.Empty, e.InnerException.Message);
+                ModelState.AddModelError("duplicateName", "Aquest nom ja existeix");
                 return BadRequest(ModelState);
             }
 
@@ -55,9 +55,9 @@ namespace ITAcademyERP.Data.Repositories
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ModelState.AddModelError(string.Empty, e.InnerException.Message);
+                ModelState.AddModelError("duplicateName", "Aquest nom ja existeix");
                 return BadRequest(ModelState);
             }
 

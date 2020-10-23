@@ -9,6 +9,7 @@ import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
 import { Address } from '../../address/address';
+import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-employee-detail',
@@ -36,6 +37,8 @@ export class EmployeeDetailComponent implements OnInit {
   employees: Employee[];  
   currentOhs: OrderHeader[] = [];
   oldOhs: OrderHeader[] = [];
+
+  errors: Errors;
 
   get addresses(): FormArray {
     return this.formGroup.get('addresses') as FormArray;    
@@ -113,6 +116,7 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   save() {
+    this.errors = {};
     let employee: Employee = Object.assign({}, this.formGroup.value);
     console.table(employee);
 
@@ -124,15 +128,25 @@ export class EmployeeDetailComponent implements OnInit {
       .subscribe(
         () => { this.deleteAddresses();
           alert("Actualització realitzada")},
-        error => alert(error.error[""])
-      );
+          error => {
+            if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }          
+          });
     } else {
       //add employee 
       this.employeeService.addEmployee(employee)
       .subscribe(
         () => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
-        error => alert(error.error[""])
-        );
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     }    
   }
 

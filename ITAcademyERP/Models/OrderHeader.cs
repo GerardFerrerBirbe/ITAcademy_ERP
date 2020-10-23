@@ -12,23 +12,35 @@ namespace ITAcademyERP.Models
         {
             OrderLines = new HashSet<OrderLine>();
         }
+        
         [Key]
         public Guid Id { get; set; }
+        
         [Required]
         public string OrderNumber { get; set; }
-        [Required, ForeignKey("ClientId")]
+        
+        [Required]
+        [ForeignKey("ClientId")]
         public Guid ClientId { get; set; }
+        
         [ForeignKey("EmployeeId")]
         public Guid EmployeeId { get; set; }
+        
         public OrderState OrderState { get; set; }
+        
         public OrderPriority OrderPriority { get; set; }
+        
         public DateTime CreationDate { get; set; }
+        
         public DateTime AssignToEmployeeDate { get; set; }
+        
         public DateTime? FinalisationDate { get; set; }
 
 
         public virtual Client Client { get; set; }
+        
         public virtual Employee Employee { get; set; }
+        
         public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }

@@ -6,6 +6,7 @@ import { ProductService }  from '../../product/product.service';
 import { ProductCategoryService }  from '../../product-category/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ProductCategory } from '../../product-category/product-category';
+import { Errors} from '../../errors/errors';
 
 @Component({
   selector: 'app-product-detail',
@@ -28,6 +29,8 @@ export class ProductDetailComponent implements OnInit {
 
   products: Product[];
   productCategories: ProductCategory[];
+
+  errors: Errors;
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
@@ -59,6 +62,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   save() {
+    this.errors = {};
     let product: Product = Object.assign({}, this.formGroup.value);
     console.table(product);
 
@@ -68,15 +72,25 @@ export class ProductDetailComponent implements OnInit {
       this.productService.updateProduct(product)
       .subscribe(
         () => alert("Actualització realitzada"),
-        error => alert(error.error[""])
-      );
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     } else {
       //add product
       this.productService.addProduct(product)
       .subscribe(
         product => alert("Producte " + product.productName + " creat correctament"),
-        error => alert(error.error[""])
-      );
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     }    
   }
   

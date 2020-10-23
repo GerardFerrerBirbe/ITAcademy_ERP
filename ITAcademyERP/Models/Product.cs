@@ -14,12 +14,18 @@ namespace ITAcademyERP.Models
         }
         [Key]
         public Guid Id { get; set; }
-        [Required, StringLength(50)]
+
+        [Required]
+        [StringLength(50)]
         public string ProductName { get; set; }
-        [Required, ForeignKey("ProductCategoryId")]
+
+        [Required]
+        [ForeignKey("ProductCategoryId")]
         public Guid ProductCategoryId { get; set; }
 
+        
         public virtual ICollection<OrderLine> OrderLines { get; set; }
+        
         public virtual ProductCategory ProductCategory { get; set; }
     }
 }

@@ -14,7 +14,9 @@ namespace ITAcademyERP.Models
         
         [Key]
         public Guid Id { get; set; }        
-        [Required, StringLength(50)]
+        
+        [Required(ErrorMessage ="Camp requerit")]
+        [StringLength(50, ErrorMessage ="El nom ha de tenir menys de 50 caràcters")]
         public string ProductCategoryName { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }

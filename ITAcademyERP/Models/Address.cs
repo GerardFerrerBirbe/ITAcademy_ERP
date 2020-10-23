@@ -14,13 +14,20 @@ namespace ITAcademyERP.Models
 
         [Key]
         public Guid Id { get; set; }
-        [Required, MaxLength(20, ErrorMessage ="El nom ha de tenir com a màxim 20 caràcters")]
-        public string Name { get; set; }
-        [Required, Column("Type", TypeName = "int")]
-        public AddressType Type { get; set; }
-        [Required, ForeignKey("PersonId")]
+        
+        [Required]
+        [ForeignKey("PersonId")]
         public string PersonId { get; set; }
+        
+        [Required]
+        [MaxLength(20)]
+        public string Name { get; set; }
+        
+        [Required]
+        [Column("Type", TypeName = "int")]
+        public AddressType Type { get; set; }       
 
+        
         public virtual Person Person { get; set; }
     }
 }

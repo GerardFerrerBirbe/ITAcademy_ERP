@@ -9,6 +9,7 @@ import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
 import { Address } from '../../address/address';
+import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-client-detail',
@@ -39,6 +40,7 @@ export class ClientDetailComponent implements OnInit {
   totalOrderAmountByClient: number;
   totalOrderNumberByClient: number;
   
+  errors: Errors;
 
   get addresses(): FormArray {
     return this.formGroup.get('addresses') as FormArray;
@@ -113,6 +115,7 @@ export class ClientDetailComponent implements OnInit {
   }
 
   save() {
+    this.errors = {};
     let client: Client = Object.assign({}, this.formGroup.value);
     console.table(client);
 
@@ -124,15 +127,25 @@ export class ClientDetailComponent implements OnInit {
       .subscribe(
         () => { this.deleteAddresses();
           alert("Actualització realitzada")},
-        error => alert(error.error[""])
-      );
+          error => {
+            if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }          
+          });
     } else {
       //add client
       this.clientService.addClient(client)
       .subscribe(
         () => alert("Client " + client.firstName + " " + client.lastName + " creat correctament"),
-        error => alert(error.error[""])
-      );
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     }    
   }
 

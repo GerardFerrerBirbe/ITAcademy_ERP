@@ -14,10 +14,14 @@ namespace ITAcademyERP.Models
             Addresses = new HashSet<Address>();
         }
 
-        [Required, StringLength(30)]
+        [Required]
+        [StringLength(30)]
         public string FirstName { get; set; }
-        [Required, StringLength(30)]
+        
+        [Required]
+        [StringLength(30)]
         public string LastName { get; set; }
+        
         [NotMapped]
         public string FullName
         {
@@ -27,8 +31,11 @@ namespace ITAcademyERP.Models
                 }
         }
 
+        
         public virtual ICollection<Address> Addresses { get; set; }
+        
         public virtual Client Client { get; set; }
+        
         public virtual Employee Employee { get; set; }
     }
 }

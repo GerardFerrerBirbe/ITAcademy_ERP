@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ITAcademyERP.Data.Migrations
+namespace ITAcademyERP.DataMigrations
 {
     public partial class InitialCreate : Migration
     {

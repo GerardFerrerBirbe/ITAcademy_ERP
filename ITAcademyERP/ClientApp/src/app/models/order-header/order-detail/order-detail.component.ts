@@ -13,6 +13,7 @@ import { EmployeeService } from '../../employee/employee.service';
 import { Employee } from '../../employee/employee';
 import { AccountService } from 'src/app/login/account.service';
 import { OrderLine } from '../../order-line/order-line';
+import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-order-detail',
@@ -50,6 +51,8 @@ export class OrderDetailComponent implements OnInit {
   totalOrderNoVat: number;
   totalOrderVat: number;
   totalVat: number;
+
+  errors: Errors;
 
   ngOnInit(): void {
     this.orderHeaderFormGroup = this.fb.group({
@@ -106,13 +109,22 @@ export class OrderDetailComponent implements OnInit {
     });   
   }
 
-  addOrderLine(){    
+  addOrderLine(){
+    this.errors = {};
     let orderLine: OrderLine = Object.assign({}, this.orderLineFormGroup.value);
     console.table(orderLine);
     orderLine.orderHeaderId = this.orderHeaderId;
 
     this.orderLineService.addOrderLine(orderLine)
-    .subscribe(() => this.updateOrderLines());   
+    .subscribe(
+      () => this.updateOrderLines(),
+      error => {
+        if (error.error.errors == undefined) {
+          this.errors = error.error;
+        } else {
+          this.errors = error.error.errors;
+        }          
+      });
 
     this.orderLineFormGroup = this.fb.group({
       productName: '',
@@ -137,6 +149,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   save() {
+    this.errors = {};
     let orderHeader: OrderHeader = Object.assign({}, this.orderHeaderFormGroup.value);
     console.table(orderHeader);
 
@@ -144,13 +157,29 @@ export class OrderDetailComponent implements OnInit {
       //edit order
       orderHeader.id = this.orderHeaderId;     
       this.orderHeaderService.updateOrderHeader(orderHeader)
-      .subscribe(() => alert("Actualització realitzada"));
-    } else {
+      .subscribe(
+        () => alert("Actualització realitzada"),
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
+      } else {
       //add order
       let userName = localStorage.getItem('userName');
       orderHeader.employee = userName;
       this.orderHeaderService.addOrderHeader(orderHeader)
-      .subscribe(oh => alert("Comanda " + oh.orderNumber + " creada correctament"));
+      .subscribe(
+        oh => alert("Comanda " + oh.orderNumber + " creada correctament"),
+        error => {
+          if (error.error.errors == undefined) {
+            this.errors = error.error;
+          } else {
+            this.errors = error.error.errors;
+          }          
+        });
     }    
   }  
 

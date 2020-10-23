@@ -15,10 +15,14 @@ namespace ITAcademyERP.Models
 
         [Key]
         public Guid Id { get; set; }
-        [Required, ForeignKey("PersonId")]
+        
+        [Required]
+        [ForeignKey("PersonId")]
         public string PersonId { get; set; }
 
+        
         public virtual Person Person { get; set; }
+        
         public virtual ICollection<OrderHeader> OrderHeaders { get; set; }
     }
 }

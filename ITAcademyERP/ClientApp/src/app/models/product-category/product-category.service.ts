@@ -30,7 +30,7 @@ export class ProductCategoryService {
   }
 
   addProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
-    return this.http.post<ProductCategory>(this.apiUrl + "/generic/", productCategory, this.httpOptions);
+    return this.http.post<ProductCategory>(this.apiUrl + "/generic", productCategory, this.httpOptions);
   }
 
   deleteProductCategory(productCategory: ProductCategory | string): Observable<ProductCategory> {
