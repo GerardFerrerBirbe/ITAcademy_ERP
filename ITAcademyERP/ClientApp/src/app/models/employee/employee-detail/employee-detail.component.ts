@@ -8,8 +8,6 @@ import { OrderHeaderService } from 'src/app/models/order-header/order-header.ser
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
-import { Address } from '../../address/address';
-import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-employee-detail',
@@ -38,7 +36,7 @@ export class EmployeeDetailComponent implements OnInit {
   currentOhs: OrderHeader[] = [];
   oldOhs: OrderHeader[] = [];
 
-  errors: Errors;
+  errors: any;
 
   get addresses(): FormArray {
     return this.formGroup.get('addresses') as FormArray;    

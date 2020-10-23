@@ -40,7 +40,7 @@ export class ClientDetailComponent implements OnInit {
   totalOrderAmountByClient: number;
   totalOrderNumberByClient: number;
   
-  errors: Errors;
+  errors: any;
 
   get addresses(): FormArray {
     return this.formGroup.get('addresses') as FormArray;

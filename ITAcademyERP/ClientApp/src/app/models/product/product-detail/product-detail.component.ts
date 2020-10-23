@@ -6,7 +6,6 @@ import { ProductService }  from '../../product/product.service';
 import { ProductCategoryService }  from '../../product-category/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ProductCategory } from '../../product-category/product-category';
-import { Errors} from '../../errors/errors';
 
 @Component({
   selector: 'app-product-detail',
@@ -30,7 +29,7 @@ export class ProductDetailComponent implements OnInit {
   products: Product[];
   productCategories: ProductCategory[];
 
-  errors: Errors;
+  errors: any;
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({

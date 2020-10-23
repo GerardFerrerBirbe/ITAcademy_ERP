@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { ProductCategoryService }  from '../../product-category/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-product-category-detail',
@@ -26,7 +25,7 @@ export class ProductCategoryDetailComponent implements OnInit {
 
   productCategories: ProductCategory[];
 
-  errors: Errors;
+  errors: any;
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({

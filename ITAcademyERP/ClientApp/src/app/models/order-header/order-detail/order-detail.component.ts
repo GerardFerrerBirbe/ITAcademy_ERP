@@ -13,7 +13,6 @@ import { EmployeeService } from '../../employee/employee.service';
 import { Employee } from '../../employee/employee';
 import { AccountService } from 'src/app/login/account.service';
 import { OrderLine } from '../../order-line/order-line';
-import { Errors } from '../../errors/errors';
 
 @Component({
   selector: 'app-order-detail',
@@ -52,7 +51,7 @@ export class OrderDetailComponent implements OnInit {
   totalOrderVat: number;
   totalVat: number;
 
-  errors: Errors;
+  errors: any;
 
   ngOnInit(): void {
     this.orderHeaderFormGroup = this.fb.group({
