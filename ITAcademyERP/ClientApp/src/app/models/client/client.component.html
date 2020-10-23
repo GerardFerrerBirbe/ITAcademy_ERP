@@ -8,36 +8,40 @@
 
 <p *ngIf="!clients"><em>Loading...</em></p>
 
-<div class="table-responsive-md">
-  <table class="table table-hover table-md" *ngIf="clients">
+<div class="table-responsive">
+  <table class="table table-hover justify-content-start w-auto" *ngIf="clients">
     <thead>
-      <tr class="row justify-content-start">
-        <th class="col-2 border-0">Email</th>
-        <th class="col-1 border-0">Nom</th>
-        <th class="col-2 border-0">Cognoms</th>
+      <tr>
+        <th class="border-0"></th>
+        <th class="border-0">Email</th>
+        <th class="border-0">Nom</th>
+        <th class="border-0">Cognoms</th>
         <th class="border-0"></th>
         <th class="border-0"></th>
       </tr>
     </thead>
     <tbody>
-      <tr class="row justify-content-start" *ngFor="let client of clients">
-        <td class="col-2">{{ client.email }}</td>
-        <td class="col-1">{{ client.firstName }}</td>
-        <td class="col-2">{{ client.lastName }}</td>        
-        <td class="col-auto">
+      <tr *ngFor="let client of clients">
+        <th scope="row"></th>
+        <td>{{ client.email }}</td>
+        <td>{{ client.firstName }}</td>
+        <td>{{ client.lastName }}</td>        
+        <td>
           <button
             routerLink="/client-detail/{{client.id}}"
             class="btn btn-outline-info"
             title="update client"
             >Seleccionar
-          </button></td>
-        <td class="col-auto">
+          </button>
+        </td>
+        <td>
           <button
             class="btn btn-outline-danger"
             title="delete client"
             (click)="delete(client)"
             >Borrar
-          </button></td>
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -2,46 +2,48 @@
 
 <button
   type="button"
-  class="btn btn-outline-primary"
+  class="btn btn-outline-primary btn-sm"
   [routerLink]='["/employee-detail"]'
   >Nou empleat
 </button>
 
 <p *ngIf="!employees"><em>Loading...</em></p>
 
-<div class="table-responsive-md">
-  <table class="table table-hover table-md" *ngIf="employees">
+<div class="table-responsive">
+  <table class="table table-hover justify-content-start w-auto" *ngIf="employees">
     <thead>
-      <tr class="row justify-content-start">
-        <th class="col-2 border-0">Email</th>
-        <th class="col-1 border-0">Nom</th>
-        <th class="col-2 border-0">Cognoms</th>
-        <th class="col-1 border-0">Càrrec</th>
-        <th class="col-1 border-0" *ngIf="isAdminUser()">Salari</th>
+      <tr>
+        <th class="border-0"></th>
+        <th class="border-0">Email</th>
+        <th class="border-0">Nom</th>
+        <th class="border-0">Cognoms</th>
+        <th class="border-0">Càrrec</th>
+        <th class="border-0" *ngIf="isAdminUser()">Salari</th>
         <th class="border-0"></th>
         <th class="border-0"></th>
       </tr>
     </thead>
     <tbody>
-      <tr class="row justify-content-start" *ngFor="let employee of employees">
-        <td class="col-2">{{ employee.email }}</td>
-        <td class="col-1">{{ employee.firstName }}</td>
-        <td class="col-2">{{ employee.lastName }}</td>
-        <td class="col-1">{{ employee.position }}</td>
-        <td class="col-1" *ngIf="isAdminUser()">{{ employee.salary }}</td>        
-        <td class="col-auto">
+      <tr *ngFor="let employee of employees">
+        <th scope="row"></th>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.firstName }}</td>
+        <td>{{ employee.lastName }}</td>
+        <td>{{ employee.position }}</td>
+        <td *ngIf="isAdminUser()">{{ employee.salary }}</td>        
+        <td>
           <button
             routerLink="/employee-detail/{{employee.id}}"
             type="button"
-            class="btn btn-outline-info"
+            class="btn btn-outline-info btn-sm"
             title="update employee"
             >Seleccionar
           </button>
         </td>
-        <td class="col-auto">
+        <td>
           <button
             type="button"
-            class="btn btn-outline-danger"
+            class="btn btn-outline-danger btn-sm"
             title="delete employee"
             (click)="delete(employee)"
             >Borrar

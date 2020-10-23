@@ -8,35 +8,37 @@
 
 <p *ngIf="!orderHeaders"><em>Loading...</em></p>
 
-<div class="table-responsive-md">
-  <table class="table table-hover table-md" *ngIf="orderHeaders">
+<div class="table-responsive">
+  <table class="table table-hover justify-content-start w-auto" *ngIf="orderHeaders">
     <thead>
-      <tr class="row justify-content-start">
-        <th class="col-1 border-0">Número Comanda</th>
-        <th class="col-1 border-0">Adreça Entrega</th>
-        <th class="col-1 border-0">Client</th>
-        <th class="col-1 border-0">Empleat</th>
-        <th class="col-1 border-0">Estat Ordre</th>
-        <th class="col-1 border-0">Prioritat</th>
-        <th class="col-1 border-0">Data Creació</th> 
-        <th class="col-1 border-0">Data Assignació Empleat</th> 
-        <th class="col-1 border-0">Data Finalització</th>
+      <tr>
+        <th class="border-0"></th>
+        <th class="border-0">Número Comanda</th>
+        <th class="border-0">Adreça Entrega</th>
+        <th class="border-0">Client</th>
+        <th class="border-0">Empleat</th>
+        <th class="border-0">Estat Ordre</th>
+        <th class="border-0">Prioritat</th>
+        <th class="border-0">Data Creació</th> 
+        <th class="border-0">Data Assignació Empleat</th> 
+        <th class="border-0">Data Finalització</th>
         <th class="border-0"></th>
         <th class="border-0"></th>
       </tr>
     </thead>
     <tbody>
-      <tr class="row justify-content-start" *ngFor="let orderHeader of orderHeaders">
-        <td class="col-1">{{ orderHeader.orderNumber }}</td>
-        <td class="col-1">{{ orderHeader.address }}</td>
-        <td class="col-1">{{ orderHeader.client }}</td>
-        <td class="col-1">{{ orderHeader.employee }}</td>
-        <td class="col-1">{{ orderHeader.orderState }}</td>
-        <td class="col-1">{{ orderHeader.orderPriority }}</td>
-        <td class="col-1">{{ orderHeader.creationDate | date: 'dd/MM/yyyy' }}</td>
-        <td class="col-1">{{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy' }}</td>
-        <td class="col-1">{{ orderHeader.finalisationDate | date: 'dd/MM/yyyy' }}</td>     
-        <td class="col-auto">
+      <tr *ngFor="let orderHeader of orderHeaders">
+        <th scope="row"></th>
+        <td>{{ orderHeader.orderNumber }}</td>
+        <td>{{ orderHeader.address }}</td>
+        <td>{{ orderHeader.client }}</td>
+        <td>{{ orderHeader.employee }}</td>
+        <td>{{ orderHeader.orderState }}</td>
+        <td>{{ orderHeader.orderPriority }}</td>
+        <td>{{ orderHeader.creationDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ orderHeader.finalisationDate | date: 'dd/MM/yyyy' }}</td>     
+        <td>
           <button
             routerLink="/order-detail/{{orderHeader.id}}"
             class="btn btn-outline-info"
@@ -44,7 +46,7 @@
             >Seleccionar
           </button>
         </td>
-        <td class="col-auto">
+        <td>
           <button
             class="btn btn-outline-danger"
             title="delete orderHeader"

@@ -6,29 +6,28 @@
 
 <p *ngIf="!roles"><em>Loading...</em></p>
 
-<div class="table-responsive-md">
-  <table class="table table-hover table-md" *ngIf="roles">
+<div class="table-responsive">
+  <table class="table table-hover justify-content-start w-auto" *ngIf="roles">
     <thead>
-      <tr class="row justify-content-start">
-        <th class="col-2 border-0">Rol</th>
+      <tr>
+        <th class="border-0"></th>
+        <th class="border-0">Rol</th>
         <th class="border-0"></th>
         <th class="border-0"></th>   
       </tr>
     </thead>
     <tbody>
-      <tr
-        class="row  justify-content-start"
-        *ngFor="let role of roles"
-        >
-        <td class="col-2">{{ role.name }}</td>      
-        <td class="col-auto">
+      <tr *ngFor="let role of roles">
+        <th scope="row"></th>
+        <td>{{ role.name }}</td>      
+        <td>
           <button
             routerLink="/role-detail/{{role.id}}"
             class="btn btn-outline-info"
             title="update role"
             >Seleccionar
           </button></td>
-        <td class="col-auto">
+        <td>
           <button
             class="btn btn-outline-danger"
             title="delete role"

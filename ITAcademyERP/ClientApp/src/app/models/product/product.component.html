@@ -13,21 +13,23 @@
 
 <p *ngIf="!products"><em>Loading...</em></p>
 
-<div class="table-responsive-md">
-  <table class="table table-hover table-md" *ngIf="products">
+<div class="table-responsive">
+  <table class="table table-hover justify-content-start w-auto" *ngIf="products">
     <thead>
-      <tr class="row justify-content-start">
-        <th class="col-2 border-0">Producte</th>
-        <th class="col-2 border-0">Categoria</th>
+      <tr>
+        <th class="border-0"></th>
+        <th class="border-0">Producte</th>
+        <th class="border-0">Categoria</th>
         <th class="border-0"></th>
         <th class="border-0"></th> 
       </tr>
     </thead>
     <tbody>
-      <tr class="row justify-content-start" *ngFor="let product of products">
-        <td class="col-2">{{ product.productName }}</td>
-        <td class="col-2">{{ product.productCategoryName }}</td>       
-        <td class="col-auto">
+      <tr *ngFor="let product of products">
+        <th scope="row"></th>
+        <td>{{ product.productName }}</td>
+        <td>{{ product.productCategoryName }}</td>       
+        <td>
           <button
             routerLink="/product-detail/{{product.id}}"
             class="btn btn-outline-info"
@@ -35,7 +37,7 @@
             >Seleccionar
           </button>
         </td>
-        <td class="col-auto">
+        <td>
           <button
             class="btn btn-outline-danger"
             title="delete product"
