@@ -22,6 +22,7 @@ export class AppComponent {
       this.accountService.logout();
       this.userName = '';
       this.isAdminUser = 'false';
+      this.navMenu = '';
       this.router.navigate(['/']);
     }
 

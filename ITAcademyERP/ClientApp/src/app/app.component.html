@@ -2,7 +2,7 @@
 <div>
   <ul>
     <li *ngIf="!isLogged()" [routerLinkActive]='["link-active"]'>
-      <a [routerLink]='["/login"]' (click)='collapse()'>
+      <a [routerLink]='["/login"]'>
         <span></span> Registre / Login
       </a>
     </li>

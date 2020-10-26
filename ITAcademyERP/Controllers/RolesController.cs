@@ -183,8 +183,6 @@ namespace ITAcademyERP.Controllers
         }
 
         // POST: api/Roles
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [Route("RoleUsers")]
         [HttpPost("{id}")]
         public async Task<IActionResult> DeleteList([FromBody] List<string> ids, string id)
@@ -210,9 +208,6 @@ namespace ITAcademyERP.Controllers
         }
 
         // PUT: api/Roles
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        
         [HttpPut]
         public async Task<IActionResult> UpdateRoleUser(UserDTO userDTO, string addOrRemove)
         {

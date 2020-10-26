@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ITAcademyERP.Models
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Employee")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, Employee")]
     [ApiController]
     public class ClientsController : GenericController<Guid, Client, ClientsRepository>
     {
@@ -70,11 +70,6 @@ namespace ITAcademyERP.Models
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClient(ClientDTO clientDTO)
         {
-            //if(clientDTO.Addresses.Any(a => a.Name == ""))
-            //{
-            //    return Ok();
-            //}
-            
             var personId = (await _peopleRepository.GetPerson(clientDTO.PersonId)).Id;
 
             var personDTO = new PersonDTO

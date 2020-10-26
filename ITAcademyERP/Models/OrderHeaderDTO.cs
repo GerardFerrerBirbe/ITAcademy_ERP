@@ -14,7 +14,6 @@ namespace ITAcademyERP.Models
         
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Camp requerit")]
         public string Client { get; set; }
         
         public string Employee { get; set; }

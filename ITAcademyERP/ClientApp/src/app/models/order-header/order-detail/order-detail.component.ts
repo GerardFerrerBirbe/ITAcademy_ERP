@@ -41,7 +41,7 @@ export class OrderDetailComponent implements OnInit {
 
   orderHeader: OrderHeader;
   orderHeaders: OrderHeader[];
-  orderLines: OrderLine[];
+  orderLines: OrderLine[] = [];
 
   employees: Employee[];
   clients: Client[];
@@ -88,7 +88,7 @@ export class OrderDetailComponent implements OnInit {
 
       this.orderHeaderId = params["id"];
       
-      this.orderHeaderService.getOrderHeader(this.orderHeaderId.toString())
+      this.orderHeaderService.getOrderHeader(this.orderHeaderId)
       .subscribe(orderHeader => {
         this.orderHeader = orderHeader;
         this.loadForm(orderHeader);
