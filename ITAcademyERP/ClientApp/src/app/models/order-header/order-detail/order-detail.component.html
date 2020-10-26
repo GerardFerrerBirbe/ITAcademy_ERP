@@ -121,7 +121,7 @@
   <div class="form-group">
     <div>
       <button
-        class="btn btn-info"
+        class="btn btn-outline-info btn-sm"
         type="submit"
         [disabled]="!orderHeaderFormGroup.valid">
         Guardar
@@ -131,9 +131,9 @@
 
 </form>
 
-<button class="btn btn-info" (click)="goBack()">Tornar</button>
+<button class="btn btn-outline-info btn-sm" (click)="goBack()">Tornar</button>
 
-<fieldset  *ngIf="orderLines"><h4>Detall Comanda:</h4>
+<fieldset  *ngIf="orderLines.length > 0"><h4>Detall Comanda:</h4>
   <table class="table">
     <thead>
       <tr class="row">
@@ -156,7 +156,7 @@
         <td class="col-1">{{ (orderLine.unitPrice * orderLine.quantity) * (1 + orderLine.vat) | currency: 'EUR'}}</td>
         <td class="col-auto">
           <button
-            class="btn btn-danger"
+            class="btn btn-outline-danger btn-sm"
             title="delete OrderLine"
             (click)="deleteOrderLine(orderLine)">
             Borrar
@@ -232,7 +232,7 @@
       <label class="col">&nbsp;</label>
       <div class="col">
         <button
-          class="btn btn-info"
+          class="btn btn-outline-info btn-sm"
           type="submit"
           [disabled]="!orderLineFormGroup.valid">
           Afegir línia comanda

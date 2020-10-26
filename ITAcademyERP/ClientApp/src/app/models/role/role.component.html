@@ -2,7 +2,7 @@
 
 <button
   [routerLink]='["/role-detail"]'
-  class="btn btn-outline-primary">Nou rol</button>
+  class="btn btn-outline-primary btn-sm">Nou rol</button>
 
 <p *ngIf="!roles"><em>Loading...</em></p>
 
@@ -23,13 +23,13 @@
         <td>
           <button
             routerLink="/role-detail/{{role.id}}"
-            class="btn btn-outline-info"
+            class="btn btn-outline-info btn-sm"
             title="update role"
             >Seleccionar
           </button></td>
         <td>
           <button
-            class="btn btn-outline-danger"
+            class="btn btn-outline-danger btn-sm"
             title="delete role"
             (click)="delete(role)"
             >Borrar

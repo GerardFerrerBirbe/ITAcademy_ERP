@@ -23,6 +23,7 @@ namespace ITAcademyERP.Controllers
         private readonly PeopleController _peopleController;
         private readonly PeopleRepository _peopleRepository;
         private readonly ClientsRepository _clientsRepository;
+        private readonly AddressesController _addressesController;
         private readonly UserManager<Person> _userManager;
 
         public EmployeesController(
@@ -30,12 +31,14 @@ namespace ITAcademyERP.Controllers
             PeopleController peopleController,
             PeopleRepository peopleRepository,
             ClientsRepository clientsRepository,
+            AddressesController addressesController,
             UserManager<Person> userManager) : base(repository)
         {
             _repository = repository;
             _peopleRepository = peopleRepository;
             _peopleController = peopleController;
             _clientsRepository = clientsRepository;
+            _addressesController = addressesController;
             _userManager = userManager;
         }
 
@@ -80,9 +83,12 @@ namespace ITAcademyERP.Controllers
 
             var updatePerson = await _peopleController.UpdatePerson(personDTO);
 
-            var statusCode = GetHttpStatusCode(updatePerson).ToString();
+            var statusCode = updatePerson
+                 .GetType()
+                .GetProperty("StatusCode")
+                .GetValue(updatePerson, null).ToString();
 
-            if (statusCode != "OK")
+            if (statusCode != "200")
             {
                 return updatePerson;
             }
@@ -106,15 +112,20 @@ namespace ITAcademyERP.Controllers
 
             if (person == null)
             {
-                var newPerson = new Person
+                var personDTO = new PersonDTO
                 {
                     Email = employeeDTO.Email,
-                    UserName = employeeDTO.Email,
                     FirstName = employeeDTO.FirstName,
-                    LastName = employeeDTO.LastName
+                    LastName = employeeDTO.LastName,
+                    Addresses = employeeDTO.Addresses
                 };
 
-                await _peopleRepository.Add(newPerson);
+                await _peopleController.AddPerson(personDTO);
+
+                var newPerson = await _peopleRepository.GetPersonByEmail(personDTO.Email);
+
+                newPerson.UserName = personDTO.Email;
+
                 await _userManager.UpdateAsync(newPerson);
             }
             else
@@ -156,7 +167,7 @@ namespace ITAcademyERP.Controllers
             return employee;
         }
 
-        private static EmployeeDTO EmployeeToDTO(Employee employee) =>
+        private EmployeeDTO EmployeeToDTO(Employee employee) =>
             new EmployeeDTO
             {
                 Id = employee.Id,
@@ -164,7 +175,7 @@ namespace ITAcademyERP.Controllers
                 Email = employee.Person.Email,
                 FirstName = employee.Person.FirstName,
                 LastName = employee.Person.LastName,
-                Addresses = employee.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList(),
+                Addresses = employee.Person.Addresses.Select(a => _addressesController.AddressToDTO(a)).ToList(),
                 Position = employee.Position,
                 Salary = employee.Salary
             };        

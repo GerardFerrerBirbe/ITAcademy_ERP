@@ -2,7 +2,7 @@
 
 <button
   [routerLink]='["/client-detail"]'
-  class="btn btn-outline-primary"
+  class="btn btn-outline-primary btn-sm"
   >Nou client
 </button>
 
@@ -29,14 +29,14 @@
         <td>
           <button
             routerLink="/client-detail/{{client.id}}"
-            class="btn btn-outline-info"
+            class="btn btn-outline-info btn-sm"
             title="update client"
             >Seleccionar
           </button>
         </td>
         <td>
           <button
-            class="btn btn-outline-danger"
+            class="btn btn-outline-danger btn-sm"
             title="delete client"
             (click)="delete(client)"
             >Borrar

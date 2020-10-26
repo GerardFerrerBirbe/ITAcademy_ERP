@@ -17,13 +17,13 @@
   <div class="form-group">
     <div>
       <button
-      class="btn btn-info"
+      class="btn btn-outline-info btn-sm"
         type="submit">Guardar</button>
     </div>
   </div>  
 </form>
 
-<button class="btn btn-info" (click)="goBack()">Tornar</button>
+<button class="btn btn-outline-info btn-sm" (click)="goBack()">Tornar</button>
 
 <fieldset *ngIf="currentRoleUsers" ><h4>Usuaris:</h4>
   <table class="table">
@@ -31,7 +31,7 @@
         <td class="col-2">{{ currentRoleUser.name }}</td>
         <td class="col-auto">
           <button
-            class="btn btn-danger"
+            class="btn btn-outline-danger btn-sm"
             title="remove userInRole"
             (click)="removeUserInRole(currentRoleUser)">
             Borrar
@@ -61,7 +61,7 @@
   <div class="form-group">
     <label class="col">&nbsp;</label>
     <div>
-      <button class="btn btn-info" type="submit">Afegir Usuari</button>
+      <button class="btn btn-outline-info btn-sm" type="submit">Afegir Usuari</button>
     </div>
   </div>
 </form>

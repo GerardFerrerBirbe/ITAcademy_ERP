@@ -24,6 +24,7 @@ namespace ITAcademyERP.Models
         private readonly PeopleController _peopleController;
         private readonly PeopleRepository _peopleRepository;
         private readonly EmployeesRepository _employeesRepository;
+        private readonly AddressesController _addressesController;
         private readonly UserManager<Person> _userManager;
 
         public ClientsController(
@@ -31,6 +32,7 @@ namespace ITAcademyERP.Models
             PeopleController peopleController,
             PeopleRepository peopleRepository,
             EmployeesRepository employeesRepository,
+            AddressesController addressesController,
             UserManager<Person> userManager) : base(repository)
         {
             _repository = repository;
@@ -38,6 +40,7 @@ namespace ITAcademyERP.Models
             _peopleRepository = peopleRepository;
             _employeesRepository = employeesRepository;
             _userManager = userManager;
+            _addressesController = addressesController;
         }
 
         // GET: api/Clients
@@ -67,10 +70,10 @@ namespace ITAcademyERP.Models
         [HttpPut("{id}")]
         public async Task<IActionResult> PutClient(ClientDTO clientDTO)
         {
-            if(clientDTO.Addresses.Any(a => a.Name == ""))
-            {
-                return Ok();
-            }
+            //if(clientDTO.Addresses.Any(a => a.Name == ""))
+            //{
+            //    return Ok();
+            //}
             
             var personId = (await _peopleRepository.GetPerson(clientDTO.PersonId)).Id;
 
@@ -94,15 +97,20 @@ namespace ITAcademyERP.Models
 
             if (person == null)
             {
-                var newPerson = new Person
+                var personDTO = new PersonDTO
                 {
                     Email = clientDTO.Email,
-                    UserName = clientDTO.Email,
                     FirstName = clientDTO.FirstName,
-                    LastName = clientDTO.LastName
+                    LastName = clientDTO.LastName,
+                    Addresses = clientDTO.Addresses
                 };
 
-                await _peopleRepository.Add(newPerson);
+                await _peopleController.AddPerson(personDTO);
+
+                var newPerson = await _peopleRepository.GetPersonByEmail(personDTO.Email);
+
+                newPerson.UserName = personDTO.Email;
+
                 await _userManager.UpdateAsync(newPerson);
             }
             else
@@ -142,7 +150,7 @@ namespace ITAcademyERP.Models
             return client;
         }
 
-        private static ClientDTO ClientToDTO(Client client) =>
+        private ClientDTO ClientToDTO(Client client) =>
             new ClientDTO
             {
                 Id = client.Id,
@@ -150,7 +158,7 @@ namespace ITAcademyERP.Models
                 Email = client.Person.Email,
                 FirstName = client.Person.FirstName,
                 LastName = client.Person.LastName,
-                Addresses = client.Person.Addresses.Select(a => AddressesController.AddressToDTO(a)).ToList()
+                Addresses = client.Person.Addresses.Select(a => _addressesController.AddressToDTO(a)).ToList()
             };        
     }
 }

@@ -72,7 +72,7 @@ namespace ITAcademyERP.Controllers
             return _repository.DeleteList(addressesDTO);
         }
 
-        public static AddressDTO AddressToDTO(Address address)
+        public AddressDTO AddressToDTO(Address address)
         {
             var addressDTO = new AddressDTO
             {

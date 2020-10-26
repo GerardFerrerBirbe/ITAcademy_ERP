@@ -28,8 +28,41 @@ namespace ITAcademyERP.Controllers
             _repository = repository;
         }
 
-        public async Task<IActionResult> UpdatePerson(PersonDTO personDTO)
+        public async Task<IActionResult> AddPerson(PersonDTO personDTO)
         {
+            var person = new Person
+            {
+                Email = personDTO.Email,
+                FirstName = personDTO.FirstName,
+                LastName = personDTO.LastName
+            };           
+
+            var add = await _repository.Add(person);
+
+            var statusCode = add
+            .GetType()
+            .GetProperty("StatusCode")
+            .GetValue(add, null).ToString();
+
+            if (statusCode != "200")
+            {
+                return add;
+            }
+            else
+            {
+                foreach (var address in personDTO.Addresses)
+                {
+                    address.PersonId = person.Id;
+                }
+
+                await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
+                
+                return Ok();
+            }
+        }
+
+        public async Task<IActionResult> UpdatePerson(PersonDTO personDTO)
+            {
             var person = await _repository.GetPerson(personDTO.Id);
 
             person.Email = personDTO.Email;
@@ -38,9 +71,12 @@ namespace ITAcademyERP.Controllers
 
             var update = await _repository.Update(person);
 
-            var statusCode = GetHttpStatusCode(update).ToString();
+            var statusCode = update
+                .GetType()
+                .GetProperty("StatusCode")
+                .GetValue(update, null).ToString();
 
-            if (statusCode != "OK")
+            if (statusCode != "200")
             {
                 return update;
             }

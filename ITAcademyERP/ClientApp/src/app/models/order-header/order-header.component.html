@@ -2,7 +2,7 @@
 
 <button
   [routerLink]='["/order-detail"]'
-  class="btn btn-outline-primary"
+  class="btn btn-outline-primary btn-sm"
   >Nova comanda
 </button>
 
@@ -41,14 +41,14 @@
         <td>
           <button
             routerLink="/order-detail/{{orderHeader.id}}"
-            class="btn btn-outline-info"
+            class="btn btn-outline-info btn-sm"
             title="update orderHeader"
             >Seleccionar
           </button>
         </td>
         <td>
           <button
-            class="btn btn-outline-danger"
+            class="btn btn-outline-danger btn-sm"
             title="delete orderHeader"
             (click)="delete(orderHeader)"
             >Borrar

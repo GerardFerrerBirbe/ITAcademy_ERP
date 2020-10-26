@@ -2,12 +2,12 @@
 
 <button
   [routerLink]='["/product-cat-detail"]'
-  class="btn btn-outline-primary"
+  class="btn btn-outline-primary btn-sm"
   >Nova Categoria
 </button>
 <button
   [routerLink]='["/product"]'
-  class="btn btn-outline-primary"
+  class="btn btn-outline-primary btn-sm"
   >Tornar a Productes
 </button>
 
@@ -30,14 +30,14 @@
         <td>
           <button
             routerLink="/product-cat-detail/{{productCategory.id}}"
-            class="btn btn-outline-info"
+            class="btn btn-outline-info btn-sm"
             title="update productCategory"
             >Seleccionar
           </button>
         </td>
         <td>
           <button
-            class="btn btn-outline-danger"
+            class="btn btn-outline-danger btn-sm"
             title="delete productCategory"
             (click)="delete(productCategory)"
             >Borrar
