@@ -5,7 +5,7 @@
   (ngSubmit)="save()"
   [formGroup]="formGroup">
   <div class="row">
-    <div class="form-group col-auto">
+    <div class="form-group col-8 col-md-5 col-lg-4">
       <label for="emailId">Email</label>
       <input class="form-control"
         id="emailId"
@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="row"> 
-    <div class="form-group col-auto">
+    <div class="form-group col-4 col-md-3 col-lg-3">
       <label for="firstNameId">Nom</label>
       <input class="form-control"
       id="firstNameId"
@@ -25,7 +25,7 @@
       formControlName="firstName"/>
       <span *ngIf="errors">{{ errors.FirstName }}</span>
     </div>
-    <div class="form-group col-4">
+    <div class="form-group col-8 col-md-5 col-lg-4">
       <label for="lastNameId">Cognoms</label>
       <input class="form-control"
       id="lastNameId"
@@ -36,7 +36,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="form-group col-auto">
+    <div class="form-group col-4 col-md-3 col-lg-3">
       <label for="positionId">Càrrec</label>
       <input class="form-control"
       id="positionId"
@@ -44,7 +44,7 @@
       formControlName="position"/>
       <span *ngIf="errors">{{ errors.Position }}</span>
     </div>
-    <div *ngIf="isAdminUser()" class="form-group col-auto">
+    <div *ngIf="isAdminUser()" class="form-group col-4 col-md-3 col-lg-3">
       <label for="salaryId">Salari</label>
       <input class="form-control"
       id="salaryId"
@@ -59,13 +59,13 @@
     formArrayName="addresses"
     *ngFor="let address of addresses.controls; let i = index;">
     <div [formGroupName]="i" class="form-row">      
-      <div class="form-group col-4">    
+      <div class="form-group col-7 col-md-5 col-lg-4">    
         <label class="col control-label" [attr.for]="'name' + i">
           Nom adreça
         </label>
         <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name" />
       </div>
-      <div class="form-group col-auto">  
+      <div class="form-group col-3 col-md-3 col-lg-3">  
         <label class="col control-label" [attr.for]="'type' + i">
           Tipus adreça
         </label>
@@ -75,7 +75,7 @@
           <option>Entrega</option>
         </select>
       </div>
-      <div class="form-group col-auto">
+      <div class="form-group col-2 col-md-3 col-lg-2">
         <label class="col">&nbsp;</label>
         <div class="col">
           <button

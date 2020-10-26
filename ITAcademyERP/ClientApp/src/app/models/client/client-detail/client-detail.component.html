@@ -5,7 +5,7 @@
   (ngSubmit)="save()"
   [formGroup]="formGroup">
   <div class="row">
-    <div class="form-group col-auto">
+    <div class="form-group col-8 col-md-5 col-lg-4">
       <label for="emailId">Email</label>
         <input class="form-control"
           id="emailId"
@@ -13,10 +13,10 @@
           required
           formControlName="email"/>
         <span *ngIf="errors">{{ errors.Email }}{{ errors.duplicateName }}</span>
-      </div>
+    </div>
   </div>
   <div class="row"> 
-    <div class="form-group col-auto">
+    <div class="form-group col-4 col-md-3 col-lg-3">
       <label for="firstNameId">Nom</label>
       <input class="form-control"
         id="firstNameId"
@@ -25,7 +25,7 @@
         formControlName="firstName"/>
         <span *ngIf="errors">{{ errors.FirstName }}</span>
     </div>
-    <div class="form-group col-4">
+    <div class="form-group col-8 col-md-5 col-lg-4">
       <label for="lastNameId">Cognoms</label>
       <input class="form-control"
         id="lastNameId"
@@ -42,14 +42,14 @@
   <div formArrayName="addresses"
         *ngFor="let address of addresses.controls; let i = index;">
     <div [formGroupName]="i" class="form-row">      
-      <div class="form-group col-4">    
-        <label class="col control-label" [attr.for]="'name' + i">
+      <div class="form-group col-7 col-md-5 col-lg-4">    
+        <label class="control-label" [attr.for]="'name' + i">
           Nom adreça
         </label>
         <input class="form-control" [attr.id]="'name' + i" type="text" formControlName="name"/>
       </div>    
-      <div class="form-group col-auto">  
-        <label class="col control-label" [attr.for]="'type' + i">
+      <div class="form-group col-3 col-md-3 col-lg-3">  
+        <label class="control-label" [attr.for]="'type' + i">
           Tipus adreça
         </label>
         <select class="form-control" [attr.id]="'type' + i" type="text" formControlName="type">
@@ -58,9 +58,9 @@
           <option>Entrega</option>
         </select>
       </div>               
-      <div class="form-group col-auto">
-        <label class="col">&nbsp;</label>
-        <div class="col">  
+      <div class="form-group col-2 col-md-3 col-lg-2">
+        <label>&nbsp;</label>
+        <div>  
           <button
             type="button"
             class="btn btn-outline-danger pull-right btn-sm"
@@ -104,10 +104,11 @@
   </div>
 </fieldset>
 <div>&nbsp;</div> 
-<fieldset *ngIf="currentOhs.length > 0"><h4>Comandes actuals</h4>
-  <table class="table">
+<fieldset class="table-responsive" *ngIf="currentOhs.length > 0"><h4>Comandes actuals</h4>
+  <table class="table justify-content-start w-auto">
     <thead>
       <tr>
+        <th></th>
         <th>Número Comanda</th>
         <th>Adreça</th>
         <th>Client</th>
@@ -121,6 +122,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let currentOh of currentOhs">
+        <th scope="row"></th>
         <td>{{ currentOh.orderNumber }}</td>
         <td>{{ currentOh.address }}</td>
         <td>{{ currentOh.client }}</td>
@@ -135,10 +137,11 @@
   </table>
 </fieldset>
 
-<fieldset *ngIf="oldOhs.length > 0"><h4>Històric de comandes</h4>
-  <table class="table">
+<fieldset class="table-responsive" *ngIf="oldOhs.length > 0"><h4>Històric de comandes</h4>
+  <table class="table justify-content-start w-auto">
     <thead>
       <tr>
+        <th></th>
         <th>Número Comanda</th>
         <th>Adreça</th>
         <th>Client</th>
@@ -152,6 +155,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let oldOh of oldOhs">
+        <th scope="row"></th>
         <td>{{ oldOh.orderNumber }}</td>
         <td>{{ oldOh.address }}</td>
         <td>{{ oldOh.client }}</td>

@@ -28,8 +28,8 @@
 <fieldset *ngIf="currentRoleUsers" ><h4>Usuaris:</h4>
   <table class="table">
       <tr class="row" *ngFor="let currentRoleUser of currentRoleUsers">
-        <td class="col-2">{{ currentRoleUser.name }}</td>
-        <td class="col-auto">
+        <td class="col-8 col-md-5 col-lg-4">{{ currentRoleUser.name }}</td>
+        <td class="col-3 col-md-2 col-lg-2">
           <button
             class="btn btn-outline-danger btn-sm"
             title="remove userInRole"
@@ -46,7 +46,7 @@
   novalidate
   (ngSubmit)="addRoleUserLine()"
   [formGroup]="roleUserFormGroup">
-  <div class="form-group col-2">
+  <div class="form-group col-8 col-md-5 col-lg-4">
     <label for="nameId">Usuari</label>
     <select
       class="form-control"
@@ -58,7 +58,7 @@
     </select>    
   </div>
 
-  <div class="form-group">
+  <div class="form-group col-3 col-md-2 col-lg-2">
     <label class="col">&nbsp;</label>
     <div>
       <button class="btn btn-outline-info btn-sm" type="submit">Afegir Usuari</button>
