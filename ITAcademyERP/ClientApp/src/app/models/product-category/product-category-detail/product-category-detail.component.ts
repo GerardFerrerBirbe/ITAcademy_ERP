@@ -63,24 +63,28 @@ export class ProductCategoryDetailComponent implements OnInit {
       .subscribe(
         () => alert("Actualització realitzada"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     } else {
       //add productCategory
       this.productCategoryService.addProductCategory(productCategory)
       .subscribe(
         pc => alert("Categoria " + pc.productCategoryName + " creada correctament"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     }    
   }
   

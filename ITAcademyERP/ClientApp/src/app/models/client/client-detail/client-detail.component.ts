@@ -126,11 +126,13 @@ export class ClientDetailComponent implements OnInit {
         () => { this.deleteAddresses();
           alert("Actualització realitzada")},
           error => {
-            if (error.error.errors == undefined) {
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
               this.errors = error.error;
             } else {
               this.errors = error.error.errors;
-            }          
+            }
           });
     } else {
       //add client
@@ -138,12 +140,14 @@ export class ClientDetailComponent implements OnInit {
       .subscribe(
         () => alert("Client " + client.firstName + " " + client.lastName + " creat correctament"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     }    
   }
 

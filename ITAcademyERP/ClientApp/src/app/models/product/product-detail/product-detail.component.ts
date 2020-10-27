@@ -72,24 +72,28 @@ export class ProductDetailComponent implements OnInit {
       .subscribe(
         () => alert("Actualització realitzada"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     } else {
       //add product
       this.productService.addProduct(product)
       .subscribe(
         product => alert("Producte " + product.productName + " creat correctament"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     }    
   }
   

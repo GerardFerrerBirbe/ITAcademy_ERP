@@ -159,12 +159,14 @@ export class OrderDetailComponent implements OnInit {
       .subscribe(
         () => alert("Actualització realitzada"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
       } else {
       //add order
       let userName = localStorage.getItem('userName');
@@ -173,12 +175,14 @@ export class OrderDetailComponent implements OnInit {
       .subscribe(
         oh => alert("Comanda " + oh.orderNumber + " creada correctament"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     }    
   }  
 

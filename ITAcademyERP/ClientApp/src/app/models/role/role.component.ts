@@ -19,7 +19,14 @@ export class RoleComponent implements OnInit {
 
   getRoles(): void {
     this.roleService.getRoles()
-    .subscribe(roles => this.roles = roles);
+    .subscribe(
+      roles => this.roles = roles,
+      error => {
+        if (error.status == 403) {
+          alert("Sense permisos")
+        }
+       }
+      );
   }
 
   delete(role: Role): void {

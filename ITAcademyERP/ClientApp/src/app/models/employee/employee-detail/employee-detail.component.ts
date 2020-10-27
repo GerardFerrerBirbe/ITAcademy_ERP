@@ -127,11 +127,13 @@ export class EmployeeDetailComponent implements OnInit {
         () => { this.deleteAddresses();
           alert("Actualització realitzada")},
           error => {
-            if (error.error.errors == undefined) {
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
               this.errors = error.error;
             } else {
               this.errors = error.error.errors;
-            }          
+            }   
           });
     } else {
       //add employee 
@@ -139,12 +141,14 @@ export class EmployeeDetailComponent implements OnInit {
       .subscribe(
         () => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
         error => {
-          if (error.error.errors == undefined) {
-            this.errors = error.error;
-          } else {
-            this.errors = error.error.errors;
-          }          
-        });
+            if (error.error == null) {
+              alert(error.status + " Usuari no autoritzat");                            
+            } else if (error.error.errors == undefined) {
+              this.errors = error.error;
+            } else {
+              this.errors = error.error.errors;
+            }
+          });
     }    
   }
 
