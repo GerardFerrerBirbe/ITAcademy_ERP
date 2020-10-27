@@ -182,31 +182,6 @@ namespace ITAcademyERP.Controllers
             return role;
         }
 
-        // POST: api/Roles
-        [Route("RoleUsers")]
-        [HttpPost("{id}")]
-        public async Task<IActionResult> DeleteList([FromBody] List<string> ids, string id)
-        {
-            
-            var roleId = id.Substring(9);
-            var role = await _roleManager.FindByIdAsync(roleId);
-            
-            try
-            {
-                foreach (var userId in ids)
-                {
-                    var roleUser = await _userManager.FindByIdAsync(userId);
-                    await _userManager.RemoveFromRoleAsync(roleUser, role.Name);             
-                }                
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-            return Ok();
-        }
-
         // PUT: api/Roles
         [HttpPut]
         public async Task<IActionResult> UpdateRoleUser(UserDTO userDTO, string addOrRemove)
