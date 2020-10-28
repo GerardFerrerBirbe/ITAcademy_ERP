@@ -32,6 +32,15 @@ namespace ITAcademyERP.Models
         [Required]
         public double Quantity { get; set; }
 
+        [NotMapped]
+        public double TotalLine
+        {
+            get
+            {
+                return UnitPrice * (1 + Vat) * Quantity;
+            }
+        }
+
 
         public virtual OrderHeader OrderHeader { get; set; }
         

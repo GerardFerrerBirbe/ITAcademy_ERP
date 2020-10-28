@@ -7,4 +7,5 @@ export interface Client {
   firstName: string;
   lastName: string;
   addresses: Address[];
+  totalSales: number;
   }

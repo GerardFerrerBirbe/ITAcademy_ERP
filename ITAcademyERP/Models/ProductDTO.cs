@@ -16,8 +16,12 @@ namespace ITAcademyERP.Models
 
         [Required(ErrorMessage = "Camp requerit")]        
         public string ProductCategoryName { get; set; }
-        
-        
+
+        public double TotalSales { get; set; }
+
+            
+
+
         public virtual ICollection<OrderLineDTO> OrderLines { get; set; }
     }
 }

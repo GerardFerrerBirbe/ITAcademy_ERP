@@ -71,6 +71,6 @@ namespace ITAcademyERP.Data.Repositories
                     .Include(o => o.OrderLines)
                     .ThenInclude(o => o.Product)
                     .SingleOrDefaultAsync(o => o.Id == id);
-        }
+        }        
     }
 }

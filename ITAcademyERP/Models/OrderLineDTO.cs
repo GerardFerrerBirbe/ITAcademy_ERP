@@ -9,7 +9,6 @@ namespace ITAcademyERP.Models
 
         public Guid OrderHeaderId { get; set; }
 
-        [Required(ErrorMessage = "Camp requerit")]
         public string ProductName { get; set; }
 
         public double UnitPrice { get; set; }

@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Client } from 'src/app/models/client/client';
+import { ClientService } from 'src/app/models/client/client.service';
+import { OrderLine } from 'src/app/models/order-line/order-line';
+import { OrderLineService } from 'src/app/models/order-line/order-line.service';
+import { Product } from 'src/app/models/product/product';
 
 @Component({
   selector: 'app-statistics',
@@ -7,9 +12,42 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StatisticsComponent implements OnInit {
 
-  constructor() { }
+  totalSales: number;
+  totalClients: number;
+
+  products: Product[];
+  clients: Client[];
+  
+  constructor(
+    private clientService: ClientService,
+    private orderLineService: OrderLineService
+  ) { }
 
   ngOnInit(): void {
-  }
+    this.clientService.getClients()
+      .subscribe(clients =>
+        this.calculateTotalClients(clients));
+    
+    this.orderLineService.getOrderLines()
+      .subscribe(orderLines =>
+        this.calculateTotalSales(orderLines));
 
+    this.orderLineService.getTopProducts()
+      .subscribe(products => this.products = products)
+    
+    this.orderLineService.getTopClients()
+      .subscribe(clients => this.clients = clients)
+    }
+
+    calculateTotalClients(clients: Client[]): void {
+      this.totalClients = clients.length;        
+    }  
+  
+  calculateTotalSales(orderLines: OrderLine[]): void {
+    this.totalSales = 0;
+
+    orderLines.forEach(orderLine => {
+      this.totalSales += orderLine.unitPrice * orderLine.quantity * (1 + orderLine.vat);
+    });   
+  }
 }

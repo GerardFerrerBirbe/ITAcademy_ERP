@@ -69,5 +69,25 @@ namespace ITAcademyERP.Controllers
 
             return orderLineDTO;
         }
+
+        // GET: api/OrderLines
+        [Route("TopProducts")]
+        [HttpGet]
+        public List<ProductDTO> GetTopProducts()
+        {
+            var products = _repository.GetTopProducts();
+
+            return products;
+        }
+
+        // GET: api/OrderHeaders
+        [Route("TopClients")]
+        [HttpGet]
+        public List<ClientDTO> GetTopClients()
+        {
+            var clients = _repository.GetTopClients();
+
+            return clients;
+        }
     }
 }

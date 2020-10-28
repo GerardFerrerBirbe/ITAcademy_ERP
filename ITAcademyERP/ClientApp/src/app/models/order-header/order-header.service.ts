@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { OrderHeader } from './order-header';
-import { OrderLine } from '../order-line/order-line';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +48,5 @@ export class OrderHeaderService {
     const url = `${this.apiUrl}/generic/${id}`;
 
     return this.http.delete<OrderHeader>(url, this.httpOptions);
-  }  
+  }
 }

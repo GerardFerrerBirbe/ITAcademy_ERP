@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITAcademyERP.Models
 {
@@ -21,8 +22,10 @@ namespace ITAcademyERP.Models
 
         [Required(ErrorMessage = "Camp requerit")]
         [StringLength(30, ErrorMessage = "El cognom ha de tenir menys de 40 caràcters")]
-        public string LastName { get; set; }        
-        
+        public string LastName { get; set; }
+
+        public double TotalSales { get; set; }
+
         public ICollection<AddressDTO> Addresses { get; set; }
     }
 }

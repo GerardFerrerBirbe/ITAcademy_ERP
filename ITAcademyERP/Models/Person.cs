@@ -27,7 +27,7 @@ namespace ITAcademyERP.Models
         {
             get
                 {
-                return this.FirstName + " " + LastName;
+                return FirstName + " " + LastName;
                 }
         }
 
