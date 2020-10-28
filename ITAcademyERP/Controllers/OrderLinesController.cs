@@ -89,5 +89,15 @@ namespace ITAcademyERP.Controllers
 
             return clients;
         }
+
+        // GET: api/OrderHeaders
+        [Route("SalesEvolution")]
+        [HttpGet]
+        public List<OrderHeaderDTO> GetSalesEvoltion()
+        {
+            var orderHeaders = _repository.GetSalesEvolution();
+
+            return orderHeaders;
+        }
     }
 }

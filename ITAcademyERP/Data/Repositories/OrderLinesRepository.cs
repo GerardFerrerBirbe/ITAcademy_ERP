@@ -55,5 +55,20 @@ namespace ITAcademyERP.Data.Repositories
 
             return clients;
         }
+
+        public List<OrderHeaderDTO> GetSalesEvolution()
+        {
+            var orderHeaders = _context.OrderLines
+                    .Include(o => o.OrderHeader)
+                    .GroupBy(o => new { month = o.OrderHeader.CreationDate.Month, year = o.OrderHeader.CreationDate.Year })
+                    .Select(g => new OrderHeaderDTO
+                    {
+                        YearMonth = g.Key.year.ToString() + "-" + g.Key.month.ToString(),
+                        TotalSales = g.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)
+                    })                    
+                    .ToList();
+
+            return orderHeaders;
+        }
     }
 }

@@ -36,6 +36,9 @@ namespace ITAcademyERP.Models
         
         public DateTime? FinalisationDate { get; set; }
 
+        [NotMapped]
+        public string YearMonth { get; set; }
+
 
         public virtual Client Client { get; set; }
         

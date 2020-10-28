@@ -2,6 +2,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Client } from '../client/client';
+import { OrderHeader } from '../order-header/order-header';
 import { Product } from '../product/product';
 import { OrderLine } from './order-line';
 
@@ -39,6 +40,10 @@ export class OrderLineService {
 
   getTopClients(): Observable<Client[]>{
     return this.http.get<Client[]>(this.apiUrl + "/TopClients");
+  }
+
+  getSalesByDate(): Observable<OrderHeader[]>{
+    return this.http.get<OrderHeader[]>(this.apiUrl + "/SalesEvolution");
   }
     
 }

@@ -24,6 +24,9 @@ import { OrderHeaderService } from './models/order-header/order-header.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
 
+import { ChartsModule } from 'ng2-charts'
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +44,8 @@ import { LogInterceptorService } from './services/log-interceptor.service';
     FormsModule,
     ReactiveFormsModule,
     HhrrModule,
-    SalesModule
+    SalesModule,
+    ChartsModule
   ],
   providers: [
     AddressService,

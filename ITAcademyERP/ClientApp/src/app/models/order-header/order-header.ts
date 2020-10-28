@@ -11,5 +11,7 @@ export interface OrderHeader {
   creationDate: string;
   assignToEmployeeDate: string;
   finalisationDate: string;
+  yearMonth: string;
+  totalSales: number;
   orderLines: OrderLine[];
 }
