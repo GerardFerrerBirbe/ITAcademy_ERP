@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.DTOs
 {
     public class ProductDTO
     {
@@ -16,6 +16,8 @@ namespace ITAcademyERP.Models
 
         [Required(ErrorMessage = "Camp requerit")]        
         public string ProductCategoryName { get; set; }
+
+        public string YearMonth { get; set; }
 
         public double TotalSales { get; set; }
 

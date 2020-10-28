@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using ITAcademyERP.Data.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

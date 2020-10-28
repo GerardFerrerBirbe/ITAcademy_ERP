@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using ITAcademyERP.Data.Repositories;
 using System.Net;
+using ITAcademyERP.Data.DTOs;
 
 namespace ITAcademyERP.Controllers
 {

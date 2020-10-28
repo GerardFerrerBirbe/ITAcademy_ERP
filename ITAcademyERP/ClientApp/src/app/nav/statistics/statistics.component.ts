@@ -28,7 +28,7 @@ export class StatisticsComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartLegend = true;
   public lineChartData = [
-    {data: [], label: 'Evolució vendes'}
+    {data: [], label: 'Total vendes'}
   ];
   
   constructor(
@@ -51,9 +51,9 @@ export class StatisticsComponent implements OnInit {
     this.orderLineService.getTopClients()
       .subscribe(clients => this.clients = clients)
 
-    this.orderLineService.getSalesByDate()
-      .subscribe(orderHeaders => {
-        this.setLineChartData(orderHeaders);
+    this.orderLineService.getSalesByDateAndProduct()
+      .subscribe(products => {
+        this.setLineChartData(products);
       })
     }
 
@@ -69,10 +69,10 @@ export class StatisticsComponent implements OnInit {
     });   
   }
 
-  setLineChartData(orderHeaders : OrderHeader[]){
-    orderHeaders.forEach(orderHeader => {
-      this.lineChartLabels.push(orderHeader.yearMonth);
-      this.lineChartData[0].data.push(orderHeader.totalSales);
+  setLineChartData(products : Product[]){
+    products.forEach(product => {
+      this.lineChartLabels.push(product.yearMonth);
+      this.lineChartData[0].data.push(product.totalSales);
     });
   }
 }

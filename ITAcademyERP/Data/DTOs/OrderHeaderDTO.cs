@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.DTOs
 {
     public class OrderHeaderDTO
     {        

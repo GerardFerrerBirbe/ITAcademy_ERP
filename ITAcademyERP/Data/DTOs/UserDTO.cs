@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.DTOs
 {
     public class UserDTO
     {

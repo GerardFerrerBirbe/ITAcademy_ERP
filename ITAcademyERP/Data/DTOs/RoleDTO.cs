@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.DTOs
 {
     public class RoleDTO
     {

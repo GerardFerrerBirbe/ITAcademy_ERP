@@ -1,4 +1,5 @@
-﻿using ITAcademyERP.Models;
+﻿using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

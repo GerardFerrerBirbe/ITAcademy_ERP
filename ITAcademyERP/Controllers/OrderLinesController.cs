@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using ITAcademyERP.Data;
 using ITAcademyERP.Data.Repositories;
+using ITAcademyERP.Data.DTOs;
 
 namespace ITAcademyERP.Controllers
 {
@@ -80,7 +81,7 @@ namespace ITAcademyERP.Controllers
             return products;
         }
 
-        // GET: api/OrderHeaders
+        // GET: api/OrderLines
         [Route("TopClients")]
         [HttpGet]
         public List<ClientDTO> GetTopClients()
@@ -90,14 +91,24 @@ namespace ITAcademyERP.Controllers
             return clients;
         }
 
-        // GET: api/OrderHeaders
-        [Route("SalesEvolution")]
+        // GET: api/OrderLines
+        [Route("SalesByDate")]
         [HttpGet]
-        public List<OrderHeaderDTO> GetSalesEvoltion()
+        public List<OrderHeaderDTO> GetSalesByDate()
         {
-            var orderHeaders = _repository.GetSalesEvolution();
+            var orderHeaders = _repository.GetSalesByDate();
 
             return orderHeaders;
+        }
+
+        // GET: api/OrderLines
+        [Route("SalesByDateAndProduct")]
+        [HttpGet]
+        public List<ProductDTO> GetSalesByDateAndProduct()
+        {
+            var output = _repository.GetSalesByDateAndProduct();
+
+            return output;
         }
     }
 }

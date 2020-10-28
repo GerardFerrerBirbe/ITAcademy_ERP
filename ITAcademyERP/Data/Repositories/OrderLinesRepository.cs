@@ -1,4 +1,5 @@
-﻿using ITAcademyERP.Models;
+﻿using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace ITAcademyERP.Data.Repositories
             return clients;
         }
 
-        public List<OrderHeaderDTO> GetSalesEvolution()
+        public List<OrderHeaderDTO> GetSalesByDate()
         {
             var orderHeaders = _context.OrderLines
                     .Include(o => o.OrderHeader)
@@ -66,6 +67,28 @@ namespace ITAcademyERP.Data.Repositories
                         YearMonth = g.Key.year.ToString() + "-" + g.Key.month.ToString(),
                         TotalSales = g.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)
                     })                    
+                    .ToList();
+
+            return orderHeaders;
+        }
+
+        public List<ProductDTO> GetSalesByDateAndProduct()
+        {
+            var orderHeaders = _context.OrderLines
+                    .Include(o => o.OrderHeader)
+                    .GroupBy(o => new 
+                    { 
+                        Month = o.OrderHeader.CreationDate.Month,
+                        Year = o.OrderHeader.CreationDate.Year,
+                        ProductName = o.Product.ProductName
+                    
+                    })
+                    .Select(g => new ProductDTO
+                    {
+                        YearMonth = g.Key.Year.ToString() + "-" + g.Key.Month.ToString(),
+                        ProductName = g.Key.ProductName,
+                        TotalSales = g.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)
+                    })
                     .ToList();
 
             return orderHeaders;

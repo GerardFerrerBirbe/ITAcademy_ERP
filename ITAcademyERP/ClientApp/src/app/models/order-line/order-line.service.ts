@@ -42,8 +42,12 @@ export class OrderLineService {
     return this.http.get<Client[]>(this.apiUrl + "/TopClients");
   }
 
-  getSalesByDate(): Observable<OrderHeader[]>{
-    return this.http.get<OrderHeader[]>(this.apiUrl + "/SalesEvolution");
+  // getSalesByDate(): Observable<OrderHeader[]>{
+  //   return this.http.get<OrderHeader[]>(this.apiUrl + "/SalesEvolution");
+  // }
+
+  getSalesByDateAndProduct(): Observable<Product[]>{
+    return this.http.get<Product[]>(this.apiUrl + "/SalesByDateAndProduct");
   }
     
 }

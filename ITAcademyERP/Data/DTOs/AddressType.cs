@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.DTOs
 {
     public enum AddressType
     {
