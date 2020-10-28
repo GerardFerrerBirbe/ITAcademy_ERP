@@ -4,14 +4,16 @@ using ITAcademyERP.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ITAcademyERP.DataMigrations
+namespace ITAcademyERP.Data.Migrations
 {
     [DbContext(typeof(ITAcademyERPContext))]
-    partial class ITAcademyERPContextModelSnapshot : ModelSnapshot
+    [Migration("20201028142418_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

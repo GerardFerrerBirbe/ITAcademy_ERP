@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ITAcademyERP.DataMigrations
+namespace ITAcademyERP.Data.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -86,9 +86,9 @@ namespace ITAcademyERP.DataMigrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    PersonId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(maxLength: 20, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<string>(nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

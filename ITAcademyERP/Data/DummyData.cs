@@ -94,6 +94,70 @@ namespace ITAcademyERP.Data
                     FirstName = "Mark",
                     LastName = "Zuckenberg"
                 },
+                new Person{
+                    Email = "pc@it.com",
+                    NormalizedEmail = "PC@IT.COM",
+                    UserName = "pc@it.com",
+                    NormalizedUserName = "PC@IT.COM",
+                    FirstName = "Philip",
+                    LastName = "Collins"
+                },
+                new Person{
+                    Email = "gfg@it.com",
+                    NormalizedEmail = "GFG@IT.COM",
+                    UserName = "gfg@it.com",
+                    NormalizedUserName = "GFG@IT.COM",
+                    FirstName = "Georgina",
+                    LastName = "Fernandez Gomez"
+                },
+                new Person{
+                    Email = "sr@it.com",
+                    NormalizedEmail = "SR@IT.COM",
+                    UserName = "sr@it.com",
+                    NormalizedUserName = "SR@IT.COM",
+                    FirstName = "Santi",
+                    LastName = "Rossinyol"
+                },
+                new Person{
+                    Email = "jb@it.com",
+                    NormalizedEmail = "JB@IT.COM",
+                    UserName = "jb@it.com",
+                    NormalizedUserName = "JB@IT.COM",
+                    FirstName = "Josep",
+                    LastName = "Batalla"
+                },
+                new Person{
+                    Email = "jpc@it.com",
+                    NormalizedEmail = "JPC@IT.COM",
+                    UserName = "jpc@it.com",
+                    NormalizedUserName = "JPC@IT.COM",
+                    FirstName = "Joan",
+                    LastName = "Patrici Carrasco"
+                },
+                new Person{
+                    Email = "gmc@it.com",
+                    NormalizedEmail = "GMC@IT.COM",
+                    UserName = "gmc@it.com",
+                    NormalizedUserName = "GMC@IT.COM",
+                    FirstName = "Gregori",
+                    LastName = "Martí Carrión"
+                },
+                new Person{
+                    Email = "sv@it.com",
+                    NormalizedEmail = "SV@IT.COM",
+                    UserName = "sv@it.com",
+                    NormalizedUserName = "SV@IT.COM",
+                    FirstName = "Silvia",
+                    LastName = "Vallvé"
+                },
+                new Person{
+                    Email = "mrc@it.com",
+                    NormalizedEmail = "MRC@IT.COM",
+                    UserName = "mrc@it.com",
+                    NormalizedUserName = "MRC@IT.COM",
+                    FirstName = "Maria",
+                    LastName = "Rodriguez Català"
+                },
             };
             return people;
         }
@@ -103,7 +167,13 @@ namespace ITAcademyERP.Data
             List<Client> clients = new List<Client>()
             {
                 new Client{PersonId = _context.People.First(p => p.FirstName == "Mark").Id},
-                new Client{PersonId = _context.People.First(p => p.FirstName == "Steve").Id}
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Maria").Id},
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Silvia").Id},
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Gregori").Id},
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Philip").Id},
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Georgina").Id},
+                new Client{PersonId = _context.People.First(p => p.FirstName == "Jake").Id}
             };
             return clients;
         }
@@ -113,7 +183,11 @@ namespace ITAcademyERP.Data
             List<Employee> employees = new List<Employee>()
             {
                 new Employee{Position = "Master", Salary = 20000, PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
-                new Employee{Position = "Student", Salary = 10000, PersonId = _context.People.First(p => p.FirstName == "Gerard").Id}
+                new Employee{Position = "Student", Salary = 10000, PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
+                new Employee{Position = "Master", Salary = 20000, PersonId = _context.People.First(p => p.FirstName == "Joan").Id},
+                new Employee{Position = "Student", Salary = 10000, PersonId = _context.People.First(p => p.FirstName == "Josep").Id},
+                new Employee{Position = "Master", Salary = 20000, PersonId = _context.People.First(p => p.FirstName == "Georgina").Id},
+                new Employee{Position = "Student", Salary = 10000, PersonId = _context.People.First(p => p.FirstName == "Santi").Id},
             };
             return employees;
         }
@@ -163,7 +237,11 @@ namespace ITAcademyERP.Data
                 new ProductCategory{ProductCategoryName = "Bicicletes"},
                 new ProductCategory{ProductCategoryName = "Motos"},
                 new ProductCategory{ProductCategoryName = "Cotxes"},
-                new ProductCategory{ProductCategoryName = "Aliments"}
+                new ProductCategory{ProductCategoryName = "Aliments"},
+                 new ProductCategory{ProductCategoryName = "Camions"},
+                new ProductCategory{ProductCategoryName = "Avions"},
+                new ProductCategory{ProductCategoryName = "Ordinadors"},
+                new ProductCategory{ProductCategoryName = "Roba"}
             };
             return productCategories;
         }
@@ -175,7 +253,19 @@ namespace ITAcademyERP.Data
                 new Product{ProductName = "Trek", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Bicicletes").Id},
                 new Product{ProductName = "Montesa", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Motos").Id},
                 new Product{ProductName = "Fiat", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Cotxes").Id},
-                new Product{ProductName = "Poma", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id}
+                new Product{ProductName = "Poma", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id},
+                new Product{ProductName = "Orbea", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Bicicletes").Id},
+                new Product{ProductName = "Bultaco", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Motos").Id},
+                new Product{ProductName = "Ford", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Cotxes").Id},
+                new Product{ProductName = "Pera", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id},
+                new Product{ProductName = "Canondale", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Bicicletes").Id},
+                new Product{ProductName = "Suzuki", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Motos").Id},
+                new Product{ProductName = "VW", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Cotxes").Id},
+                new Product{ProductName = "Entrecot", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id},
+                new Product{ProductName = "Man", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Camions").Id},
+                new Product{ProductName = "Boeing", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Avions").Id},
+                new Product{ProductName = "HP", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Ordinadors").Id},
+                new Product{ProductName = "Pantalons Zara", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Roba").Id}
             };
             return products;
         }        
@@ -186,14 +276,76 @@ namespace ITAcademyERP.Data
             {
                 new OrderHeader
                 {
+                    OrderNumber = "2020-09",
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Gregori").Id,
+                    OrderPriority = OrderPriority.Baixa,
+                    OrderState = OrderState.Completada,
+                    CreationDate = new DateTime(2020,11,09),
+                    AssignToEmployeeDate = new DateTime(2020,11,09),
+                    FinalisationDate = new DateTime(2020,12,09)
+                },
+                new OrderHeader
+                {
+                    OrderNumber = "2020-08",
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Santi").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Philip").Id,
+                    OrderPriority = OrderPriority.Alta,
+                    OrderState = OrderState.PendentTractar,
+                    CreationDate = new DateTime(2020,09,09),
+                    AssignToEmployeeDate = new DateTime(2020,10,09)
+                },
+                new OrderHeader
+                {
+                    OrderNumber = "2020-07",
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Georgina").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Silvia").Id,
+                    OrderPriority = OrderPriority.Mitjana,
+                    OrderState = OrderState.EnTractament,
+                    CreationDate = new DateTime(2020,08,11),
+                    AssignToEmployeeDate = new DateTime(2020,08,20)
+                },
+                new OrderHeader
+                {
+                    OrderNumber = "2020-06",
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Santi").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Silvia").Id,
+                    OrderPriority = OrderPriority.Baixa,
+                    OrderState = OrderState.Completada,
+                    CreationDate = new DateTime(2020,06,09),
+                    AssignToEmployeeDate = new DateTime(2020,06,09),
+                    FinalisationDate = new DateTime(2020,06,09)
+                },
+                new OrderHeader
+                {
+                    OrderNumber = "2020-05",
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Georgina").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Georgina").Id,
+                    OrderPriority = OrderPriority.Alta,
+                    OrderState = OrderState.PendentTractar,
+                    CreationDate = new DateTime(2020,05,09),
+                    AssignToEmployeeDate = new DateTime(2020,05,09)
+                },
+                new OrderHeader
+                {
+                    OrderNumber = "2020-04",
+                    EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Gerard").Id,
+                    ClientId = _context.Clients.First(o => o.Person.FirstName == "Maria").Id,
+                    OrderPriority = OrderPriority.Mitjana,
+                    OrderState = OrderState.EnTractament,
+                    CreationDate = new DateTime(2020,04,11),
+                    AssignToEmployeeDate = new DateTime(2020,04,20)
+                },
+                new OrderHeader
+                {
                     OrderNumber = "2020-03",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Steve").Id,
                     OrderPriority = OrderPriority.Baixa,
                     OrderState = OrderState.Completada,
-                    CreationDate = new DateTime(2020,07,09),
-                    AssignToEmployeeDate = new DateTime(2020,08,09),
-                    FinalisationDate = new DateTime(2020,09,09)
+                    CreationDate = new DateTime(2020,03,09),
+                    AssignToEmployeeDate = new DateTime(2020,03,09),
+                    FinalisationDate = new DateTime(2020,03,09)
                 },
                 new OrderHeader
                 {
@@ -202,8 +354,8 @@ namespace ITAcademyERP.Data
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Mark").Id,
                     OrderPriority = OrderPriority.Alta,
                     OrderState = OrderState.PendentTractar,
-                    CreationDate = new DateTime(2020,08,09),
-                    AssignToEmployeeDate = new DateTime(2020,09,09)
+                    CreationDate = new DateTime(2020,02,09),
+                    AssignToEmployeeDate = new DateTime(2020,02,09)
                 },
                 new OrderHeader
                 {
@@ -212,8 +364,8 @@ namespace ITAcademyERP.Data
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Mark").Id,
                     OrderPriority = OrderPriority.Mitjana,
                     OrderState = OrderState.EnTractament,
-                    CreationDate = new DateTime(2020,08,11),
-                    AssignToEmployeeDate = new DateTime(2020,08,20)
+                    CreationDate = new DateTime(2020,01,11),
+                    AssignToEmployeeDate = new DateTime(2020,01,20)
                 }
             };
             return orderHeaders;
@@ -223,9 +375,20 @@ namespace ITAcademyERP.Data
         {
             List<OrderLine> orderLines = new List<OrderLine>()
             {
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Trek").Id, UnitPrice = 100, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Montesa").Id, UnitPrice = 200, Vat = 0.21, Quantity = 5, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Fiat").Id, UnitPrice = 300, Vat = 0.21, Quantity = 8, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-02").Id}
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Trek").Id, UnitPrice = 2000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Montesa").Id, UnitPrice =6000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Fiat").Id, UnitPrice = 14000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-02").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Man").Id, UnitPrice = 46000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-03").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Boeing").Id, UnitPrice = 98000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-04").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "VW").Id, UnitPrice = 28000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-05").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Orbea").Id, UnitPrice = 1200, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-06").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Suzuki").Id, UnitPrice = 8000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-06").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Pantalons Zara").Id, UnitPrice = 90, Vat = 0.21, Quantity = 800, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-07").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Poma").Id, UnitPrice = 1.4, Vat = 0.21, Quantity = 3000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-07").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Pera").Id, UnitPrice = 1.8, Vat = 0.21, Quantity = 4000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-08").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Entrecot").Id, UnitPrice = 14, Vat = 0.21, Quantity = 2000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-08").Id},new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Trek").Id, UnitPrice = 100, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Bultaco").Id, UnitPrice = 7500, Vat = 0.21, Quantity = 4, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-09").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Ford").Id, UnitPrice = 23000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-09").Id}
             };
             return orderLines;
         }
