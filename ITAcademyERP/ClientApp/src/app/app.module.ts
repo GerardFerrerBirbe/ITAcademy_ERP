@@ -10,6 +10,7 @@ import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { StatisticsComponent } from './nav/statistics/statistics.component';
 import { HhrrModule } from './nav/hhrr/hhrr.module';
 import { SalesModule } from './nav/sales/sales.module';
+import { StatisticsModule } from './nav/statistics/statistics.module';
 
 import { AddressComponent } from './models/address/address.component';
 import { OrderHeaderComponent } from './models/order-header/order-header.component';
@@ -24,14 +25,11 @@ import { OrderHeaderService } from './models/order-header/order-header.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
 
-import { ChartsModule } from 'ng2-charts'
-
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    StatisticsComponent,
     AddressComponent,
     LoginComponent,
     OrderHeaderComponent,
@@ -45,7 +43,7 @@ import { ChartsModule } from 'ng2-charts'
     ReactiveFormsModule,
     HhrrModule,
     SalesModule,
-    ChartsModule
+    StatisticsModule
   ],
   providers: [
     AddressService,

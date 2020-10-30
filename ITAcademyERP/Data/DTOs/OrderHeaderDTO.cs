@@ -29,9 +29,5 @@ namespace ITAcademyERP.Data.DTOs
         public DateTime? FinalisationDate { get; set; }
 
         public ICollection<OrderLineDTO> OrderLines { get; set; }
-
-        public string YearMonth { get; set; }
-
-        public double TotalSales { get; set; }
     }
 }

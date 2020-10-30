@@ -5,6 +5,8 @@ import { OrderHeader } from 'src/app/models/order-header/order-header';
 import { OrderLine } from 'src/app/models/order-line/order-line';
 import { OrderLineService } from 'src/app/models/order-line/order-line.service';
 import { Product } from 'src/app/models/product/product';
+import { StatisticsService } from './statistics.service';
+
 
 @Component({
   selector: 'app-statistics',
@@ -18,22 +20,12 @@ export class StatisticsComponent implements OnInit {
 
   products: Product[];
   clients: Client[];
-  orderHeaders: OrderHeader[];
-  
-  public lineChartOptions = {
-    scaleShowVerticalLines: false,
-    responsive: true
-  };
-  public lineChartLabels = [];
-  public lineChartType = 'line';
-  public lineChartLegend = true;
-  public lineChartData = [
-    {data: [], label: 'Total vendes'}
-  ];
+  orderHeaders: OrderHeader[];  
   
   constructor(
     private clientService: ClientService,
-    private orderLineService: OrderLineService
+    private orderLineService: OrderLineService,
+    private statisticsService: StatisticsService
   ) { }
 
   ngOnInit(): void {
@@ -45,16 +37,12 @@ export class StatisticsComponent implements OnInit {
       .subscribe(orderLines =>
         this.calculateTotalSales(orderLines));
 
-    this.orderLineService.getTopProducts()
+    this.statisticsService.getTopProducts()
       .subscribe(products => this.products = products)
     
-    this.orderLineService.getTopClients()
+    this.statisticsService.getTopClients()
       .subscribe(clients => this.clients = clients)
-
-    this.orderLineService.getSalesByDateAndProduct()
-      .subscribe(products => {
-        this.setLineChartData(products);
-      })
+    
     }
 
   calculateTotalClients(clients: Client[]): void {
@@ -69,10 +57,4 @@ export class StatisticsComponent implements OnInit {
     });   
   }
 
-  setLineChartData(products : Product[]){
-    products.forEach(product => {
-      this.lineChartLabels.push(product.yearMonth);
-      this.lineChartData[0].data.push(product.totalSales);
-    });
-  }
 }

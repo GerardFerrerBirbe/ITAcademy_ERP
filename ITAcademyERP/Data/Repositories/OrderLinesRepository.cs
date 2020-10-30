@@ -23,28 +23,28 @@ namespace ITAcademyERP.Data.Repositories
                     .ToListAsync();
         }
 
-        public List<ProductDTO> GetTopProducts()
+        public List<StatsByProduct> GetTopProducts()
         {            
-            var products = _context.OrderLines
+            var output = _context.OrderLines
                     .Include(o => o.Product)
                     .GroupBy(o => o.Product.ProductName)
-                    .Select(o => new ProductDTO {
+                    .Select(o => new StatsByProduct {
                         ProductName = o.Key, 
                         TotalSales = o.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)})
                     .OrderByDescending(x => x.TotalSales).Take(3)
                     .ToList();
 
-            return products;
+            return output;
         }
 
-        public List<ClientDTO> GetTopClients()
+        public List<StatsByClient> GetTopClients()
         {
-            var clients = _context.OrderLines
+            var output = _context.OrderLines
                     .Include(o => o.OrderHeader)
                     .ThenInclude(o => o.Client)
                     .ThenInclude(c => c.Person)
                     .GroupBy(o => o.OrderHeader.Client.Person.Email)
-                    .Select(g => new ClientDTO
+                    .Select(g => new StatsByClient
                     {
                         Email = g.Key,
                         FirstName = _context.People.FirstOrDefault(p => p.Email == g.Key).FirstName,
@@ -54,36 +54,48 @@ namespace ITAcademyERP.Data.Repositories
                     .OrderByDescending(x => x.TotalSales).Take(3)
                     .ToList();
 
-            return clients;
+            return output;
         }
 
-        public List<OrderHeaderDTO> GetSalesByDate()
+        public List<StatsByDate> GetSalesByDate(string initialDate, string finalDate)
         {
-            var orderHeaders = _context.OrderLines
+            var initialYear = int.Parse(initialDate.Split("-")[0]);
+            var initialMonth = int.Parse(initialDate.Split("-")[1]);
+            var finalYear = int.Parse(finalDate.Split("-")[0]);
+            var finalMonth = int.Parse(finalDate.Split("-")[1]);
+
+            var initialDateTime = new DateTime(initialYear, initialMonth, 1);
+            var finalDateTime = new DateTime(finalYear, finalMonth, DateTime.DaysInMonth(finalYear, finalMonth));
+
+            var output = _context.OrderLines
                     .Include(o => o.OrderHeader)
+                    .Where(o =>
+                        o.OrderHeader.CreationDate >= initialDateTime &&
+                        o.OrderHeader.CreationDate <= finalDateTime
+                        )
                     .GroupBy(o => new { month = o.OrderHeader.CreationDate.Month, year = o.OrderHeader.CreationDate.Year })
-                    .Select(g => new OrderHeaderDTO
+                    .Select(g => new StatsByDate
                     {
                         YearMonth = g.Key.year.ToString() + "-" + g.Key.month.ToString(),
                         TotalSales = g.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)
                     })                    
                     .ToList();
 
-            return orderHeaders;
+            return output;
         }
 
-        public List<ProductDTO> GetSalesByDateAndProduct()
+        public List<StatsByDate> GetSalesByDateAndProduct()
         {
-            var orderHeaders = _context.OrderLines
+            var output = _context.OrderLines
                     .Include(o => o.OrderHeader)
-                    .GroupBy(o => new 
-                    { 
+                    .Include(o => o.Product)
+                    .GroupBy(o => new
+                    {
                         Month = o.OrderHeader.CreationDate.Month,
                         Year = o.OrderHeader.CreationDate.Year,
                         ProductName = o.Product.ProductName
-                    
                     })
-                    .Select(g => new ProductDTO
+                    .Select(g => new StatsByDate
                     {
                         YearMonth = g.Key.Year.ToString() + "-" + g.Key.Month.ToString(),
                         ProductName = g.Key.ProductName,
@@ -91,7 +103,32 @@ namespace ITAcademyERP.Data.Repositories
                     })
                     .ToList();
 
-            return orderHeaders;
+            return output;
+
+            //var output = _context.OrderLines
+            //        .Include(o => o.OrderHeader)
+            //        .Include(o => o.Product)
+            //        .GroupBy(o => new 
+            //        { 
+            //            Month = o.OrderHeader.CreationDate.Month,
+            //            Year = o.OrderHeader.CreationDate.Year
+            //        })
+            //        .Select(g => new StatsByDate
+            //        {
+            //            YearMonth = g.Key.Year.ToString() + "-" + g.Key.Month.ToString(),
+            //            Products = g.GroupBy(o => new
+            //            {
+            //                ProductName = o.Product.ProductName                            
+            //            })
+            //            .Select(g => new StatsByProduct
+            //            {
+            //                ProductName = g.Key.ToString(),
+            //                TotalSales = g.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)
+            //            }).ToList()
+            //        })
+            //        .ToList();
+
+            //return output;
         }
     }
 }

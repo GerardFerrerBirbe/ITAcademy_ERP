@@ -17,12 +17,6 @@ namespace ITAcademyERP.Data.DTOs
         [Required(ErrorMessage = "Camp requerit")]        
         public string ProductCategoryName { get; set; }
 
-        public string YearMonth { get; set; }
-
-        public double TotalSales { get; set; }
-
-            
-
 
         public virtual ICollection<OrderLineDTO> OrderLines { get; set; }
     }

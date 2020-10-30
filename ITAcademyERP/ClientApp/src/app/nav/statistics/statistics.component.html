@@ -13,7 +13,7 @@
           <h5 class="my-0 font-weight-normal">Total Vendes</h5>
         </div>
         <div class="card-body">
-          <h6 class="card-title pricing-card-title">{{ totalSales | currency:'EUR' }}</h6>
+          <h6 class="card-title pricing-card-title">{{ totalSales }}</h6>
         </div>
       </div>    
     </div>
@@ -45,13 +45,8 @@
     </div>
 </div>
 <div>
-  <div class="w-50" style="display: block">
-    <canvas baseChart
-            [datasets]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType">
-    </canvas>
-  </div>
+  <app-line-chart></app-line-chart>
+</div>
+<div>  
+  <app-line-chart-products></app-line-chart-products>
 </div>

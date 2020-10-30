@@ -74,37 +74,37 @@ namespace ITAcademyERP.Controllers
         // GET: api/OrderLines
         [Route("TopProducts")]
         [HttpGet]
-        public List<ProductDTO> GetTopProducts()
+        public List<StatsByProduct> GetTopProducts()
         {
-            var products = _repository.GetTopProducts();
+            var output = _repository.GetTopProducts();
 
-            return products;
+            return output;
         }
 
         // GET: api/OrderLines
         [Route("TopClients")]
         [HttpGet]
-        public List<ClientDTO> GetTopClients()
+        public List<StatsByClient> GetTopClients()
         {
-            var clients = _repository.GetTopClients();
+            var output = _repository.GetTopClients();
 
-            return clients;
+            return output;
         }
 
         // GET: api/OrderLines
         [Route("SalesByDate")]
         [HttpGet]
-        public List<OrderHeaderDTO> GetSalesByDate()
+        public List<StatsByDate> GetSalesByDate(string initialDate, string finalDate)
         {
-            var orderHeaders = _repository.GetSalesByDate();
+            var output = _repository.GetSalesByDate(initialDate, finalDate);
 
-            return orderHeaders;
+            return output;
         }
 
         // GET: api/OrderLines
         [Route("SalesByDateAndProduct")]
         [HttpGet]
-        public List<ProductDTO> GetSalesByDateAndProduct()
+        public List<StatsByDate> GetSalesByDateAndProduct()
         {
             var output = _repository.GetSalesByDateAndProduct();
 

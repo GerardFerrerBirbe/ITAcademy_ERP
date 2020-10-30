@@ -17,7 +17,7 @@ import { ClientService } from '../../models/client/client.service';
 import { ProductService } from '../../models/product/product.service';
 import { ProductCategoryService } from '../../models/product-category/product-category.service';
 import { OrderLineService } from '../../models/order-line/order-line.service';
-import { AppRoutingModule } from 'src/app/app-routing.module';
+import { AppRoutingModule } from '../../app-routing.module';
 
 
 @NgModule({

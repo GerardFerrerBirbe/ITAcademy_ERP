@@ -24,7 +24,6 @@ namespace ITAcademyERP.Data.DTOs
         [StringLength(30, ErrorMessage = "El cognom ha de tenir menys de 40 caràcters")]
         public string LastName { get; set; }
 
-        public double TotalSales { get; set; }
 
         public ICollection<AddressDTO> Addresses { get; set; }
     }
