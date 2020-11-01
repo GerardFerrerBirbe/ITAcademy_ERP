@@ -82,11 +82,31 @@ namespace ITAcademyERP.Controllers
         }
 
         // GET: api/OrderLines
+        [Route("SalesByProduct")]
+        [HttpGet]
+        public List<StatsByProduct> GetSalesByProduct()
+        {
+            var output = _repository.GetSalesByProduct();
+
+            return output;
+        }
+
+        // GET: api/OrderLines
         [Route("TopClients")]
         [HttpGet]
         public List<StatsByClient> GetTopClients()
         {
             var output = _repository.GetTopClients();
+
+            return output;
+        }
+
+        // GET: api/OrderLines
+        [Route("SalesByClient")]
+        [HttpGet]
+        public List<StatsByClient> GetSalesByClient()
+        {
+            var output = _repository.GetSalesByClient();
 
             return output;
         }
@@ -104,9 +124,9 @@ namespace ITAcademyERP.Controllers
         // GET: api/OrderLines
         [Route("SalesByDateAndProduct")]
         [HttpGet]
-        public List<StatsByDate> GetSalesByDateAndProduct()
+        public List<StatsByDate> GetSalesByDateAndProduct(string initialDate, string finalDate, string productName)
         {
-            var output = _repository.GetSalesByDateAndProduct();
+            var output = _repository.GetSalesByDateAndProduct(initialDate, finalDate, productName);
 
             return output;
         }

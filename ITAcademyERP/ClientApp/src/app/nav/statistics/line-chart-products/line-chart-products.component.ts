@@ -18,8 +18,12 @@ export class LineChartProductsComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartLegend = true;
   public lineChartData = [
-    {data: [], label: 'Total vendes'}
+    {data: [], label: 'Total vendes'},
+    {data: [], label: ''}
   ];
+
+  statsByDate: StatsByDate[];
+  statsByDateAndProduct: StatsByDate[];
 
   initialDate: string;
   finalDate: string;
@@ -27,6 +31,7 @@ export class LineChartProductsComponent implements OnInit {
   finalYear: number;
   initialMonth: number;
   finalMonth: number;
+  productName: string;
   
   
   constructor(
@@ -36,23 +41,31 @@ export class LineChartProductsComponent implements OnInit {
   ngOnInit(): void {
     
   }
-
   
   applicateDateFilters(){
     this.initialDate = (document.getElementById("initialDate") as HTMLInputElement).value;
     this.finalDate = (document.getElementById("finalDate") as HTMLInputElement).value;
+    this.productName = (document.getElementById("productName") as HTMLInputElement).value;
     
     this.statisticsService.getSalesByDate(this.initialDate, this.finalDate)
-      .subscribe(statsByDate => {
-        this.setLabelFilters(statsByDate);
-      });        
+      .subscribe(stats => {
+        this.statsByDate = stats;
+        
+        this.statisticsService.getSalesByDateAndProduct(this.initialDate, this.finalDate, this.productName)
+          .subscribe(stats => {
+            this.statsByDateAndProduct = stats;
+
+            this.setChartData(this.statsByDate, this.statsByDateAndProduct);          
+          });        
+      });  
   }
 
-  setLabelFilters(statsByDate: StatsByDate[]){
+  setChartData(statsByDate: StatsByDate[], statsByDateAndProduct: StatsByDate[]){
     
     this.lineChartLabels = [];
     this.lineChartData = [
-      {data: [], label: 'Total vendes'}
+      {data: [], label: 'Total vendes'},
+      {data: [], label: 'Vendes ' + this.productName}
     ];
     
     this.initialYear = parseInt(this.initialDate.split("-")[0]);
@@ -65,38 +78,46 @@ export class LineChartProductsComponent implements OnInit {
       for (let month = this.initialMonth; month <= this.finalMonth; month++) {
         let label = this.initialYear + "-" + month;
         this.lineChartLabels.push(label);
-        this.pushChartData(statsByDate, label);        
+        this.pushChartData(statsByDate, statsByDateAndProduct, label);        
       }
     }else{
       for (let month = this.initialMonth; month <= 12; month++) {
         let label = this.initialYear + "-" + month;
         this.lineChartLabels.push(label);
-        this.pushChartData(statsByDate, label);       
+        this.pushChartData(statsByDate, statsByDateAndProduct, label);       
       }
       if (this.finalYear > this.initialYear + 1) {        
         for (let year = this.initialYear + 1; year < this.finalYear; year++) {     
           for (let month = 1; month <= 12; month++) {
             let label = year + "-" + month;
             this.lineChartLabels.push(label);
-            this.pushChartData(statsByDate, label);        
+            this.pushChartData(statsByDate, statsByDateAndProduct, label);        
           }      
         }
       }
       for (let month = 1; month <= this.finalMonth; month++) {
         let label = this.finalYear + "-" + month;
         this.lineChartLabels.push(label);
-        this.pushChartData(statsByDate, label);         
+        this.pushChartData(statsByDate, statsByDateAndProduct, label);         
       }      
     }
   }
 
-  pushChartData (statsByDate: StatsByDate[], label: string) {    
-    let result = statsByDate.filter(s => s.yearMonth == label);
-    if (result.length > 0) {
-      this.lineChartData[0].data.push(result[0].totalSales);
+  pushChartData (statsByDate: StatsByDate[], statsByDateAndProduct: StatsByDate[], label: string) {    
+    let resultByDate = statsByDate.filter(s => s.yearMonth == label);
+    if (resultByDate.length > 0) {
+      this.lineChartData[0].data.push(resultByDate[0].totalSales);
     }else{
       this.lineChartData[0].data.push(0);
-    }    
+    }
+
+    let resultByDateAndProduct = statsByDateAndProduct.filter(s => s.yearMonth == label);
+    if (resultByDateAndProduct.length > 0) {
+      this.lineChartData[1].data.push(resultByDateAndProduct[0].totalSales);
+    }else{
+      this.lineChartData[1].data.push(0);
+    }
+      
   }
 
   

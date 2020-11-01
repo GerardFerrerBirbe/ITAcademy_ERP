@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { Client } from 'src/app/models/client/client';
 import { Product } from 'src/app/models/product/product';
 import { StatsByDate } from './statsByDate';
+import { StatsByClient } from './statsByClient';
+import { StatsByProduct } from './statsByProduct';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +24,16 @@ export class StatisticsService {
     return this.http.get<Product[]>(this.apiUrl + "/TopProducts");
   }
 
+  getSalesByProduct(): Observable<StatsByProduct[]>{
+    return this.http.get<StatsByProduct[]>(this.apiUrl + "/SalesByProduct");
+  }
+
   getTopClients(): Observable<Client[]>{
     return this.http.get<Client[]>(this.apiUrl + "/TopClients");
+  }
+
+  getSalesByClient(): Observable<StatsByClient[]>{
+    return this.http.get<StatsByClient[]>(this.apiUrl + "/SalesByClient");
   }
 
   getSalesByDate(initialDate: string, finalDate: string): Observable<StatsByDate[]>{
@@ -33,8 +43,12 @@ export class StatisticsService {
     return this.http.get<StatsByDate[]>(this.apiUrl + "/SalesByDate", {params: params});
   }
 
-  getSalesByDateAndProduct(): Observable<StatsByDate[]>{
-    return this.http.get<StatsByDate[]>(this.apiUrl + "/SalesByDateAndProduct");
+  getSalesByDateAndProduct(initialDate: string, finalDate: string, productName: string): Observable<StatsByDate[]>{
+    let params = new HttpParams()
+      .set('initialDate', initialDate)
+      .set('finalDate', finalDate)
+      .set('productName', productName);
+    return this.http.get<StatsByDate[]>(this.apiUrl + "/SalesByDateAndProduct", {params: params});
   }
 
 }
