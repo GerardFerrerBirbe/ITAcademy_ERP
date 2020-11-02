@@ -1,0 +1,34 @@
+<div class="w-50" style="display: block">
+    <canvas baseChart
+            [datasets]="lineChartData"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType">
+    </canvas>
+</div>
+
+<div>
+    <label>Data inicial</label>
+    <input
+        type="text"
+        id = "initialDate"/>
+</div>
+<div>
+    <label>Data final</label>
+    <input
+        type="text"
+        id="finalDate"/>
+</div>
+<div>
+    <label>Producte</label>
+    <input
+        type="text"
+        id="productName"/>
+</div>
+<div>
+    <button type="submit" (click)="applicateDateFilters()">
+        Aplicar
+    </button>
+</div>
+

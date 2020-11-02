@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-import { SalesComponent } from '../../nav/sales/sales.component';
+import { SalesComponent } from '../../views/sales/sales.component';
 
 import { ClientComponent } from '../../models/client/client.component';
 import { ProductComponent } from '../../models/product/product.component';

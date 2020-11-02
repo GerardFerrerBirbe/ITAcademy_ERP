@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DashboardComponent } from './nav/dashboard/dashboard.component';
-import { HhrrComponent } from './nav/hhrr/hhrr.component';
-import { SalesComponent } from './nav/sales/sales.component';
-import { StatisticsComponent } from './nav/statistics/statistics.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { HhrrComponent } from './views/hhrr/hhrr.component';
+import { SalesComponent } from './views/sales/sales.component';
+import { StatisticsComponent } from './views/statistics/statistics.component';
 
 import { EmployeeComponent } from './models/employee/employee.component';
 import { ClientComponent } from './models/client/client.component';
