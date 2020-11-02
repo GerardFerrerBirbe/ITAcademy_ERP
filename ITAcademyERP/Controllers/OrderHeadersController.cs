@@ -84,7 +84,7 @@ namespace ITAcademyERP.Controllers
         {
             var orderHeader = await _repository.Get(orderHeaderDTO.Id);
 
-            if (orderHeaderDTO.OrderState.ToString() == "Completada" && (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState) != orderHeader.OrderState)
+            if (orderHeaderDTO.OrderState == GetEnumString(OrderState.Completada) && (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState) != orderHeader.OrderState)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
@@ -136,8 +136,8 @@ namespace ITAcademyERP.Controllers
                 Id = orderHeader.Id,
                 OrderNumber = orderHeader.OrderNumber,
                 Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == AddressType.Entrega)?.Name,
-                Client = orderHeader.Client.Person.FirstName + ' ' + orderHeader.Client.Person.LastName,
-                Employee = orderHeader.Employee.Person.FirstName + ' ' + orderHeader.Employee.Person.LastName,
+                Client = orderHeader.Client.Person.FullName,
+                Employee = orderHeader.Employee.Person.FullName,
                 OrderState = GetEnumString(orderHeader.OrderState),
                 OrderPriority = GetEnumString(orderHeader.OrderPriority),
                 CreationDate = orderHeader.CreationDate,

@@ -1,8 +1,6 @@
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Client } from 'src/app/models/client/client';
-import { Product } from 'src/app/models/product/product';
 import { StatsByDate } from './statsByDate';
 import { StatsByClient } from './statsByClient';
 import { StatsByProduct } from './statsByProduct';
@@ -20,16 +18,16 @@ export class StatisticsService {
   
   constructor(private http: HttpClient) { }
 
-  getTopProducts(): Observable<Product[]>{
-    return this.http.get<Product[]>(this.apiUrl + "/TopProducts");
+  getTopProducts(): Observable<StatsByProduct[]>{
+    return this.http.get<StatsByProduct[]>(this.apiUrl + "/TopProducts");
   }
 
   getSalesByProduct(): Observable<StatsByProduct[]>{
     return this.http.get<StatsByProduct[]>(this.apiUrl + "/SalesByProduct");
   }
 
-  getTopClients(): Observable<Client[]>{
-    return this.http.get<Client[]>(this.apiUrl + "/TopClients");
+  getTopClients(): Observable<StatsByClient[]>{
+    return this.http.get<StatsByClient[]>(this.apiUrl + "/TopClients");
   }
 
   getSalesByClient(): Observable<StatsByClient[]>{

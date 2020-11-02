@@ -40,7 +40,7 @@ namespace ITAcademyERP.Data.Repositories
         public string GetPersonIdByName(string personName)
         {
             return _context.People
-                            .FirstOrDefault(x => x.FirstName + ' ' + x.LastName == personName)
+                            .FirstOrDefault(p => p.FirstName + ' ' + p.LastName == personName)
                             .Id;
         }
 

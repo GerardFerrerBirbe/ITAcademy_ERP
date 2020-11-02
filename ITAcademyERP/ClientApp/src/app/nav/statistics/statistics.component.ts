@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Client } from 'src/app/models/client/client';
 import { ClientService } from 'src/app/models/client/client.service';
-import { OrderHeader } from 'src/app/models/order-header/order-header';
 import { OrderLine } from 'src/app/models/order-line/order-line';
 import { OrderLineService } from 'src/app/models/order-line/order-line.service';
-import { Product } from 'src/app/models/product/product';
 import { StatisticsService } from './statistics.service';
+import { StatsByClient } from './statsByClient';
+import { StatsByProduct } from './statsByProduct';
 
 
 @Component({
@@ -18,9 +18,8 @@ export class StatisticsComponent implements OnInit {
   totalSales: number;
   totalClients: number;
 
-  products: Product[];
-  clients: Client[];
-  orderHeaders: OrderHeader[];  
+  products: StatsByProduct[];
+  clients: StatsByClient[];
   
   constructor(
     private clientService: ClientService,
@@ -47,7 +46,7 @@ export class StatisticsComponent implements OnInit {
 
   calculateTotalClients(clients: Client[]): void {
     this.totalClients = clients.length;        
-  }  
+  }
   
   calculateTotalSales(orderLines: OrderLine[]): void {
     this.totalSales = 0;

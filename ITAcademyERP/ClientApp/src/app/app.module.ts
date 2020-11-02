@@ -10,7 +10,6 @@ import { DashboardComponent } from './nav/dashboard/dashboard.component';
 import { StatisticsComponent } from './nav/statistics/statistics.component';
 import { HhrrModule } from './nav/hhrr/hhrr.module';
 import { SalesModule } from './nav/sales/sales.module';
-import { StatisticsModule } from './nav/statistics/statistics.module';
 
 import { AddressComponent } from './models/address/address.component';
 import { OrderHeaderComponent } from './models/order-header/order-header.component';
@@ -24,6 +23,11 @@ import { OrderHeaderService } from './models/order-header/order-header.service';
 
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { LogInterceptorService } from './services/log-interceptor.service';
+import { LineChartProductsComponent } from './nav/statistics/line-chart-products/line-chart-products.component';
+import { BarChartComponent } from './nav/statistics/bar-chart/bar-chart.component';
+import { DoughnutChartComponent } from './nav/statistics/doughnut-chart/doughnut-chart.component';
+import { ChartsModule } from 'ng2-charts';
+import { StatisticsService } from './nav/statistics/statistics.service';
 
 
 @NgModule({
@@ -33,7 +37,11 @@ import { LogInterceptorService } from './services/log-interceptor.service';
     AddressComponent,
     LoginComponent,
     OrderHeaderComponent,
-    OrderDetailComponent
+    OrderDetailComponent,
+    StatisticsComponent,
+    LineChartProductsComponent,
+    BarChartComponent,
+    DoughnutChartComponent
   ],
   imports: [
     BrowserModule,
@@ -43,10 +51,11 @@ import { LogInterceptorService } from './services/log-interceptor.service';
     ReactiveFormsModule,
     HhrrModule,
     SalesModule,
-    StatisticsModule
+    ChartsModule
   ],
   providers: [
     AddressService,
+    StatisticsService,
     OrderHeaderService,
     AuthGuardService,
     AccountService,

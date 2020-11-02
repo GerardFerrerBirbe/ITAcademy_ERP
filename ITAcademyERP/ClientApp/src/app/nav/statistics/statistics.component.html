@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="card-deck mb-3 text-center">
-      <div class="card mb-4 shadow-sm col-lg-2">
+      <div class="card mb-4 shadow-sm col-lg-4">
         <div class="card-header">
           <h5 class="my-0 font-weight-normal">Total Clients</h5>
         </div>
@@ -8,30 +8,30 @@
           <h6 class="card-title pricing-card-title">{{ totalClients }}</h6>
         </div>
       </div>
-      <div class="card mb-4 shadow-sm col-lg-2">
+      <div class="card mb-4 shadow-sm col-lg-4">
         <div class="card-header">
           <h5 class="my-0 font-weight-normal">Total Vendes</h5>
         </div>
         <div class="card-body">
-          <h6 class="card-title pricing-card-title">{{ totalSales }}</h6>
+          <h6 class="card-title pricing-card-title">{{ totalSales | currency:'EUR' }}</h6>
         </div>
       </div>    
     </div>
 </div>
 <div class="container-fluid">
     <div class="card-deck mb-3 text-center">
-      <div class="card mb-4 shadow-sm col-lg-2">
+      <div class="card mb-4 shadow-sm col-lg-4">
         <div class="card-header">
           <h5 class="my-0 font-weight-normal">Top 3 Productes</h5>
         </div>
         <div class="card-body">
           <h6 class="card-title pricing-card-title"></h6>
           <ul class="list-unstyled mt-3 mb-4">
-            <li *ngFor="let product of products">{{ product.productName }} - {{ product.totalSales | currency:'EUR' }}</li>
+            <li *ngFor="let product of products">{{ product.productName }} - {{ product.totalSales | currency:'EUR'}}</li>
           </ul>
         </div>
       </div>
-      <div class="card mb-4 shadow-sm col-lg-2">
+      <div class="card mb-4 shadow-sm col-lg-4">
         <div class="card-header">
           <h5 class="my-0 font-weight-normal">Top 3 Clients</h5>
         </div>
@@ -43,9 +43,6 @@
         </div>
       </div>    
     </div>
-</div>
-<div>
-  <app-line-chart></app-line-chart>
 </div>
 <div>  
   <app-line-chart-products></app-line-chart-products>
