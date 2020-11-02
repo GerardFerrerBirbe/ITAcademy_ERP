@@ -1,18 +1,26 @@
-<h1>{{title}}</h1>
-<div>
-  <ul>
-    <li *ngIf="!isLogged()" [routerLinkActive]='["link-active"]'>
-      <a [routerLink]='["/login"]'>
-        <span></span> Registre / Login
+<div class="container-fluid">
+  <div class="row align-items-center">
+    <div class="col-auto mr-auto">
+    <h1>{{title}}</h1>
+    </div>    
+    <div class="col-auto" *ngIf="isLogged()">
+      <a> 
+        <span>{{ userName }}</span>
       </a>
-    </li>
-    <li *ngIf="isLogged()">{{ userName }}</li>
-    <li *ngIf="isLogged()" [routerLinkActive]='["link-active"]'>
-      <a [routerLink]='["/login"]' (click)='logout()'>
-        <span></span> Logout
-      </a>
-    </li>
-</ul>
+    </div>
+    <div class="col-auto ">
+      <div *ngIf="!isLogged()" [routerLinkActive]='["link-active"]'>
+        <a [routerLink]='["/login"]'>
+          <span>Registre / Login</span> 
+        </a>
+      </div>
+      <div *ngIf="isLogged()" [routerLinkActive]='["link-active"]'>
+        <a [routerLink]='["/login"]' (click)='logout()'>
+          <span>Logout</span>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 <app-nav-bar></app-nav-bar>
 <router-outlet></router-outlet>
