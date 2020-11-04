@@ -27,8 +27,8 @@
     <tbody>
       <tr *ngFor="let product of products">
         <th scope="row"></th>
-        <td>{{ product.productName }}</td>
-        <td>{{ product.productCategoryName }}</td>       
+        <td>{{ product.name }}</td>
+        <td>{{ product.category.name }}</td>       
         <td>
           <button
             routerLink="/product-detail/{{product.id}}"

@@ -30,16 +30,16 @@ namespace ITAcademyERP.Controllers
 
         //GET: api/Products
        [HttpGet]
-        public async Task<IEnumerable<ProductDTO>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts()
         {
             var products = await _repository.GetAll();
 
-            return products.Select(p => ProductToDTO(p));
+            return products;
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDTO>> GetProduct(Guid id)
+        public async Task<ActionResult<Product>> GetProduct(Guid id)
         {
             var product = await _repository.Get(id);
 
@@ -48,40 +48,32 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            return ProductToDTO(product);
+            return product;
         }
 
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(ProductDTO productDTO)
+        public async Task<IActionResult> PutProduct(Product productUpdate)
         {
-            var product = await _repository.Get(productDTO.Id);
+            var product = await _repository.Get(productUpdate.Id);
 
-            product.ProductName = productDTO.ProductName;
-            product.ProductCategoryId = _productCategoriesRepository.GetProductCategoryId(productDTO.ProductCategoryName);
+            product.Name = productUpdate.Name;
+            product.CategoryId = _productCategoriesRepository.GetProductCategoryId(productUpdate.Category.Name);
 
             return await _repository.Update(product);
         }
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult> PostProduct(ProductDTO productDTO)
+        public async Task<ActionResult> PostProduct(Product newProduct)
         {
             var product = new Product
             {
-                ProductName = productDTO.ProductName,
-                ProductCategoryId = _productCategoriesRepository.GetProductCategoryId(productDTO.ProductCategoryName)
+                Name = newProduct.Name,
+                CategoryId = _productCategoriesRepository.GetProductCategoryId(newProduct.Category.Name)
             };
 
             return await _repository.Add(product);
-        }
-
-        public static ProductDTO ProductToDTO(Product product) =>
-            new ProductDTO
-            {
-                Id = product.Id,
-                ProductName = product.ProductName,
-                ProductCategoryName = product.ProductCategory.ProductCategoryName
-            };      
+        }      
     }
 }

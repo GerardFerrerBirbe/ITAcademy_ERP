@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,8 +18,9 @@ namespace ITAcademyERP.Models
         
         [Required(ErrorMessage ="Camp requerit")]
         [StringLength(50, ErrorMessage ="El nom ha de tenir menys de 50 caràcters")]
-        public string ProductCategoryName { get; set; }
+        public string Name { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; }
     }
 }

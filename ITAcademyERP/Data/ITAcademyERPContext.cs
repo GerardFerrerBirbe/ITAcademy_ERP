@@ -31,11 +31,11 @@ namespace ITAcademyERP.Data
             base.OnModelCreating(builder);
 
             builder.Entity<ProductCategory>()
-                .HasIndex(p => p.ProductCategoryName)
+                .HasIndex(p => p.Name)
                 .IsUnique();
 
             builder.Entity<Product>()
-                .HasIndex(p => p.ProductName)
+                .HasIndex(p => p.Name)
                 .IsUnique();
 
             builder.Entity<Person>()

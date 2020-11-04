@@ -29,7 +29,7 @@ export class ProductCategoryDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
-      productCategoryName: ''
+      name: ''
     });  
 
     this.route.params.subscribe(params => {
@@ -47,7 +47,7 @@ export class ProductCategoryDetailComponent implements OnInit {
 
   loadForm(productCategory: ProductCategory){
     this.formGroup.patchValue({
-      productCategoryName: productCategory.productCategoryName
+      name: productCategory.name
     })
   }
 
@@ -75,7 +75,7 @@ export class ProductCategoryDetailComponent implements OnInit {
       //add productCategory
       this.productCategoryService.addProductCategory(productCategory)
       .subscribe(
-        pc => alert("Categoria " + pc.productCategoryName + " creada correctament"),
+        pc => alert("Categoria " + pc.name + " creada correctament"),
         error => {
             if (error.error == null) {
               alert(error.status + " Usuari no autoritzat");                            

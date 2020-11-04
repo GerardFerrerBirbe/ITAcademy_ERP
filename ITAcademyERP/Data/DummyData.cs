@@ -235,14 +235,14 @@ namespace ITAcademyERP.Data
         {
             List<ProductCategory> productCategories = new List<ProductCategory>()
             {
-                new ProductCategory{ProductCategoryName = "Bicicletes"},
-                new ProductCategory{ProductCategoryName = "Motos"},
-                new ProductCategory{ProductCategoryName = "Cotxes"},
-                new ProductCategory{ProductCategoryName = "Aliments"},
-                 new ProductCategory{ProductCategoryName = "Camions"},
-                new ProductCategory{ProductCategoryName = "Avions"},
-                new ProductCategory{ProductCategoryName = "Ordinadors"},
-                new ProductCategory{ProductCategoryName = "Roba"}
+                new ProductCategory{Name = "Bicicletes"},
+                new ProductCategory{Name = "Motos"},
+                new ProductCategory{Name = "Cotxes"},
+                new ProductCategory{Name = "Aliments"},
+                new ProductCategory{Name = "Camions"},
+                new ProductCategory{Name = "Avions"},
+                new ProductCategory{Name = "Ordinadors"},
+                new ProductCategory{Name = "Roba"}
             };
             return productCategories;
         }
@@ -251,22 +251,22 @@ namespace ITAcademyERP.Data
         {
             List<Product> products = new List<Product>()
             {
-                new Product{ProductName = "Trek", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Bicicletes").Id},
-                new Product{ProductName = "Montesa", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Motos").Id},
-                new Product{ProductName = "Fiat", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Cotxes").Id},
-                new Product{ProductName = "Poma", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id},
-                new Product{ProductName = "Orbea", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Bicicletes").Id},
-                new Product{ProductName = "Bultaco", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Motos").Id},
-                new Product{ProductName = "Ford", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Cotxes").Id},
-                new Product{ProductName = "Pera", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id},
-                new Product{ProductName = "Canondale", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Bicicletes").Id},
-                new Product{ProductName = "Suzuki", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Motos").Id},
-                new Product{ProductName = "VW", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Cotxes").Id},
-                new Product{ProductName = "Entrecot", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Aliments").Id},
-                new Product{ProductName = "Man", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Camions").Id},
-                new Product{ProductName = "Boeing", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Avions").Id},
-                new Product{ProductName = "HP", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Ordinadors").Id},
-                new Product{ProductName = "Pantalons Zara", ProductCategoryId = _context.ProductCategories.First(p => p.ProductCategoryName == "Roba").Id}
+                new Product{Name = "Trek", CategoryId = _context.ProductCategories.First(p => p.Name == "Bicicletes").Id},
+                new Product{Name = "Montesa", CategoryId = _context.ProductCategories.First(p => p.Name == "Motos").Id},
+                new Product{Name = "Fiat", CategoryId = _context.ProductCategories.First(p => p.Name == "Cotxes").Id},
+                new Product{Name = "Poma", CategoryId = _context.ProductCategories.First(p => p.Name == "Aliments").Id},
+                new Product{Name = "Orbea", CategoryId = _context.ProductCategories.First(p => p.Name == "Bicicletes").Id},
+                new Product{Name = "Bultaco", CategoryId = _context.ProductCategories.First(p => p.Name == "Motos").Id},
+                new Product{Name = "Ford", CategoryId = _context.ProductCategories.First(p => p.Name == "Cotxes").Id},
+                new Product{Name = "Pera", CategoryId = _context.ProductCategories.First(p => p.Name == "Aliments").Id},
+                new Product{Name = "Canondale", CategoryId = _context.ProductCategories.First(p => p.Name == "Bicicletes").Id},
+                new Product{Name = "Suzuki", CategoryId = _context.ProductCategories.First(p => p.Name == "Motos").Id},
+                new Product{Name = "VW", CategoryId = _context.ProductCategories.First(p => p.Name == "Cotxes").Id},
+                new Product{Name = "Entrecot", CategoryId = _context.ProductCategories.First(p => p.Name == "Aliments").Id},
+                new Product{Name = "Man", CategoryId = _context.ProductCategories.First(p => p.Name == "Camions").Id},
+                new Product{Name = "Boeing", CategoryId = _context.ProductCategories.First(p => p.Name == "Avions").Id},
+                new Product{Name = "HP", CategoryId = _context.ProductCategories.First(p => p.Name == "Ordinadors").Id},
+                new Product{Name = "Pantalons Zara", CategoryId = _context.ProductCategories.First(p => p.Name == "Roba").Id}
             };
             return products;
         }        
@@ -376,20 +376,20 @@ namespace ITAcademyERP.Data
         {
             List<OrderLine> orderLines = new List<OrderLine>()
             {
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Trek").Id, UnitPrice = 2000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Montesa").Id, UnitPrice =6000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Fiat").Id, UnitPrice = 14000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-02").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Man").Id, UnitPrice = 46000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-03").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Boeing").Id, UnitPrice = 98000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-04").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "VW").Id, UnitPrice = 28000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-05").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Orbea").Id, UnitPrice = 1200, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-06").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Suzuki").Id, UnitPrice = 8000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-06").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Pantalons Zara").Id, UnitPrice = 90, Vat = 0.21, Quantity = 800, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-07").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Poma").Id, UnitPrice = 1.4, Vat = 0.21, Quantity = 3000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-07").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Pera").Id, UnitPrice = 1.8, Vat = 0.21, Quantity = 4000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-08").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Entrecot").Id, UnitPrice = 14, Vat = 0.21, Quantity = 2000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-08").Id},new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Trek").Id, UnitPrice = 100, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Bultaco").Id, UnitPrice = 7500, Vat = 0.21, Quantity = 4, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-09").Id},
-                new OrderLine{ProductId = _context.Products.First(p => p.ProductName == "Ford").Id, UnitPrice = 23000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-09").Id}
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Trek").Id, UnitPrice = 2000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Montesa").Id, UnitPrice =6000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Fiat").Id, UnitPrice = 14000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-02").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Man").Id, UnitPrice = 46000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-03").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Boeing").Id, UnitPrice = 98000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-04").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "VW").Id, UnitPrice = 28000, Vat = 0.21, Quantity = 1, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-05").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Orbea").Id, UnitPrice = 1200, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-06").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Suzuki").Id, UnitPrice = 8000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-06").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Pantalons Zara").Id, UnitPrice = 90, Vat = 0.21, Quantity = 800, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-07").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Poma").Id, UnitPrice = 1.4, Vat = 0.21, Quantity = 3000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-07").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Pera").Id, UnitPrice = 1.8, Vat = 0.21, Quantity = 4000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-08").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Entrecot").Id, UnitPrice = 14, Vat = 0.21, Quantity = 2000, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-08").Id},new OrderLine{ProductId = _context.Products.First(p => p.Name == "Trek").Id, UnitPrice = 100, Vat = 0.21, Quantity = 3, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-01").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Bultaco").Id, UnitPrice = 7500, Vat = 0.21, Quantity = 4, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-09").Id},
+                new OrderLine{ProductId = _context.Products.First(p => p.Name == "Ford").Id, UnitPrice = 23000, Vat = 0.21, Quantity = 2, OrderHeaderId = _context.OrderHeaders.First(o => o.OrderNumber == "2020-09").Id}
             };
             return orderLines;
         }

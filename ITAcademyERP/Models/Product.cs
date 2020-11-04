@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,17 +16,19 @@ namespace ITAcademyERP.Models
         [Key]
         public Guid Id { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string ProductName { get; set; }
+        [Required(ErrorMessage = "Camp requerit")]
+        [StringLength(50, ErrorMessage = "El producte ha de tenir menys de 50 caràcters")]
+        public string Name { get; set; }
 
-        [Required]
-        [ForeignKey("ProductCategoryId")]
-        public Guid ProductCategoryId { get; set; }
+        [JsonIgnore]
+        [Required(ErrorMessage = "Camp requerit")]
+        [ForeignKey("CategoryId")]
+        public Guid CategoryId { get; set; }
 
-        
+
+        [JsonIgnore]
         public virtual ICollection<OrderLine> OrderLines { get; set; }
-        
-        public virtual ProductCategory ProductCategory { get; set; }
+
+        public virtual ProductCategory Category { get; set; }
     }
 }

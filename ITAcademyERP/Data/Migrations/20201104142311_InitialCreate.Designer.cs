@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITAcademyERP.Data.Migrations
 {
     [DbContext(typeof(ITAcademyERPContext))]
-    [Migration("20201028142418_InitialCreate")]
+    [Migration("20201104142311_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,6 @@ namespace ITAcademyERP.Data.Migrations
                         .HasMaxLength(20);
 
                     b.Property<string>("PersonId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Type")
@@ -245,19 +244,19 @@ namespace ITAcademyERP.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProductCategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ProductName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductCategoryId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("ProductName")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Products");
@@ -269,14 +268,14 @@ namespace ITAcademyERP.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ProductCategoryName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductCategoryName")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("ProductCategories");
@@ -417,9 +416,7 @@ namespace ITAcademyERP.Data.Migrations
                 {
                     b.HasOne("ITAcademyERP.Models.Person", "Person")
                         .WithMany("Addresses")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.Client", b =>
@@ -472,9 +469,9 @@ namespace ITAcademyERP.Data.Migrations
 
             modelBuilder.Entity("ITAcademyERP.Models.Product", b =>
                 {
-                    b.HasOne("ITAcademyERP.Models.ProductCategory", "ProductCategory")
+                    b.HasOne("ITAcademyERP.Models.ProductCategory", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("ProductCategoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

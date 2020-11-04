@@ -62,7 +62,7 @@ namespace ITAcademyERP.Controllers
             {
                 Id = orderLine.Id,
                 OrderHeaderId = orderLine.OrderHeaderId,
-                ProductName = orderLine.Product.ProductName,
+                ProductName = orderLine.Product.Name,
                 UnitPrice = orderLine.UnitPrice,
                 Vat = orderLine.Vat,
                 Quantity = orderLine.Quantity

@@ -72,18 +72,5 @@ namespace ITAcademyERP.Controllers
         {
             return _repository.DeleteList(addresses);
         }
-
-        //public AddressDTO AddressToDTO(Address address)
-        //{
-        //    var addressDTO = new AddressDTO
-        //    {
-        //        Id = address.Id.ToString(),
-        //        PersonId = address.PersonId,
-        //        Name = address.Name,
-        //        Type = Enum.GetName(typeof(AddressType), address.Type)
-        //    };
-
-        //    return addressDTO;
-        //}
     }
 }

@@ -53,7 +53,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ProductCategoryName = table.Column<string>(maxLength: 50, nullable: false)
+                    Name = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,7 +86,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PersonId = table.Column<string>(nullable: false),
+                    PersonId = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 20, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
@@ -98,7 +98,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,15 +229,15 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ProductName = table.Column<string>(maxLength: 50, nullable: false),
-                    ProductCategoryId = table.Column<Guid>(nullable: false)
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    CategoryId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_ProductCategories_ProductCategoryId",
-                        column: x => x.ProductCategoryId,
+                        name: "FK_Products_ProductCategories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "ProductCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -386,20 +386,20 @@ namespace ITAcademyERP.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCategories_ProductCategoryName",
+                name: "IX_ProductCategories_Name",
                 table: "ProductCategories",
-                column: "ProductCategoryName",
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductCategoryId",
+                name: "IX_Products_CategoryId",
                 table: "Products",
-                column: "ProductCategoryId");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductName",
+                name: "IX_Products_Name",
                 table: "Products",
-                column: "ProductName",
+                column: "Name",
                 unique: true);
         }
 

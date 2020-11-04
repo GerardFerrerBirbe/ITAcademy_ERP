@@ -27,7 +27,7 @@ namespace ITAcademyERP.Data.Repositories
         {            
             var output = _context.OrderLines
                     .Include(o => o.Product)
-                    .GroupBy(o => o.Product.ProductName)
+                    .GroupBy(o => o.Product.Name)
                     .Select(o => new StatsByProduct {
                         ProductName = o.Key, 
                         TotalSales = o.Sum(o => o.UnitPrice * (1 + o.Vat) * o.Quantity)})
@@ -41,7 +41,7 @@ namespace ITAcademyERP.Data.Repositories
         {
             var output = _context.OrderLines
                     .Include(o => o.Product)
-                    .GroupBy(o => o.Product.ProductName)
+                    .GroupBy(o => o.Product.Name)
                     .Select(o => new StatsByProduct
                     {
                         ProductName = o.Key,
@@ -136,13 +136,13 @@ namespace ITAcademyERP.Data.Repositories
                     .Where(o =>
                         o.OrderHeader.CreationDate >= initialDateTime &&
                         o.OrderHeader.CreationDate <= finalDateTime &&
-                        o.Product.ProductName == productName
+                        o.Product.Name == productName
                         )
                     .GroupBy(o => new
                     {
                         Month = o.OrderHeader.CreationDate.Month,
                         Year = o.OrderHeader.CreationDate.Year,
-                        ProductName = o.Product.ProductName
+                        ProductName = o.Product.Name
                     })
                     .Select(g => new StatsByDate
                     {

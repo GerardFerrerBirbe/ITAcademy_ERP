@@ -6,6 +6,7 @@ import { ProductService }  from '../../product/product.service';
 import { ProductCategoryService }  from '../../product-category/product-category.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ProductCategory } from '../../product-category/product-category';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-product-detail',
@@ -33,8 +34,8 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
-      productName: '',
-      productCategoryName: ''
+      name: '',
+      categoryName: ''
     });
 
     this.productCategoryService.getProductCategories()
@@ -55,19 +56,27 @@ export class ProductDetailComponent implements OnInit {
 
   loadForm(product: Product){
     this.formGroup.patchValue({
-      productName: product.productName,
-      productCategoryName: product.productCategoryName
+      name: product.name,
+      categoryName: product.category.name
     })
   }
 
   save() {
     this.errors = {};
-    let product: Product = Object.assign({}, this.formGroup.value);
+    //let product: Product = Object.assign({}, this.formGroup.value;
+    let product: Product = {
+      id: Guid.EMPTY,
+      name: this.formGroup.get('name').value,
+      category: <ProductCategory>{
+        id: Guid.EMPTY,
+        name: this.formGroup.get('categoryName').value,
+      }
+    };
     console.table(product);
 
     if (this.editionMode){
       //edit product     
-      product.id = this.productId;      
+      product.id = this.productId; 
       this.productService.updateProduct(product)
       .subscribe(
         () => alert("Actualització realitzada"),
@@ -84,7 +93,7 @@ export class ProductDetailComponent implements OnInit {
       //add product
       this.productService.addProduct(product)
       .subscribe(
-        product => alert("Producte " + product.productName + " creat correctament"),
+        product => alert("Producte " + product.name + " creat correctament"),
         error => {
             if (error.error == null) {
               alert(error.status + " Usuari no autoritzat");                            
