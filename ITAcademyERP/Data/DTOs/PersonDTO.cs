@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITAcademyERP.Models;
+using System;
 using System.Collections.Generic;
 
 namespace ITAcademyERP.Data.DTOs
@@ -9,6 +10,6 @@ namespace ITAcademyERP.Data.DTOs
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<AddressDTO> Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
     }
 }

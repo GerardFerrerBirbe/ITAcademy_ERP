@@ -176,7 +176,7 @@ namespace ITAcademyERP.Controllers
                 Email = employee.Person.Email,
                 FirstName = employee.Person.FirstName,
                 LastName = employee.Person.LastName,
-                Addresses = employee.Person.Addresses.Select(a => _addressesController.AddressToDTO(a)).ToList(),
+                Addresses = employee.Person.Addresses,
                 Position = employee.Position,
                 Salary = employee.Salary
             };        

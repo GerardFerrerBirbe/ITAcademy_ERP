@@ -27,10 +27,10 @@ namespace ITAcademyERP.Controllers
             _repository = repository;
         }        
 
-        public async Task CreateOrEditAddresses(ICollection<AddressDTO> addressesDTO)
+        public async Task CreateOrEditAddresses(ICollection<Address> addresses)
         {
-            ICollection<AddressDTO> addressesToCreate = addressesDTO.Where(x => x.Id == "").ToList();
-            ICollection<AddressDTO> addressesToEdit = addressesDTO.Where(x => x.Id != "").ToList();
+            ICollection<Address> addressesToCreate = addresses.Where(x => x.Id == Guid.Empty).ToList();
+            ICollection<Address> addressesToEdit = addresses.Where(x => x.Id != Guid.Empty).ToList();
 
             if (addressesToCreate.Any())
             {
@@ -43,7 +43,7 @@ namespace ITAcademyERP.Controllers
                     {
                         PersonId = addressToCreate.PersonId,
                         Name = addressToCreate.Name,
-                        Type = (AddressType) Enum.Parse(typeof(AddressType), addressToCreate.Type)
+                        Type = addressToCreate.Type
                     };
 
                     await _repository.Add(address);
@@ -54,12 +54,12 @@ namespace ITAcademyERP.Controllers
             {
                 foreach (var addressToEdit in addressesToEdit)
                 {
-                    var address = await _repository.GetAddress(Guid.Parse(addressToEdit.Id));
+                    var address = await _repository.GetAddress(addressToEdit.Id);
 
-                    address.Id = Guid.Parse(addressToEdit.Id);
+                    address.Id = addressToEdit.Id;
                     address.PersonId = addressToEdit.PersonId;
                     address.Name = addressToEdit.Name;
-                    address.Type = (AddressType)Enum.Parse(typeof(AddressType), addressToEdit.Type);
+                    address.Type = addressToEdit.Type;
 
                     await _repository.Update(address);                   
                 }
@@ -68,22 +68,22 @@ namespace ITAcademyERP.Controllers
 
         // POST: api/Addresses
         [HttpPost]
-        public IActionResult DeleteList([FromBody] List<string> addressesDTO)
+        public IActionResult DeleteList([FromBody] List<string> addresses)
         {
-            return _repository.DeleteList(addressesDTO);
+            return _repository.DeleteList(addresses);
         }
 
-        public AddressDTO AddressToDTO(Address address)
-        {
-            var addressDTO = new AddressDTO
-            {
-                Id = address.Id.ToString(),
-                PersonId = address.PersonId,
-                Name = address.Name,
-                Type = Enum.GetName(typeof(AddressType), address.Type)
-            };
+        //public AddressDTO AddressToDTO(Address address)
+        //{
+        //    var addressDTO = new AddressDTO
+        //    {
+        //        Id = address.Id.ToString(),
+        //        PersonId = address.PersonId,
+        //        Name = address.Name,
+        //        Type = Enum.GetName(typeof(AddressType), address.Type)
+        //    };
 
-            return addressDTO;
-        }
+        //    return addressDTO;
+        //}
     }
 }

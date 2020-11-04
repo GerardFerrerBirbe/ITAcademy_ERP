@@ -8,6 +8,8 @@ import { OrderHeaderService } from 'src/app/models/order-header/order-header.ser
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
+import { Guid } from 'guid-typescript';
+import { AddressType } from '../../address/addressType';
 
 @Component({
   selector: 'app-employee-detail',
@@ -82,7 +84,7 @@ export class EmployeeDetailComponent implements OnInit {
 
   buildAddress(){
     return this.fb.group({
-      id: '',
+      id:  Guid.EMPTY,
       personId: this.personId != null ? this.personId : '',
       name: '',
       type: ''
@@ -108,7 +110,12 @@ export class EmployeeDetailComponent implements OnInit {
 
     employee.addresses.forEach(address => {
       let addressFG = this.buildAddress();
-      addressFG.patchValue(address);
+      addressFG.patchValue({
+        id: address.id,
+        personId: address.personId,
+        name: address.name,
+        type: AddressType[address.type]
+      });
       this.addresses.push(addressFG);
     });
   }

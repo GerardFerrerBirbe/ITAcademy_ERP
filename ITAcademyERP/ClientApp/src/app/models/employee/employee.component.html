@@ -30,7 +30,7 @@
         <td>{{ employee.firstName }}</td>
         <td>{{ employee.lastName }}</td>
         <td>{{ employee.position }}</td>
-        <td *ngIf="isAdminUser()">{{ employee.salary }}</td>        
+        <td *ngIf="isAdminUser()">{{ employee.salary | currency:'EUR' }}</td>        
         <td>
           <button
             routerLink="/employee-detail/{{employee.id}}"

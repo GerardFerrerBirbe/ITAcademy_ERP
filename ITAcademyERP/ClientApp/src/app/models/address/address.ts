@@ -1,6 +1,9 @@
+import { Guid } from "guid-typescript";
+import {AddressType} from "./addressType";
+
 export interface Address {
-  id: string;
+  id: Guid;
   personId: string;
   name: string;
-  type: string;
+  type: AddressType;
 }

@@ -154,7 +154,7 @@ namespace ITAcademyERP.Models
                 Email = client.Person.Email,
                 FirstName = client.Person.FirstName,
                 LastName = client.Person.LastName,
-                Addresses = client.Person.Addresses.Select(a => _addressesController.AddressToDTO(a)).ToList()
+                Addresses = client.Person.Addresses
             };        
     }
 }

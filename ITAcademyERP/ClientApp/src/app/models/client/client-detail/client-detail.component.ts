@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { Client } from '../client';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -8,6 +8,9 @@ import { OrderHeaderService } from 'src/app/models/order-header/order-header.ser
 import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
+import { Guid } from 'guid-typescript';
+import { Address } from '../../address/address';
+import { AddressType } from '../../address/addressType';
 
 @Component({
   selector: 'app-client-detail',
@@ -16,16 +19,6 @@ import { AccountService } from 'src/app/login/account.service';
 })
 export class ClientDetailComponent implements OnInit {
   
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private clientService: ClientService,
-    private addressService: AddressService,
-    private orderHeaderService: OrderHeaderService,
-    private accountService: AccountService, 
-    private location: Location
-  ) { }
-
   editionMode: boolean = false;
   formGroup: FormGroup;
   clientId: any;
@@ -44,7 +37,18 @@ export class ClientDetailComponent implements OnInit {
     return this.formGroup.get('addresses') as FormArray;
   };
 
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private clientService: ClientService,
+    private addressService: AddressService,
+    private orderHeaderService: OrderHeaderService,
+    private accountService: AccountService, 
+    private location: Location
+  ) { }
+
   ngOnInit(): void {
+
     this.formGroup = this.fb.group({
       email: '',
       firstName: '',
@@ -83,7 +87,7 @@ export class ClientDetailComponent implements OnInit {
 
   buildAddress(){
     return this.fb.group({
-      id: '',
+      id: Guid.EMPTY,
       personId: this.personId != null ? this.personId : '',
       name: '',
       type: ''
@@ -107,7 +111,12 @@ export class ClientDetailComponent implements OnInit {
 
     client.addresses.forEach(address => {
       let addressFG = this.buildAddress();
-      addressFG.patchValue(address);
+      addressFG.patchValue({
+        id: address.id,
+        personId: address.personId,
+        name: address.name,
+        type: AddressType[address.type]
+      });
       this.addresses.push(addressFG);
     });
   }

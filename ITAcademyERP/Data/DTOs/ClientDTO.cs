@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using ITAcademyERP.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,6 @@ namespace ITAcademyERP.Data.DTOs
         public string LastName { get; set; }
 
 
-        public ICollection<AddressDTO> Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
     }
 }

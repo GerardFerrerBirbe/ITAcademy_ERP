@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITAcademyERP.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,7 +23,7 @@ namespace ITAcademyERP.Data.DTOs
         [StringLength(40, ErrorMessage = "El cognom ha de tenir menys de 40 caràcters")]
         public string LastName { get; set; }
         
-        public ICollection<AddressDTO> Addresses { get; set; }
+        public ICollection<Address> Addresses { get; set; }
 
         [StringLength(30, ErrorMessage = "La posició ha de tenir menys de 30 caràcters")]
         public string Position { get; set; }

@@ -1,5 +1,6 @@
 ﻿using ITAcademyERP.Data;
 using ITAcademyERP.Data.DTOs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,19 +17,18 @@ namespace ITAcademyERP.Models
         [Key]
         public Guid Id { get; set; }
         
-        [Required]
         [ForeignKey("PersonId")]
         public string PersonId { get; set; }
-        
-        [Required]
-        [MaxLength(20)]
+
+        [Required(ErrorMessage = "Camp requerit")]
+        [MaxLength(20, ErrorMessage = "El nom ha de tenir com a màxim 20 caràcters")]
         public string Name { get; set; }
-        
-        [Required]
+
+        [Required(ErrorMessage = "Camp requerit")]
         [Column("Type", TypeName = "int")]
         public AddressType Type { get; set; }       
 
-        
+        [JsonIgnore]
         public virtual Person Person { get; set; }
     }
 }
