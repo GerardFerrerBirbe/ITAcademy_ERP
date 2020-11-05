@@ -170,7 +170,7 @@ export class OrderDetailComponent implements OnInit {
       } else {
       //add order
       let userName = localStorage.getItem('userName');
-      orderHeader.employee = userName;
+      orderHeader.employee.person.fullName = userName;
       this.orderHeaderService.addOrderHeader(orderHeader)
       .subscribe(
         oh => alert("Comanda " + oh.orderNumber + " creada correctament"),

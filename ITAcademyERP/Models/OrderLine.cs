@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,6 +20,7 @@ namespace ITAcademyERP.Models
         [ForeignKey("OrderHeaderId")]
         public Guid OrderHeaderId { get; set; }
         
+        [JsonIgnore]
         [Required]
         [ForeignKey("ProductId")]
         public Guid ProductId { get; set; }
@@ -41,7 +43,7 @@ namespace ITAcademyERP.Models
             }
         }
 
-
+        [JsonIgnore]
         public virtual OrderHeader OrderHeader { get; set; }
         
         public virtual Product Product { get; set; }

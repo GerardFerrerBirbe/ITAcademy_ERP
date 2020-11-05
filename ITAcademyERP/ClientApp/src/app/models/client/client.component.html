@@ -23,9 +23,9 @@
     <tbody>
       <tr *ngFor="let client of clients">
         <th scope="row"></th>
-        <td>{{ client.email }}</td>
-        <td>{{ client.firstName }}</td>
-        <td>{{ client.lastName }}</td>        
+        <td>{{ client.person.email }}</td>
+        <td>{{ client.person.firstName }}</td>
+        <td>{{ client.person.lastName }}</td>        
         <td>
           <button
             routerLink="/client-detail/{{client.id}}"

@@ -46,16 +46,16 @@ namespace ITAcademyERP.Models
 
         // GET: api/Clients
         [HttpGet]
-        public async Task<IEnumerable<ClientDTO>> GetClients()
+        public async Task<IEnumerable<Client>> GetClients()
         {
             var clients = await _repository.GetAll();
 
-            return clients.Select(c => ClientToDTO(c));
+            return clients;
         }        
 
         // GET: api/Clients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ClientDTO>> GetClient(Guid id)
+        public async Task<ActionResult<Client>> GetClient(Guid id)
         {
             var client = await _repository.Get(id);
 
@@ -64,62 +64,61 @@ namespace ITAcademyERP.Models
                 return NotFound();
             }
 
-            return ClientToDTO(client);
+            return client;
         }
 
         // PUT: api/Clients/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(ClientDTO clientDTO)
+        public async Task<IActionResult> PutClient(Client clientUpdate)
         {
-            var personId = (await _peopleRepository.GetPerson(clientDTO.PersonId)).Id;
+            var personId = (await _peopleRepository.GetPerson(clientUpdate.Person.Id)).Id;
 
-            var personDTO = new PersonDTO
+            var person = new Person
             {
                 Id = personId,
-                Email = clientDTO.Email,
-                FirstName = clientDTO.FirstName,
-                LastName = clientDTO.LastName,
-                Addresses = clientDTO.Addresses
+                Email = clientUpdate.Person.Email,
+                FirstName = clientUpdate.Person.FirstName,
+                LastName = clientUpdate.Person.LastName,
+                Addresses = clientUpdate.Person.Addresses
             };
 
-            return await _peopleController.UpdatePerson(personDTO);
+            return await _peopleController.UpdatePerson(person);
         }
 
         // POST: api/Clients
         [HttpPost]
-        public async Task<ActionResult<Client>> PostClient(ClientDTO clientDTO)
+        public async Task<ActionResult<Client>> PostClient(Client newClient)
         {
-            var person = await _peopleRepository.GetPersonByEmail(clientDTO.Email);
+            var person = await _peopleRepository.GetPersonByEmail(newClient.Person.Email);
 
             if (person == null)
             {
-                var personDTO = new PersonDTO
+                var newPerson = new Person
                 {
-                    Email = clientDTO.Email,
-                    FirstName = clientDTO.FirstName,
-                    LastName = clientDTO.LastName,
-                    Addresses = clientDTO.Addresses
+                    Email = newClient.Person.Email,
+                    FirstName = newClient.Person.FirstName,
+                    LastName = newClient.Person.LastName,
+                    Addresses = newClient.Person.Addresses
                 };
 
-                await _peopleController.AddPerson(personDTO);
+                await _peopleController.AddPerson(newPerson);
 
-                var newPerson = await _peopleRepository.GetPersonByEmail(personDTO.Email);
+                var getPerson = await _peopleRepository.GetPersonByEmail(newPerson.Email);
+                getPerson.UserName = newPerson.Email;
 
-                newPerson.UserName = personDTO.Email;
-
-                await _userManager.UpdateAsync(newPerson);
+                await _userManager.UpdateAsync(getPerson);
             }
             else
             {
-                person.FirstName = clientDTO.FirstName;
-                person.LastName = clientDTO.LastName;
+                person.FirstName = newClient.Person.FirstName;
+                person.LastName = newClient.Person.LastName;
 
                 await _peopleRepository.Update(person);
             }      
                        
             var client = new Client
             {
-                PersonId = _peopleRepository.GetPersonId(clientDTO.Email)
+                PersonId = _peopleRepository.GetPersonId(newClient.Person.Email)
             };
 
             return await _repository.Add(client);                      
@@ -144,17 +143,6 @@ namespace ITAcademyERP.Models
             }
 
             return client;
-        }
-
-        private ClientDTO ClientToDTO(Client client) =>
-            new ClientDTO
-            {
-                Id = client.Id,
-                PersonId = client.PersonId,
-                Email = client.Person.Email,
-                FirstName = client.Person.FirstName,
-                LastName = client.Person.LastName,
-                Addresses = client.Person.Addresses
-            };        
+        }    
     }
 }

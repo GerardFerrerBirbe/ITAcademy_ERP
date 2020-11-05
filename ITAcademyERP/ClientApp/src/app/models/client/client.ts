@@ -1,10 +1,6 @@
-import { Address } from '../address/address'
+import { Person } from '../person/person';
 
 export interface Client {
   id: string;
-  personId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  addresses: Address[];
+  person: Person;
   }

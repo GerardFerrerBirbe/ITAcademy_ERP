@@ -11,6 +11,8 @@ import { AccountService } from 'src/app/login/account.service';
 import { Guid } from 'guid-typescript';
 import { Address } from '../../address/address';
 import { AddressType } from '../../address/addressType';
+import { OrderState } from '../../order-header/orderState';
+import { Person } from '../../person/person';
 
 @Component({
   selector: 'app-client-detail',
@@ -67,14 +69,14 @@ export class ClientDetailComponent implements OnInit {
       this.clientService.getClient(this.clientId)
       .subscribe(client => {
         this.loadForm(client);
-        this.personId = client.personId;
+        this.personId = client.person.id;
       });
 
       this.orderHeaderService.getOHByClient(this.clientId)
       .subscribe(orderHeaders => {
         this.calculateTotalClient(orderHeaders);
-        this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completada" || oh.orderState == "Cancel·lada");
+        this.currentOhs = orderHeaders.filter(oh => oh.orderState == OrderState.EnRepartiment || OrderState.EnTractament ||  OrderState.PendentTractar);
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == OrderState.Completada || oh.orderState == OrderState.Cancelada);
       }
       );
     });
@@ -104,12 +106,12 @@ export class ClientDetailComponent implements OnInit {
 
   loadForm(client: Client){
     this.formGroup.patchValue({
-      email: client.email,
-      firstName: client.firstName,
-      lastName: client.lastName
+      email: client.person.email,
+      firstName: client.person.firstName,
+      lastName: client.person.lastName
     });
 
-    client.addresses.forEach(address => {
+    client.person.addresses.forEach(address => {
       let addressFG = this.buildAddress();
       addressFG.patchValue({
         id: address.id,
@@ -123,13 +125,24 @@ export class ClientDetailComponent implements OnInit {
 
   save() {
     this.errors = {};
-    let client: Client = Object.assign({}, this.formGroup.value);
+    //let client: Client = Object.assign({}, this.formGroup.value);
+    let client: Client = {
+      id: Guid.EMPTY,
+      person: <Person>{
+        id: '',
+        firstName: this.formGroup.get('firstName').value,
+        lastName: this.formGroup.get('lastName').value,
+        fullName: this.formGroup.get('firstName').value + ' ' + this.formGroup.get('lastName').value,
+        email: this.formGroup.get('email').value,
+        addresses: this.formGroup.get('addresses').value
+      }
+    };    
     console.table(client);
 
     if (this.editionMode){
       //edit client     
       client.id = this.clientId;
-      client.personId = this.personId;    
+      client.person.id = this.personId;    
       this.clientService.updateClient(client)
       .subscribe(
         () => { this.deleteAddresses();
@@ -147,7 +160,7 @@ export class ClientDetailComponent implements OnInit {
       //add client
       this.clientService.addClient(client)
       .subscribe(
-        () => alert("Client " + client.firstName + " " + client.lastName + " creat correctament"),
+        () => alert("Client " + client.person.firstName + " " + client.person.lastName + " creat correctament"),
         error => {
             if (error.error == null) {
               alert(error.status + " Usuari no autoritzat");                            

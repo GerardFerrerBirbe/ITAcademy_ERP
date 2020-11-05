@@ -39,34 +39,34 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/OrderHeaders
         [HttpGet]
-        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeaders()
+        public async Task<IEnumerable<OrderHeader>> GetOrderHeaders()
         {
             var orderHeaders = await _repository.GetAll();
 
-            return orderHeaders.Select(e => OrderHeaderToDTO(e));
+            return orderHeaders;
         }
 
         [Route("Employee")]
         [HttpGet]
-        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByEmployee(Guid employeeId)
+        public async Task<IEnumerable<OrderHeader>> GetOrderHeadersByEmployee(Guid employeeId)
         {
             var orderHeaders = await _repository.GetOrderHeadersByEmployee(employeeId);
 
-            return orderHeaders.Select(e => OrderHeaderToDTO(e));
+            return orderHeaders;
         }
 
         [Route("Client")]
         [HttpGet]
-        public async Task<IEnumerable<OrderHeaderDTO>> GetOrderHeadersByClient(Guid clientId)
+        public async Task<IEnumerable<OrderHeader>> GetOrderHeadersByClient(Guid clientId)
         {
             var orderHeaders = await _repository.GetOrderHeadersByClient(clientId);
 
-            return orderHeaders.Select(e => OrderHeaderToDTO(e));
+            return orderHeaders;
         }
 
         //GET: api/OrderHeaders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderHeaderDTO>> GetOrderHeader(Guid id)
+        public async Task<ActionResult<OrderHeader>> GetOrderHeader(Guid id)
         {
             var orderHeader = await _repository.Get(id);              
 
@@ -75,45 +75,45 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            return OrderHeaderToDTO(orderHeader);
+            return orderHeader;
         }
 
         // PUT: api/OrderHeaders/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderHeader(OrderHeaderDTO orderHeaderDTO)
+        public async Task<IActionResult> PutOrderHeader(OrderHeader orderHeaderUpdate)
         {
-            var orderHeader = await _repository.Get(orderHeaderDTO.Id);
+            var orderHeader = await _repository.Get(orderHeaderUpdate.Id);
 
-            if (orderHeaderDTO.OrderState == GetEnumString(OrderState.Completada) && (OrderState)Enum.Parse(typeof(OrderState), orderHeaderDTO.OrderState) != orderHeader.OrderState)
+            if (orderHeaderUpdate.OrderState == OrderState.Completada && orderHeaderUpdate.OrderState != orderHeader.OrderState)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
 
-            if (_employeesRepository.GetEmployeeId(orderHeaderDTO.Employee) != orderHeader.EmployeeId)
+            if (_employeesRepository.GetEmployeeId(orderHeaderUpdate.Employee.Person.FullName) != orderHeader.EmployeeId)
             {
                 orderHeader.AssignToEmployeeDate = DateTime.Now;
             }
 
-            orderHeader.OrderNumber = orderHeaderDTO.OrderNumber;
-            orderHeader.ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client);
-            orderHeader.EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee);
-            orderHeader.OrderState = GetEnumValue<OrderState>(orderHeaderDTO.OrderState);
-            orderHeader.OrderPriority = GetEnumValue<OrderPriority>(orderHeaderDTO.OrderPriority);
+            orderHeader.OrderNumber = orderHeaderUpdate.OrderNumber;
+            orderHeader.ClientId = _clientsRepository.GetClientId(orderHeaderUpdate.Client.Person.FullName);
+            orderHeader.EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderUpdate.Employee.Person.FullName);
+            orderHeader.OrderState = orderHeaderUpdate.OrderState;
+            orderHeader.OrderPriority = orderHeaderUpdate.OrderPriority;
 
             return await _repository.Update(orderHeader);
         }       
 
         // POST: api/OrderHeaders
         [HttpPost]
-        public async Task<ActionResult> PostOrderHeader(OrderHeaderDTO orderHeaderDTO)
+        public async Task<ActionResult> PostOrderHeader(OrderHeader newOrderHeader)
         {
             var orderHeader = new OrderHeader
             {
-                OrderNumber = orderHeaderDTO.OrderNumber,
-                ClientId = _clientsRepository.GetClientId(orderHeaderDTO.Client),
-                EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderDTO.Employee),
-                OrderState = GetEnumValue<OrderState>(orderHeaderDTO.OrderState),
-                OrderPriority = GetEnumValue<OrderPriority>(orderHeaderDTO.OrderPriority),
+                OrderNumber = newOrderHeader.OrderNumber,
+                ClientId = _clientsRepository.GetClientId(newOrderHeader.Client.Person.FullName),
+                EmployeeId = _employeesRepository.GetEmployeeId(newOrderHeader.Employee.Person.FullName),
+                OrderState = newOrderHeader.OrderState,
+                OrderPriority = newOrderHeader.OrderPriority,
                 CreationDate = DateTime.Now,
                 AssignToEmployeeDate = DateTime.Now
             };
@@ -121,52 +121,52 @@ namespace ITAcademyERP.Controllers
             return await _repository.Add(orderHeader);
         }        
         
-        public OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
+        //public OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
 
-            var orderLinesDTO = new List<OrderLineDTO>();
+        //    var orderLinesDTO = new List<OrderLineDTO>();
 
-            foreach (var orderLine in orderHeader.OrderLines)
-            {
-                var orderLineDTO = _orderLinesController.OrderLineToDTO(orderLine);
-                orderLinesDTO.Add(orderLineDTO);
-            }           
+        //    foreach (var orderLine in orderHeader.OrderLines)
+        //    {
+        //        var orderLineDTO = _orderLinesController.OrderLineToDTO(orderLine);
+        //        orderLinesDTO.Add(orderLineDTO);
+        //    }           
 
-            var orderHeaderDTO = new OrderHeaderDTO
-            {
-                Id = orderHeader.Id,
-                OrderNumber = orderHeader.OrderNumber,
-                Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == AddressType.Entrega)?.Name,
-                Client = orderHeader.Client.Person.FullName,
-                Employee = orderHeader.Employee.Person.FullName,
-                OrderState = GetEnumString(orderHeader.OrderState),
-                OrderPriority = GetEnumString(orderHeader.OrderPriority),
-                CreationDate = orderHeader.CreationDate,
-                AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
-                FinalisationDate = orderHeader.FinalisationDate == null ? null : orderHeader.FinalisationDate,
-                OrderLines = orderLinesDTO
-            };
+        //    var orderHeaderDTO = new OrderHeaderDTO
+        //    {
+        //        Id = orderHeader.Id,
+        //        OrderNumber = orderHeader.OrderNumber,
+        //        Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == AddressType.Entrega)?.Name,
+        //        Client = orderHeader.Client.Person.FullName,
+        //        Employee = orderHeader.Employee.Person.FullName,
+        //        OrderState = GetEnumString(orderHeader.OrderState),
+        //        OrderPriority = GetEnumString(orderHeader.OrderPriority),
+        //        CreationDate = orderHeader.CreationDate,
+        //        AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
+        //        FinalisationDate = orderHeader.FinalisationDate == null ? null : orderHeader.FinalisationDate,
+        //        OrderLines = orderLinesDTO
+        //    };
 
-            return orderHeaderDTO;
-        }
+        //    return orderHeaderDTO;
+        //}
         
-        public string GetEnumString<T>(T enumInput)
-        {
-            var enumType = typeof(T);
-            var name = Enum.GetName(enumType, enumInput);
-            var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
+        //public string GetEnumString<T>(T enumInput)
+        //{
+        //    var enumType = typeof(T);
+        //    var name = Enum.GetName(enumType, enumInput);
+        //    var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
             
-            return enumMemberAttribute.Value;          
-        }
+        //    return enumMemberAttribute.Value;          
+        //}
 
-        public static T GetEnumValue<T>(string enumName)
-        {
-            var enumType = typeof(T);
-            foreach (var name in Enum.GetNames(enumType))
-            {
-                var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
-                if (enumMemberAttribute.Value == enumName) return (T)Enum.Parse(enumType, name);
-            }
-            return default;
-        }
+        //public static T GetEnumValue<T>(string enumName)
+        //{
+        //    var enumType = typeof(T);
+        //    foreach (var name in Enum.GetNames(enumType))
+        //    {
+        //        var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
+        //        if (enumMemberAttribute.Value == enumName) return (T)Enum.Parse(enumType, name);
+        //    }
+        //    return default;
+        //}
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,14 +16,17 @@ namespace ITAcademyERP.Models
         
         [Key]
         public Guid Id { get; set; }
-        
-        [Required]
+
+        [Required(ErrorMessage = "Camp requerit")]
+        [MaxLength(20, ErrorMessage = "Ha de tenir com a màxim 20 caràcters")]
         public string OrderNumber { get; set; }
         
+        [JsonIgnore]
         [Required]
         [ForeignKey("ClientId")]
         public Guid ClientId { get; set; }
         
+        [JsonIgnore]
         [ForeignKey("EmployeeId")]
         public Guid EmployeeId { get; set; }
         
@@ -36,10 +40,8 @@ namespace ITAcademyERP.Models
         
         public DateTime? FinalisationDate { get; set; }
 
-        [NotMapped]
-        public string YearMonth { get; set; }
-
-
+        
+        
         public virtual Client Client { get; set; }
         
         public virtual Employee Employee { get; set; }

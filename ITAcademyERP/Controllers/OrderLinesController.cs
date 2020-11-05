@@ -31,45 +31,45 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/OrderLines
         [HttpGet]
-        public async Task<IEnumerable<OrderLineDTO>> GetOrderLines()
+        public async Task<IEnumerable<OrderLine>> GetOrderLines()
         {
             var orderLines = await _repository.GetAll();
 
-            return orderLines.Select(p => OrderLineToDTO(p));                
+            return orderLines;                
         }
 
         // POST: api/OrderLines
         [HttpPost]
-        public async Task<ActionResult> AddOrderLine(OrderLineDTO orderLineDTO)
+        public async Task<ActionResult> AddOrderLine(OrderLine newOrderLine)
         {
             var orderLine = new OrderLine
             {
-                Id = orderLineDTO.Id,
-                OrderHeaderId = orderLineDTO.OrderHeaderId,
-                ProductId = _productsRepository.GetProductId(orderLineDTO.ProductName),
-                UnitPrice = orderLineDTO.UnitPrice,
-                Vat = orderLineDTO.Vat,
-                Quantity = orderLineDTO.Quantity
+                Id = newOrderLine.Id,
+                OrderHeaderId = newOrderLine.OrderHeaderId,
+                ProductId = _productsRepository.GetProductId(newOrderLine.Product.Name),
+                UnitPrice = newOrderLine.UnitPrice,
+                Vat = newOrderLine.Vat,
+                Quantity = newOrderLine.Quantity
             };
 
             return await _repository.Add(orderLine);
         }
 
-        public OrderLineDTO OrderLineToDTO(OrderLine orderLine)
-        {
+        //public OrderLineDTO OrderLineToDTO(OrderLine orderLine)
+        //{
 
-            var orderLineDTO = new OrderLineDTO
-            {
-                Id = orderLine.Id,
-                OrderHeaderId = orderLine.OrderHeaderId,
-                ProductName = orderLine.Product.Name,
-                UnitPrice = orderLine.UnitPrice,
-                Vat = orderLine.Vat,
-                Quantity = orderLine.Quantity
-            };
+        //    var orderLineDTO = new OrderLineDTO
+        //    {
+        //        Id = orderLine.Id,
+        //        OrderHeaderId = orderLine.OrderHeaderId,
+        //        ProductName = orderLine.Product.Name,
+        //        UnitPrice = orderLine.UnitPrice,
+        //        Vat = orderLine.Vat,
+        //        Quantity = orderLine.Quantity
+        //    };
 
-            return orderLineDTO;
-        }
+        //    return orderLineDTO;
+        //}
 
         // GET: api/OrderLines
         [Route("TopProducts")]

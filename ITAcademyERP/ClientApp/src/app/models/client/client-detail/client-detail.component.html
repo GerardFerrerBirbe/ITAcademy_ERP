@@ -110,8 +110,6 @@
       <tr>
         <th></th>
         <th>Número Comanda</th>
-        <th>Adreça</th>
-        <th>Client</th>
         <th>Empleat</th>
         <th>Estat Ordre</th>
         <th>Prioritat</th>
@@ -124,9 +122,7 @@
       <tr *ngFor="let currentOh of currentOhs">
         <th scope="row"></th>
         <td>{{ currentOh.orderNumber }}</td>
-        <td>{{ currentOh.address }}</td>
-        <td>{{ currentOh.client }}</td>
-        <td>{{ currentOh.employee }}</td>
+        <td>{{ currentOh.employee.person.fullName }}</td>
         <td>{{ currentOh.orderState }}</td>
         <td>{{ currentOh.orderPriority }}</td>
         <td>{{ currentOh.creationDate | date: 'dd/MM/yyyy' }}</td>
@@ -143,8 +139,6 @@
       <tr>
         <th></th>
         <th>Número Comanda</th>
-        <th>Adreça</th>
-        <th>Client</th>
         <th>Empleat</th>
         <th>Estat Ordre</th>
         <th>Prioritat</th>
@@ -157,9 +151,7 @@
       <tr *ngFor="let oldOh of oldOhs">
         <th scope="row"></th>
         <td>{{ oldOh.orderNumber }}</td>
-        <td>{{ oldOh.address }}</td>
-        <td>{{ oldOh.client }}</td>
-        <td>{{ oldOh.employee }}</td>
+        <td>{{ oldOh.employee.person.fullName }}</td>
         <td>{{ oldOh.orderState }}</td>
         <td>{{ oldOh.orderPriority }}</td>
         <td>{{ oldOh.creationDate | date: 'dd/MM/yyyy' }}</td>

@@ -29,13 +29,13 @@ namespace ITAcademyERP.Controllers
             _repository = repository;
         }
 
-        public async Task<IActionResult> AddPerson(PersonDTO personDTO)
+        public async Task<IActionResult> AddPerson(Person newPerson)
         {
             var person = new Person
             {
-                Email = personDTO.Email,
-                FirstName = personDTO.FirstName,
-                LastName = personDTO.LastName
+                Email = newPerson.Email,
+                FirstName = newPerson.FirstName,
+                LastName = newPerson.LastName
             };           
 
             var add = await _repository.Add(person);
@@ -51,24 +51,24 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                foreach (var address in personDTO.Addresses)
+                foreach (var address in newPerson.Addresses)
                 {
                     address.PersonId = person.Id;
                 }
 
-                await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
+                await _addressesController.CreateOrEditAddresses(newPerson.Addresses);
                 
                 return Ok();
             }
         }
 
-        public async Task<IActionResult> UpdatePerson(PersonDTO personDTO)
+        public async Task<IActionResult> UpdatePerson(Person personUpdate)
             {
-            var person = await _repository.GetPerson(personDTO.Id);
+            var person = await _repository.GetPerson(personUpdate.Id);
 
-            person.Email = personDTO.Email;
-            person.FirstName = personDTO.FirstName;
-            person.LastName = personDTO.LastName;
+            person.Email = personUpdate.Email;
+            person.FirstName = personUpdate.FirstName;
+            person.LastName = personUpdate.LastName;
 
             var update = await _repository.Update(person);
 
@@ -83,7 +83,7 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                await _addressesController.CreateOrEditAddresses(personDTO.Addresses);
+                await _addressesController.CreateOrEditAddresses(personUpdate.Addresses);
                 return Ok();
             }
         }

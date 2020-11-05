@@ -10,6 +10,10 @@ import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
 import { Guid } from 'guid-typescript';
 import { AddressType } from '../../address/addressType';
+import { OrderState } from '../../order-header/orderState';
+import { Person } from '../../person/person';
+import { OrderPriority } from '../../order-header/orderPriority';
+import { Address } from '../../address/address';
 
 @Component({
   selector: 'app-employee-detail',
@@ -37,6 +41,10 @@ export class EmployeeDetailComponent implements OnInit {
   employees: Employee[];  
   currentOhs: OrderHeader[] = [];
   oldOhs: OrderHeader[] = [];
+  deliveryAddresses: Address[];
+  OrderState = OrderState;
+  OrderPriority = OrderPriority;
+
 
   errors: any;
 
@@ -65,13 +73,13 @@ export class EmployeeDetailComponent implements OnInit {
       this.employeeService.getEmployee(this.employeeId)
       .subscribe(employee => {
         this.loadForm(employee);
-        this.personId = employee.personId;
+        this.personId = employee.person.id;
       });
 
       this.orderHeaderService.getOHByEmployee(this.employeeId)
       .subscribe(orderHeaders => {
-        this.currentOhs = orderHeaders.filter(oh => oh.orderState == "En repartiment" || oh.orderState == "En tractament" ||  oh.orderState == "Pendent de tractar"); 
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == "Completada" || oh.orderState == "Cancel·lada");
+        this.currentOhs = orderHeaders.filter(oh => oh.orderState == OrderState.EnRepartiment || OrderState.EnTractament ||  OrderState.PendentTractar);
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == OrderState.Completada || oh.orderState == OrderState.Cancelada);
       }
       );   
     });
@@ -101,14 +109,14 @@ export class EmployeeDetailComponent implements OnInit {
 
   loadForm(employee: Employee){
     this.formGroup.patchValue({
-      email: employee.email,
-      firstName: employee.firstName,
-      lastName: employee.lastName,
+      email: employee.person.email,
+      firstName: employee.person.firstName,
+      lastName: employee.person.lastName,
       position: employee.position,
       salary: employee.salary
     });
 
-    employee.addresses.forEach(address => {
+    employee.person.addresses.forEach(address => {
       let addressFG = this.buildAddress();
       addressFG.patchValue({
         id: address.id,
@@ -122,13 +130,25 @@ export class EmployeeDetailComponent implements OnInit {
 
   save() {
     this.errors = {};
-    let employee: Employee = Object.assign({}, this.formGroup.value);
+    //let employee: Employee = Object.assign({}, this.formGroup.value);
+    let employee: Employee = {
+      id: Guid.EMPTY,
+      person: <Person>{
+        id: '',
+        firstName: this.formGroup.get('firstName').value,
+        lastName: this.formGroup.get('lastName').value,
+        email: this.formGroup.get('email').value,       
+        addresses: this.formGroup.get('addresses').value
+      },
+      position: this.formGroup.get('position').value,
+      salary: this.formGroup.get('salary').value
+    }; 
     console.table(employee);
 
     if (this.editionMode){
       //edit employee
       employee.id = this.employeeId;
-      employee.personId = this.personId;     
+      employee.person.id = this.personId;     
       this.employeeService.updateEmployee(employee)
       .subscribe(
         () => { this.deleteAddresses();
@@ -146,7 +166,7 @@ export class EmployeeDetailComponent implements OnInit {
       //add employee 
       this.employeeService.addEmployee(employee)
       .subscribe(
-        () => alert("Empleat " + employee.firstName + " " + employee.lastName + " creat correctament"),
+        () => alert("Empleat " + employee.person.firstName + " " + employee.person.lastName + " creat correctament"),
         error => {
             if (error.error == null) {
               alert(error.status + " Usuari no autoritzat");                            

@@ -31,8 +31,8 @@
         <th scope="row"></th>
         <td>{{ orderHeader.orderNumber }}</td>
         <td>{{ orderHeader.address }}</td>
-        <td>{{ orderHeader.client }}</td>
-        <td>{{ orderHeader.employee }}</td>
+        <td>{{ orderHeader.client.person.fullName }}</td>
+        <td>{{ orderHeader.employee.person.fullName }}</td>
         <td>{{ orderHeader.orderState }}</td>
         <td>{{ orderHeader.orderPriority }}</td>
         <td>{{ orderHeader.creationDate | date: 'dd/MM/yyyy' }}</td>

@@ -26,9 +26,9 @@
     <tbody>
       <tr *ngFor="let employee of employees">
         <th scope="row"></th>
-        <td>{{ employee.email }}</td>
-        <td>{{ employee.firstName }}</td>
-        <td>{{ employee.lastName }}</td>
+        <td>{{ employee.person.email }}</td>
+        <td>{{ employee.person.firstName }}</td>
+        <td>{{ employee.person.lastName }}</td>
         <td>{{ employee.position }}</td>
         <td *ngIf="isAdminUser()">{{ employee.salary | currency:'EUR' }}</td>        
         <td>

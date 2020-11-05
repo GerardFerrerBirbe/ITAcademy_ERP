@@ -45,16 +45,16 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<IEnumerable<EmployeeDTO>> GetEmployees()
+        public async Task<IEnumerable<Employee>> GetEmployees()
         {
             var employees = await _repository.GetAll();
 
-            return employees.Select(e => EmployeeToDTO(e));
+            return employees;
         }
 
         // GET: api/Employees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmployeeDTO>> GetEmployee(Guid id)
+        public async Task<ActionResult<Employee>> GetEmployee(Guid id)
         {
             var employee = await _repository.Get(id);
 
@@ -63,26 +63,26 @@ namespace ITAcademyERP.Controllers
                 return NotFound();
             }
 
-            return EmployeeToDTO(employee);
+            return employee;
         }
 
         // PUT: api/Employees/5
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(EmployeeDTO employeeDTO)
+        public async Task<IActionResult> PutEmployee(Employee employeeUpdate)
         {
-            var personId = (await _peopleRepository.GetPerson(employeeDTO.PersonId)).Id;
+            var personId = (await _peopleRepository.GetPerson(employeeUpdate.Person.Id)).Id;
             
-            var personDTO = new PersonDTO
+            var person = new Person
             {
                 Id = personId,
-                Email = employeeDTO.Email,
-                FirstName = employeeDTO.FirstName,
-                LastName = employeeDTO.LastName,
-                Addresses = employeeDTO.Addresses
+                Email = employeeUpdate.Person.Email,
+                FirstName = employeeUpdate.Person.FirstName,
+                LastName = employeeUpdate.Person.LastName,
+                Addresses = employeeUpdate.Person.Addresses
             };
 
-            var updatePerson = await _peopleController.UpdatePerson(personDTO);
+            var updatePerson = await _peopleController.UpdatePerson(person);
 
             var statusCode = updatePerson
                  .GetType()
@@ -95,10 +95,10 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                var employee = await _repository.Get(employeeDTO.Id);
+                var employee = await _repository.Get(employeeUpdate.Id);
 
-                employee.Position = employeeDTO.Position;
-                employee.Salary = employeeDTO.Salary;
+                employee.Position = employeeUpdate.Position;
+                employee.Salary = employeeUpdate.Salary;
 
                 return await _repository.Update(employee);
             }            
@@ -107,41 +107,40 @@ namespace ITAcademyERP.Controllers
         // POST: api/Employees
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult> PostEmployee(EmployeeDTO employeeDTO)
+        public async Task<ActionResult> PostEmployee(Employee newEmployee)
         {
-            var person = await _peopleRepository.GetPersonByEmail(employeeDTO.Email);
+            var person = await _peopleRepository.GetPersonByEmail(newEmployee.Person.Email);
 
             if (person == null)
             {
-                var personDTO = new PersonDTO
+                var newPerson = new Person
                 {
-                    Email = employeeDTO.Email,
-                    FirstName = employeeDTO.FirstName,
-                    LastName = employeeDTO.LastName,
-                    Addresses = employeeDTO.Addresses
+                    Email = newEmployee.Person.Email,
+                    FirstName = newEmployee.Person.FirstName,
+                    LastName = newEmployee.Person.LastName,
+                    Addresses = newEmployee.Person.Addresses
                 };
 
-                await _peopleController.AddPerson(personDTO);
+                await _peopleController.AddPerson(newPerson);
 
-                var newPerson = await _peopleRepository.GetPersonByEmail(personDTO.Email);
+                var getPerson = await _peopleRepository.GetPersonByEmail(newPerson.Email);
+                getPerson.UserName = newPerson.Email;
 
-                newPerson.UserName = personDTO.Email;
-
-                await _userManager.UpdateAsync(newPerson);
+                await _userManager.UpdateAsync(getPerson);
             }
             else
             {
-                person.FirstName = employeeDTO.FirstName;
-                person.LastName = employeeDTO.LastName;
+                person.FirstName = newEmployee.Person.FirstName;
+                person.LastName = newEmployee.Person.LastName;
 
                 await _peopleRepository.Update(person);
             }
 
             var employee = new Employee
             {
-                PersonId = _peopleRepository.GetPersonId(employeeDTO.Email),
-                Position = employeeDTO.Position,
-                Salary = employeeDTO.Salary
+                PersonId = _peopleRepository.GetPersonId(newEmployee.Person.Email),
+                Position = newEmployee.Position,
+                Salary = newEmployee.Salary
             };
 
             return await _repository.Add(employee);
@@ -166,19 +165,6 @@ namespace ITAcademyERP.Controllers
             }
 
             return employee;
-        }
-
-        private EmployeeDTO EmployeeToDTO(Employee employee) =>
-            new EmployeeDTO
-            {
-                Id = employee.Id,
-                PersonId = employee.PersonId,
-                Email = employee.Person.Email,
-                FirstName = employee.Person.FirstName,
-                LastName = employee.Person.LastName,
-                Addresses = employee.Person.Addresses,
-                Position = employee.Position,
-                Salary = employee.Salary
-            };        
+        }    
     }
 }
