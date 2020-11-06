@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderHeader } from './order-header';
 import { OrderHeaderService } from './order-header.service';
+import { OrderPriority } from '../order-priority/order-priority';
+import { OrderState } from '../order-state/order-state';
+import { Address } from '../address/address';
+import { AddressType } from '../address/addressType';
 
 
 @Component({
@@ -11,6 +15,8 @@ import { OrderHeaderService } from './order-header.service';
 export class OrderHeaderComponent implements OnInit {
 
   public orderHeaders: OrderHeader[];
+  OrderState = OrderState;
+  OrderPriority = OrderPriority;
   
   constructor(
     private orderHeaderService: OrderHeaderService,
@@ -22,7 +28,7 @@ export class OrderHeaderComponent implements OnInit {
 
   getOrderHeaders(): void {
     this.orderHeaderService.getOrderHeaders()
-    .subscribe(orderHeaders => this.orderHeaders = orderHeaders);
+    .subscribe(orderHeaders => this.orderHeaders = orderHeaders)
   }
 
   delete(orderHeader: OrderHeader): void {

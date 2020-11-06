@@ -1,4 +1,5 @@
-﻿using ITAcademyERP.Models;
+﻿using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;

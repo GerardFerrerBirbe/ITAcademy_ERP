@@ -1,8 +1,8 @@
 import { Client } from '../client/client';
 import { Employee } from '../employee/employee';
 import { OrderLine } from '../order-line/order-line';
-import { OrderState} from './orderState';
-import { OrderPriority} from './orderPriority';
+import { OrderState} from '../order-state/order-state';
+import { OrderPriority} from '../order-priority/order-priority';
 
 export interface OrderHeader {
   id: string;

@@ -10,9 +10,9 @@ import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
 import { Guid } from 'guid-typescript';
 import { AddressType } from '../../address/addressType';
-import { OrderState } from '../../order-header/orderState';
+import { OrderState } from '../../order-state/order-state';
 import { Person } from '../../person/person';
-import { OrderPriority } from '../../order-header/orderPriority';
+import { OrderPriority } from '../../order-priority/order-priority';
 import { Address } from '../../address/address';
 
 @Component({
@@ -78,8 +78,8 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.orderHeaderService.getOHByEmployee(this.employeeId)
       .subscribe(orderHeaders => {
-        this.currentOhs = orderHeaders.filter(oh => oh.orderState == OrderState.EnRepartiment || OrderState.EnTractament ||  OrderState.PendentTractar);
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == OrderState.Completada || oh.orderState == OrderState.Cancelada);
+        this.currentOhs = orderHeaders.filter(oh => oh.orderState == OrderState["En repartiment"] || OrderState["En tractament"] ||  OrderState["Pendent de tractar"]);
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == OrderState.Completada || oh.orderState == OrderState.Cancel·lada);
       }
       );   
     });

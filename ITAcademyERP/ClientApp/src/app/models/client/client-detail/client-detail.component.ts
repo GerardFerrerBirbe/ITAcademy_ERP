@@ -11,7 +11,7 @@ import { AccountService } from 'src/app/login/account.service';
 import { Guid } from 'guid-typescript';
 import { Address } from '../../address/address';
 import { AddressType } from '../../address/addressType';
-import { OrderState } from '../../order-header/orderState';
+import { OrderState } from '../../order-state/order-state';
 import { Person } from '../../person/person';
 
 @Component({
@@ -75,8 +75,8 @@ export class ClientDetailComponent implements OnInit {
       this.orderHeaderService.getOHByClient(this.clientId)
       .subscribe(orderHeaders => {
         this.calculateTotalClient(orderHeaders);
-        this.currentOhs = orderHeaders.filter(oh => oh.orderState == OrderState.EnRepartiment || OrderState.EnTractament ||  OrderState.PendentTractar);
-        this.oldOhs = orderHeaders.filter(oh => oh.orderState == OrderState.Completada || oh.orderState == OrderState.Cancelada);
+        this.currentOhs = orderHeaders.filter(oh => oh.orderState == OrderState["En repartiment"] || OrderState["En tractament"] ||  OrderState["Pendent de tractar"]);
+        this.oldOhs = orderHeaders.filter(oh => oh.orderState == OrderState.Completada || oh.orderState == OrderState.Cancel·lada);
       }
       );
     });

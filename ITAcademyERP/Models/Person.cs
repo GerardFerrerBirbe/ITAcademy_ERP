@@ -15,11 +15,11 @@ namespace ITAcademyERP.Models
             Addresses = new HashSet<Address>();
         }
 
-        [Required(ErrorMessage = "Camp requerit")]
+        //[Required(ErrorMessage = "Camp requerit")]
         [StringLength(30, ErrorMessage = "El nom ha de tenir menys de 30 caràcters")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Camp requerit")]
+        //[Required(ErrorMessage = "Camp requerit")]
         [StringLength(40, ErrorMessage = "El cognom ha de tenir menys de 40 caràcters")]
         public string LastName { get; set; }
         
@@ -34,7 +34,7 @@ namespace ITAcademyERP.Models
 
         #region overrides
 
-        [Required(ErrorMessage = "Camp requerit")]
+        //[Required(ErrorMessage = "Camp requerit")]
         [StringLength(30, ErrorMessage = "L'email ha de tenir menys de 30 caràcters")]
         public override string Email { get; set; }
         

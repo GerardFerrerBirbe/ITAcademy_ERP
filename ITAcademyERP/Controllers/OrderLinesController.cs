@@ -55,22 +55,6 @@ namespace ITAcademyERP.Controllers
             return await _repository.Add(orderLine);
         }
 
-        //public OrderLineDTO OrderLineToDTO(OrderLine orderLine)
-        //{
-
-        //    var orderLineDTO = new OrderLineDTO
-        //    {
-        //        Id = orderLine.Id,
-        //        OrderHeaderId = orderLine.OrderHeaderId,
-        //        ProductName = orderLine.Product.Name,
-        //        UnitPrice = orderLine.UnitPrice,
-        //        Vat = orderLine.Vat,
-        //        Quantity = orderLine.Quantity
-        //    };
-
-        //    return orderLineDTO;
-        //}
-
         // GET: api/OrderLines
         [Route("TopProducts")]
         [HttpGet]

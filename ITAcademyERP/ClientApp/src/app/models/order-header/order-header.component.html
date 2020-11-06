@@ -30,11 +30,11 @@
       <tr *ngFor="let orderHeader of orderHeaders">
         <th scope="row"></th>
         <td>{{ orderHeader.orderNumber }}</td>
-        <td>{{ orderHeader.address }}</td>
+        <td>{{ orderHeader.client.person.addresses[0].name }}</td>
         <td>{{ orderHeader.client.person.fullName }}</td>
         <td>{{ orderHeader.employee.person.fullName }}</td>
-        <td>{{ orderHeader.orderState }}</td>
-        <td>{{ orderHeader.orderPriority }}</td>
+        <td>{{ OrderState[orderHeader.orderState] }}</td>
+        <td>{{ OrderPriority[orderHeader.orderPriority] }}</td>
         <td>{{ orderHeader.creationDate | date: 'dd/MM/yyyy' }}</td>
         <td>{{ orderHeader.assignToEmployeeDate | date: 'dd/MM/yyyy' }}</td>
         <td>{{ orderHeader.finalisationDate | date: 'dd/MM/yyyy' }}</td>     

@@ -16,22 +16,22 @@ namespace ITAcademyERP.Models
         [Key]
         public Guid Id { get; set; }
         
-        [Required]
+        //[Required]
         [ForeignKey("OrderHeaderId")]
         public Guid OrderHeaderId { get; set; }
         
         [JsonIgnore]
-        [Required]
+        //[Required]
         [ForeignKey("ProductId")]
         public Guid ProductId { get; set; }
         
-        [Required]
+        //[Required]
         public double UnitPrice { get; set; }
         
-        [Required]
+        //[Required]
         public double Vat { get; set; }
         
-        [Required]
+        //[Required]
         public double Quantity { get; set; }
 
         [NotMapped]

@@ -21,20 +21,11 @@ namespace ITAcademyERP.Controllers
     public class OrderHeadersController : GenericController<Guid, OrderHeader, OrderHeadersRepository>
     {
         private readonly OrderHeadersRepository _repository;
-        private readonly ClientsRepository _clientsRepository;
-        private readonly EmployeesRepository _employeesRepository;
-        private readonly OrderLinesController _orderLinesController;
 
         public OrderHeadersController(
-            OrderHeadersRepository repository,
-            ClientsRepository clientsRepository,
-            EmployeesRepository employeesRepository,
-            OrderLinesController orderLinesController) : base(repository)
+            OrderHeadersRepository repository) : base(repository)
         {
             _repository = repository;
-            _clientsRepository = clientsRepository;
-            _employeesRepository = employeesRepository;
-            _orderLinesController = orderLinesController;
         }
 
         // GET: api/OrderHeaders
@@ -43,7 +34,7 @@ namespace ITAcademyERP.Controllers
         {
             var orderHeaders = await _repository.GetAll();
 
-            return orderHeaders;
+            return orderHeaders.Select(o => FilteringDeliveryAddress(o));
         }
 
         [Route("Employee")]
@@ -89,14 +80,14 @@ namespace ITAcademyERP.Controllers
                 orderHeader.FinalisationDate = DateTime.Now;
             }
 
-            if (_employeesRepository.GetEmployeeId(orderHeaderUpdate.Employee.Person.FullName) != orderHeader.EmployeeId)
+            if (orderHeaderUpdate.Employee.Id != orderHeader.EmployeeId)
             {
                 orderHeader.AssignToEmployeeDate = DateTime.Now;
             }
 
             orderHeader.OrderNumber = orderHeaderUpdate.OrderNumber;
-            orderHeader.ClientId = _clientsRepository.GetClientId(orderHeaderUpdate.Client.Person.FullName);
-            orderHeader.EmployeeId = _employeesRepository.GetEmployeeId(orderHeaderUpdate.Employee.Person.FullName);
+            orderHeader.ClientId = orderHeaderUpdate.Client.Id;
+            orderHeader.EmployeeId = orderHeaderUpdate.Employee.Id;
             orderHeader.OrderState = orderHeaderUpdate.OrderState;
             orderHeader.OrderPriority = orderHeaderUpdate.OrderPriority;
 
@@ -110,8 +101,8 @@ namespace ITAcademyERP.Controllers
             var orderHeader = new OrderHeader
             {
                 OrderNumber = newOrderHeader.OrderNumber,
-                ClientId = _clientsRepository.GetClientId(newOrderHeader.Client.Person.FullName),
-                EmployeeId = _employeesRepository.GetEmployeeId(newOrderHeader.Employee.Person.FullName),
+                ClientId = newOrderHeader.Client.Id,
+                EmployeeId = newOrderHeader.Employee.Id,
                 OrderState = newOrderHeader.OrderState,
                 OrderPriority = newOrderHeader.OrderPriority,
                 CreationDate = DateTime.Now,
@@ -119,54 +110,34 @@ namespace ITAcademyERP.Controllers
             };
 
             return await _repository.Add(orderHeader);
-        }        
-        
-        //public OrderHeaderDTO OrderHeaderToDTO(OrderHeader orderHeader) {
+        }
 
-        //    var orderLinesDTO = new List<OrderLineDTO>();
-
-        //    foreach (var orderLine in orderHeader.OrderLines)
-        //    {
-        //        var orderLineDTO = _orderLinesController.OrderLineToDTO(orderLine);
-        //        orderLinesDTO.Add(orderLineDTO);
-        //    }           
-
-        //    var orderHeaderDTO = new OrderHeaderDTO
-        //    {
-        //        Id = orderHeader.Id,
-        //        OrderNumber = orderHeader.OrderNumber,
-        //        Address = orderHeader.Client.Person.Addresses.FirstOrDefault(a => a.Type == AddressType.Entrega)?.Name,
-        //        Client = orderHeader.Client.Person.FullName,
-        //        Employee = orderHeader.Employee.Person.FullName,
-        //        OrderState = GetEnumString(orderHeader.OrderState),
-        //        OrderPriority = GetEnumString(orderHeader.OrderPriority),
-        //        CreationDate = orderHeader.CreationDate,
-        //        AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
-        //        FinalisationDate = orderHeader.FinalisationDate == null ? null : orderHeader.FinalisationDate,
-        //        OrderLines = orderLinesDTO
-        //    };
-
-        //    return orderHeaderDTO;
-        //}
-        
-        //public string GetEnumString<T>(T enumInput)
-        //{
-        //    var enumType = typeof(T);
-        //    var name = Enum.GetName(enumType, enumInput);
-        //    var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
-            
-        //    return enumMemberAttribute.Value;          
-        //}
-
-        //public static T GetEnumValue<T>(string enumName)
-        //{
-        //    var enumType = typeof(T);
-        //    foreach (var name in Enum.GetNames(enumType))
-        //    {
-        //        var enumMemberAttribute = ((EnumMemberAttribute[])enumType.GetField(name).GetCustomAttributes(typeof(EnumMemberAttribute), true)).Single();
-        //        if (enumMemberAttribute.Value == enumName) return (T)Enum.Parse(enumType, name);
-        //    }
-        //    return default;
-        //}
+        public OrderHeader FilteringDeliveryAddress(OrderHeader orderHeader)
+        {
+            return new OrderHeader
+            {
+                Id = orderHeader.Id,
+                OrderNumber = orderHeader.OrderNumber,
+                Client = new Client
+                {
+                    Id = orderHeader.Client.Id,
+                    Person = new Person
+                    {
+                        Id = orderHeader.Client.Person.Id,
+                        FirstName = orderHeader.Client.Person.FirstName,
+                        LastName = orderHeader.Client.Person.LastName,
+                        Email = orderHeader.Client.Person.Email,
+                        Addresses = orderHeader.Client.Person.Addresses.Where(a => a.Type == AddressType.Entrega).ToList()
+                    }
+                },
+                Employee = orderHeader.Employee,
+                OrderState = orderHeader.OrderState,
+                OrderPriority = orderHeader.OrderPriority,
+                CreationDate = orderHeader.CreationDate,
+                AssignToEmployeeDate = orderHeader.AssignToEmployeeDate,
+                FinalisationDate = orderHeader.FinalisationDate,
+                OrderLines = orderHeader.OrderLines
+            };
+        }
     }
 }

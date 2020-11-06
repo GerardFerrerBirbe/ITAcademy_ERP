@@ -13,6 +13,10 @@ import { EmployeeService } from '../../employee/employee.service';
 import { Employee } from '../../employee/employee';
 import { AccountService } from 'src/app/login/account.service';
 import { OrderLine } from '../../order-line/order-line';
+import { OrderState } from '../../order-state/../order-state/order-state';
+import { OrderPriority } from '../../order-priority/../order-priority/order-priority';
+import { Guid } from 'guid-typescript';
+import { Person } from '../../person/person';
 
 @Component({
   selector: 'app-order-detail',
@@ -38,7 +42,7 @@ export class OrderDetailComponent implements OnInit {
   orderHeaderFormGroup: FormGroup;
   orderLineFormGroup: FormGroup;
   orderHeaderId: any;
-
+  
   orderHeader: OrderHeader;
   orderHeaders: OrderHeader[];
   orderLines: OrderLine[] = [];
@@ -101,16 +105,27 @@ export class OrderDetailComponent implements OnInit {
   loadForm(orderHeader: OrderHeader){
     this.orderHeaderFormGroup.patchValue({
       orderNumber: orderHeader.orderNumber,
-      employee: orderHeader.employee,
-      client: orderHeader.client,
-      orderState: orderHeader.orderState,
-      orderPriority: orderHeader.orderPriority
+      employee: orderHeader.employee.person.fullName,
+      client: orderHeader.client.person.fullName,
+      orderState: OrderState[orderHeader.orderState],
+      orderPriority: OrderPriority[orderHeader.orderPriority]
     });   
   }
 
   addOrderLine(){
     this.errors = {};
-    let orderLine: OrderLine = Object.assign({}, this.orderLineFormGroup.value);
+    //let orderLine: OrderLine = Object.assign({}, this.orderLineFormGroup.value);
+    let orderLine: OrderLine = {
+      id: Guid.EMPTY,
+      orderHeaderId: this.orderHeader.id,
+      product: <Product>{
+        id: Guid.EMPTY,
+        name: this.orderLineFormGroup.get('productName').value
+      },
+      unitPrice: this.orderLineFormGroup.get('unitPrice').value,
+      vat: this.orderLineFormGroup.get('vat').value,
+      quantity: this.orderLineFormGroup.get('quantity').value
+    }
     console.table(orderLine);
     orderLine.orderHeaderId = this.orderHeaderId;
 
@@ -149,12 +164,28 @@ export class OrderDetailComponent implements OnInit {
 
   save() {
     this.errors = {};
-    let orderHeader: OrderHeader = Object.assign({}, this.orderHeaderFormGroup.value);
+    let orderHeader: OrderHeader = {
+      id: Guid.EMPTY,
+      orderNumber: this.orderHeaderFormGroup.get('orderNumber').value,
+      client: <Client>{
+        id: this.clients.find(c => c.person.fullName == this.orderHeaderFormGroup.get('client').value).id,
+        },
+      employee: <Employee>{
+      },
+      orderState: this.orderHeaderFormGroup.get('orderState').value,
+      orderPriority: this.orderHeaderFormGroup.get('orderPriority').value,
+      creationDate: "2000-01-01T00:00:00",
+      assignToEmployeeDate: "2000-01-01T00:00:00",
+      finalisationDate: "2000-01-01T00:00:00",
+      orderLines: this.orderLines
+    }
+    
     console.table(orderHeader);
 
     if (this.editionMode){
       //edit order
-      orderHeader.id = this.orderHeaderId;     
+      orderHeader.id = this.orderHeaderId;  
+      orderHeader.employee.id = this.employees.find(e => e.person.fullName == this.orderHeaderFormGroup.get('employee').value).id;
       this.orderHeaderService.updateOrderHeader(orderHeader)
       .subscribe(
         () => alert("Actualització realitzada"),
@@ -170,7 +201,7 @@ export class OrderDetailComponent implements OnInit {
       } else {
       //add order
       let userName = localStorage.getItem('userName');
-      orderHeader.employee.person.fullName = userName;
+      orderHeader.employee.id = this.employees.find(e => e.person.fullName == userName).id;
       this.orderHeaderService.addOrderHeader(orderHeader)
       .subscribe(
         oh => alert("Comanda " + oh.orderNumber + " creada correctament"),
