@@ -26,9 +26,11 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 30, nullable: false),
+                    LastName = table.Column<string>(maxLength: 40, nullable: false),
+                    Email = table.Column<string>(maxLength: 30, nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
@@ -39,9 +41,7 @@ namespace ITAcademyERP.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(maxLength: 30, nullable: false),
-                    LastName = table.Column<string>(maxLength: 30, nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,7 +87,7 @@ namespace ITAcademyERP.Data.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     PersonId = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(maxLength: 20, nullable: false),
+                    Name = table.Column<string>(maxLength: 30, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -191,7 +191,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PersonId = table.Column<string>(nullable: false)
+                    PersonId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,7 +201,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,8 +209,8 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    PersonId = table.Column<string>(nullable: false),
-                    Position = table.Column<string>(maxLength: 30, nullable: true),
+                    PersonId = table.Column<string>(nullable: true),
+                    Position = table.Column<string>(maxLength: 30, nullable: false),
                     Salary = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
@@ -221,7 +221,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -248,7 +248,7 @@ namespace ITAcademyERP.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    OrderNumber = table.Column<string>(nullable: false),
+                    OrderNumber = table.Column<string>(maxLength: 20, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false),
                     EmployeeId = table.Column<Guid>(nullable: false),
                     OrderState = table.Column<int>(nullable: false),
@@ -271,7 +271,7 @@ namespace ITAcademyERP.Data.Migrations
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -338,8 +338,7 @@ namespace ITAcademyERP.Data.Migrations
                 name: "IX_AspNetUsers_Email",
                 table: "AspNetUsers",
                 column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -357,13 +356,15 @@ namespace ITAcademyERP.Data.Migrations
                 name: "IX_Clients_PersonId",
                 table: "Clients",
                 column: "PersonId",
-                unique: true);
+                unique: true,
+                filter: "[PersonId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_PersonId",
                 table: "Employees",
                 column: "PersonId",
-                unique: true);
+                unique: true,
+                filter: "[PersonId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderHeaders_ClientId",

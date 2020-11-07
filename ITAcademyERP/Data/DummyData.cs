@@ -226,7 +226,11 @@ namespace ITAcademyERP.Data
                 new Address{Name = "C/ Granollers, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
                 new Address{Name = "C/ Major, 8", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
                 new Address{Name = "C/ Tort, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Mark").Id},
-                new Address{Name = "C/ Llarg, 124", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Mark").Id}
+                new Address{Name = "C/ Llarg, 200", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Maria").Id},
+                new Address{Name = "C/ Joanic, 12", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Silvia").Id},
+                new Address{Name = "C/ Ample, 1", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Gregori").Id},
+                new Address{Name = "C/ Curt, 320", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Philip").Id},
+                new Address{Name = "C/ Mallorca, 32", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Georgina").Id}
             };
             return addresses;
         }

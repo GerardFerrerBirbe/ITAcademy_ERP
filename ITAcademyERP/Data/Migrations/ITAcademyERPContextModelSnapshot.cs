@@ -27,8 +27,8 @@ namespace ITAcademyERP.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<string>("PersonId")
                         .HasColumnType("nvarchar(450)");
@@ -51,13 +51,13 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PersonId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PersonId] IS NOT NULL");
 
                     b.ToTable("Clients");
                 });
@@ -69,10 +69,10 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PersonId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Position")
+                        .IsRequired()
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
 
@@ -82,7 +82,8 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PersonId] IS NOT NULL");
 
                     b.ToTable("Employees");
                 });
@@ -110,7 +111,8 @@ namespace ITAcademyERP.Data.Migrations
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.Property<int>("OrderPriority")
                         .HasColumnType("int");
@@ -160,6 +162,7 @@ namespace ITAcademyERP.Data.Migrations
             modelBuilder.Entity("ITAcademyERP.Models.Person", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
@@ -170,8 +173,9 @@ namespace ITAcademyERP.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -183,8 +187,8 @@ namespace ITAcademyERP.Data.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(40)")
+                        .HasMaxLength(40);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -222,8 +226,7 @@ namespace ITAcademyERP.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -421,18 +424,14 @@ namespace ITAcademyERP.Data.Migrations
                 {
                     b.HasOne("ITAcademyERP.Models.Person", "Person")
                         .WithOne("Client")
-                        .HasForeignKey("ITAcademyERP.Models.Client", "PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ITAcademyERP.Models.Client", "PersonId");
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.Employee", b =>
                 {
                     b.HasOne("ITAcademyERP.Models.Person", "Person")
                         .WithOne("Employee")
-                        .HasForeignKey("ITAcademyERP.Models.Employee", "PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ITAcademyERP.Models.Employee", "PersonId");
                 });
 
             modelBuilder.Entity("ITAcademyERP.Models.OrderHeader", b =>
