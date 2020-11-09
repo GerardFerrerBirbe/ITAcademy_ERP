@@ -19,40 +19,11 @@ namespace ITAcademyERP.Controllers
     public class OrderLinesController : GenericController<Guid, OrderLine, OrderLinesRepository>
     {
         private readonly OrderLinesRepository _repository;
-        private readonly ProductsRepository _productsRepository;
 
         public OrderLinesController(
-            OrderLinesRepository repository,
-            ProductsRepository productsRepository) : base(repository)
+            OrderLinesRepository repository) : base(repository)
         {
             _repository = repository;
-            _productsRepository = productsRepository;
-        }
-
-        // GET: api/OrderLines
-        [HttpGet]
-        public async Task<IEnumerable<OrderLine>> GetOrderLines()
-        {
-            var orderLines = await _repository.GetAll();
-
-            return orderLines;                
-        }
-
-        // POST: api/OrderLines
-        [HttpPost]
-        public async Task<ActionResult> AddOrderLine(OrderLine newOrderLine)
-        {
-            var orderLine = new OrderLine
-            {
-                Id = newOrderLine.Id,
-                OrderHeaderId = newOrderLine.OrderHeaderId,
-                ProductId = _productsRepository.GetProductId(newOrderLine.Product.Name),
-                UnitPrice = newOrderLine.UnitPrice,
-                Vat = newOrderLine.Vat,
-                Quantity = newOrderLine.Quantity
-            };
-
-            return await _repository.Add(orderLine);
         }
 
         // GET: api/OrderLines

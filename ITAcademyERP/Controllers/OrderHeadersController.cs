@@ -30,7 +30,7 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/OrderHeaders
         [HttpGet]
-        public async Task<IEnumerable<OrderHeader>> GetOrderHeaders()
+        public override async Task<IEnumerable<OrderHeader>> GetAll()
         {
             var orderHeaders = await _repository.GetAll();
 
@@ -55,56 +55,42 @@ namespace ITAcademyERP.Controllers
             return orderHeaders;
         }
 
-        //GET: api/OrderHeaders/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OrderHeader>> GetOrderHeader(Guid id)
-        {
-            var orderHeader = await _repository.Get(id);              
-
-            if (orderHeader == null)
-            {
-                return NotFound();
-            }
-
-            return orderHeader;
-        }
-
         // PUT: api/OrderHeaders/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderHeader(OrderHeader orderHeaderUpdate)
+        public override async Task<IActionResult> Put(OrderHeader inputOrderHeader)
         {
-            var orderHeader = await _repository.Get(orderHeaderUpdate.Id);
+            var orderHeader = await _repository.Get(inputOrderHeader.Id);
 
-            if (orderHeaderUpdate.OrderState == EOrderState.Completada && orderHeaderUpdate.OrderState != orderHeader.OrderState)
+            if (inputOrderHeader.OrderState == EOrderState.Completada && inputOrderHeader.OrderState != orderHeader.OrderState)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
 
-            if (orderHeaderUpdate.Employee.Id != orderHeader.EmployeeId)
+            if (inputOrderHeader.EmployeeId != orderHeader.EmployeeId)
             {
                 orderHeader.AssignToEmployeeDate = DateTime.Now;
             }
 
-            orderHeader.OrderNumber = orderHeaderUpdate.OrderNumber;
-            orderHeader.ClientId = orderHeaderUpdate.Client.Id;
-            orderHeader.EmployeeId = orderHeaderUpdate.Employee.Id;
-            orderHeader.OrderState = orderHeaderUpdate.OrderState;
-            orderHeader.OrderPriority = orderHeaderUpdate.OrderPriority;
+            orderHeader.OrderNumber = inputOrderHeader.OrderNumber;
+            orderHeader.ClientId = inputOrderHeader.ClientId;
+            orderHeader.EmployeeId = inputOrderHeader.EmployeeId;
+            orderHeader.OrderState = inputOrderHeader.OrderState;
+            orderHeader.OrderPriority = inputOrderHeader.OrderPriority;
 
             return await _repository.Update(orderHeader);
         }       
 
         // POST: api/OrderHeaders
         [HttpPost]
-        public async Task<ActionResult> PostOrderHeader(OrderHeader newOrderHeader)
+        public override async Task<ActionResult> Post(OrderHeader inputOrderHeader)
         {
             var orderHeader = new OrderHeader
             {
-                OrderNumber = newOrderHeader.OrderNumber,
-                ClientId = newOrderHeader.Client.Id,
-                EmployeeId = newOrderHeader.Employee.Id,
-                OrderState = newOrderHeader.OrderState,
-                OrderPriority = newOrderHeader.OrderPriority,
+                OrderNumber = inputOrderHeader.OrderNumber,
+                ClientId = inputOrderHeader.ClientId,
+                EmployeeId = inputOrderHeader.EmployeeId,
+                OrderState = inputOrderHeader.OrderState,
+                OrderPriority = inputOrderHeader.OrderPriority,
                 CreationDate = DateTime.Now,
                 AssignToEmployeeDate = DateTime.Now
             };

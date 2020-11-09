@@ -22,12 +22,10 @@ namespace ITAcademyERP.Models
         [MaxLength(20, ErrorMessage = "Ha de tenir com a màxim 20 caràcters")]
         public string OrderNumber { get; set; }
         
-        [JsonIgnore]
         //[Required]
         [ForeignKey("ClientId")]
         public Guid ClientId { get; set; }
         
-        [JsonIgnore]
         [ForeignKey("EmployeeId")]
         public Guid EmployeeId { get; set; }
         

@@ -118,10 +118,8 @@ export class OrderDetailComponent implements OnInit {
     let orderLine: OrderLine = {
       id: Guid.EMPTY,
       orderHeaderId: this.orderHeader.id,
-      product: <Product>{
-        id: Guid.EMPTY,
-        name: this.orderLineFormGroup.get('productName').value
-      },
+      productId: this.products.find(p => p.name == this.orderLineFormGroup.get('productName').value).id,
+      product: null,
       unitPrice: this.orderLineFormGroup.get('unitPrice').value,
       vat: this.orderLineFormGroup.get('vat').value,
       quantity: this.orderLineFormGroup.get('quantity').value
@@ -167,11 +165,10 @@ export class OrderDetailComponent implements OnInit {
     let orderHeader: OrderHeader = {
       id: Guid.EMPTY,
       orderNumber: this.orderHeaderFormGroup.get('orderNumber').value,
-      client: <Client>{
-        id: this.clients.find(c => c.person.fullName == this.orderHeaderFormGroup.get('client').value).id,
-        },
-      employee: <Employee>{
-      },
+      clientId: this.clients.find(c => c.person.fullName == this.orderHeaderFormGroup.get('client').value).id,
+      client: null,        
+      employeeId: Guid.EMPTY,
+      employee: null,
       orderState: this.orderHeaderFormGroup.get('orderState').value,
       orderPriority: this.orderHeaderFormGroup.get('orderPriority').value,
       creationDate: "2000-01-01T00:00:00",
@@ -185,7 +182,7 @@ export class OrderDetailComponent implements OnInit {
     if (this.editionMode){
       //edit order
       orderHeader.id = this.orderHeaderId;  
-      orderHeader.employee.id = this.employees.find(e => e.person.fullName == this.orderHeaderFormGroup.get('employee').value).id;
+      orderHeader.employeeId = this.employees.find(e => e.person.fullName == this.orderHeaderFormGroup.get('employee').value).id;
       this.orderHeaderService.updateOrderHeader(orderHeader)
       .subscribe(
         () => alert("Actualització realitzada"),
@@ -201,7 +198,7 @@ export class OrderDetailComponent implements OnInit {
       } else {
       //add order
       let userName = localStorage.getItem('userName');
-      orderHeader.employee.id = this.employees.find(e => e.person.fullName == userName).id;
+      orderHeader.employeeId = this.employees.find(e => e.person.fullName == userName).id;
       this.orderHeaderService.addOrderHeader(orderHeader)
       .subscribe(
         oh => alert("Comanda " + oh.orderNumber + " creada correctament"),

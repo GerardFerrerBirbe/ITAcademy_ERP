@@ -20,7 +20,6 @@ namespace ITAcademyERP.Models
         [ForeignKey("OrderHeaderId")]
         public Guid OrderHeaderId { get; set; }
         
-        [JsonIgnore]
         //[Required]
         [ForeignKey("ProductId")]
         public Guid ProductId { get; set; }
