@@ -17,6 +17,6 @@ httpOptions = {
   constructor(private http: HttpClient) { }
 
   deleteAddresses(addresses: string[]): Observable<void>{
-    return this.http.post<void>(this.apiUrl, addresses, this.httpOptions);
+    return this.http.post<void>(this.apiUrl + "/delete", addresses, this.httpOptions);
   }
 }

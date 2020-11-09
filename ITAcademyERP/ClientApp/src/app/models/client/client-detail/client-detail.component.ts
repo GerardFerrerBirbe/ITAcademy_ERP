@@ -9,7 +9,6 @@ import { OrderHeader } from '../../order-header/order-header';
 import { AddressService } from '../../address/address.service';
 import { AccountService } from 'src/app/login/account.service';
 import { Guid } from 'guid-typescript';
-import { Address } from '../../address/address';
 import { AddressType } from '../../address/addressType';
 import { OrderState } from '../../order-state/order-state';
 import { Person } from '../../person/person';
@@ -50,13 +49,12 @@ export class ClientDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.formGroup = this.fb.group({
       email: '',
       firstName: '',
       lastName: '',
       addresses: this.fb.array([])
-    });  
+    });
 
     this.route.params.subscribe(params => {
       if (params["id"] == undefined){
@@ -128,11 +126,11 @@ export class ClientDetailComponent implements OnInit {
     //let client: Client = Object.assign({}, this.formGroup.value);
     let client: Client = {
       id: Guid.EMPTY,
+      personId: Guid.EMPTY,
       person: <Person>{
-        id: '',
+        id: Guid.EMPTY,
         firstName: this.formGroup.get('firstName').value,
         lastName: this.formGroup.get('lastName').value,
-        fullName: this.formGroup.get('firstName').value + ' ' + this.formGroup.get('lastName').value,
         email: this.formGroup.get('email').value,
         addresses: this.formGroup.get('addresses').value
       }
@@ -142,7 +140,8 @@ export class ClientDetailComponent implements OnInit {
     if (this.editionMode){
       //edit client     
       client.id = this.clientId;
-      client.person.id = this.personId;    
+      client.personId = this.personId;
+      client.person.id = this.personId;
       this.clientService.updateClient(client)
       .subscribe(
         () => { this.deleteAddresses();

@@ -40,49 +40,15 @@ namespace ITAcademyERP.Controllers
             _userManager = userManager;
         }
 
-        // GET: api/Employees
-        [HttpGet]
-        public async Task<IEnumerable<Employee>> GetEmployees()
-        {
-            var employees = await _repository.GetAll();
-
-            return employees;
-        }
-
-        // GET: api/Employees/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(Guid id)
-        {
-            var employee = await _repository.Get(id);
-
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return employee;
-        }
-
         // PUT: api/Employees/5
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(Employee employeeUpdate)
+        public override async Task<IActionResult> Put(Employee employee)
         {
-            var personId = (await _peopleRepository.GetPerson(employeeUpdate.Person.Id)).Id;
-            
-            var person = new Person
-            {
-                Id = personId,
-                Email = employeeUpdate.Person.Email,
-                FirstName = employeeUpdate.Person.FirstName,
-                LastName = employeeUpdate.Person.LastName,
-                Addresses = employeeUpdate.Person.Addresses
-            };
-
-            var updatePerson = await _peopleController.UpdatePerson(person);
+            var updatePerson = await _peopleController.UpdatePerson(employee.Person);
 
             var statusCode = updatePerson
-                 .GetType()
+                .GetType()
                 .GetProperty("StatusCode")
                 .GetValue(updatePerson, null).ToString();
 
@@ -92,11 +58,6 @@ namespace ITAcademyERP.Controllers
             }
             else
             {
-                var employee = await _repository.Get(employeeUpdate.Id);
-
-                employee.Position = employeeUpdate.Position;
-                employee.Salary = employeeUpdate.Salary;
-
                 return await _repository.Update(employee);
             }            
         }
@@ -104,33 +65,28 @@ namespace ITAcademyERP.Controllers
         // POST: api/Employees
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult> PostEmployee(Employee newEmployee)
+        public override async Task<ActionResult> Post(Employee newEmployee)
         {
             var person = await _peopleRepository.GetPersonByEmail(newEmployee.Person.Email);
 
             if (person == null)
             {
-                var newPerson = new Person
-                {
-                    Email = newEmployee.Person.Email,
-                    FirstName = newEmployee.Person.FirstName,
-                    LastName = newEmployee.Person.LastName,
-                    Addresses = newEmployee.Person.Addresses
-                };
+                await _peopleController.AddPerson(newEmployee.Person);
 
-                await _peopleController.AddPerson(newPerson);
-
-                var getPerson = await _peopleRepository.GetPersonByEmail(newPerson.Email);
-                getPerson.UserName = newPerson.Email;
+                var getPerson = await _peopleRepository.GetPersonByEmail(newEmployee.Person.Email);
+                getPerson.UserName = newEmployee.Person.Email;
 
                 await _userManager.UpdateAsync(getPerson);
             }
             else
             {
-                person.FirstName = newEmployee.Person.FirstName;
-                person.LastName = newEmployee.Person.LastName;
+                newEmployee.Person.Id = person.Id;
+                foreach (var address in newEmployee.Person.Addresses)
+                {
+                    address.PersonId = person.Id;
+                }
 
-                await _peopleRepository.Update(person);
+                await _peopleController.UpdatePerson(newEmployee.Person);
             }
 
             var employee = new Employee
@@ -145,7 +101,7 @@ namespace ITAcademyERP.Controllers
 
         // DELETE: api/[controller]/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Employee>> DeleteEmployee(Guid id)
+        public override async Task<ActionResult<Employee>> Delete(Guid id)
         {
             var employee = await _repository.Delete(id);
             

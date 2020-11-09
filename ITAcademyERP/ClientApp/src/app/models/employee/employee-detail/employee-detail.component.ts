@@ -133,8 +133,9 @@ export class EmployeeDetailComponent implements OnInit {
     //let employee: Employee = Object.assign({}, this.formGroup.value);
     let employee: Employee = {
       id: Guid.EMPTY,
+      personId: Guid.EMPTY,
       person: <Person>{
-        id: '',
+        id: Guid.EMPTY,
         firstName: this.formGroup.get('firstName').value,
         lastName: this.formGroup.get('lastName').value,
         email: this.formGroup.get('email').value,       
@@ -148,7 +149,8 @@ export class EmployeeDetailComponent implements OnInit {
     if (this.editionMode){
       //edit employee
       employee.id = this.employeeId;
-      employee.person.id = this.personId;     
+      employee.personId = this.personId;
+      employee.person.id = this.personId;
       this.employeeService.updateEmployee(employee)
       .subscribe(
         () => { this.deleteAddresses();

@@ -39,14 +39,7 @@ namespace ITAcademyERP.Controllers
                     if (addressToCreate.Name == "")
                         return;
 
-                    var address = new Address
-                    {
-                        PersonId = addressToCreate.PersonId,
-                        Name = addressToCreate.Name,
-                        Type = addressToCreate.Type
-                    };
-
-                    await _repository.Add(address);
+                    await _repository.Add(addressToCreate);
                 }
             }
 
@@ -54,20 +47,14 @@ namespace ITAcademyERP.Controllers
             {
                 foreach (var addressToEdit in addressesToEdit)
                 {
-                    var address = await _repository.GetAddress(addressToEdit.Id);
-
-                    address.Id = addressToEdit.Id;
-                    address.PersonId = addressToEdit.PersonId;
-                    address.Name = addressToEdit.Name;
-                    address.Type = addressToEdit.Type;
-
-                    await _repository.Update(address);                   
+                    await _repository.Update(addressToEdit);                   
                 }
             }
         }
 
         // POST: api/Addresses
         [HttpPost]
+        [Route("delete")]
         public IActionResult DeleteList([FromBody] List<string> addresses)
         {
             return _repository.DeleteList(addresses);

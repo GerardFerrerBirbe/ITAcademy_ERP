@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITAcademyERP.Controllers
 {
@@ -27,6 +28,32 @@ namespace ITAcademyERP.Controllers
         {
             _addressesController = addressesController;
             _repository = repository;
+        }
+
+        public async Task<IActionResult> UpdatePerson(Person inputPerson)
+        {
+            var person = await _repository.GetPerson(inputPerson.Id);
+
+            person.Email = inputPerson.Email;
+            person.FirstName = inputPerson.FirstName;
+            person.LastName = inputPerson.LastName;            
+            
+            var update = await _repository.Update(person);
+
+            var statusCode = update
+                .GetType()
+                .GetProperty("StatusCode")
+                .GetValue(update, null).ToString();
+
+            if (statusCode != "200")
+            {
+                return update;
+            }
+            else
+            {
+                await _addressesController.CreateOrEditAddresses(inputPerson.Addresses);
+                return Ok();
+            }
         }
 
         public async Task<IActionResult> AddPerson(Person newPerson)
@@ -60,32 +87,6 @@ namespace ITAcademyERP.Controllers
                 
                 return Ok();
             }
-        }
-
-        public async Task<IActionResult> UpdatePerson(Person personUpdate)
-            {
-            var person = await _repository.GetPerson(personUpdate.Id);
-
-            person.Email = personUpdate.Email;
-            person.FirstName = personUpdate.FirstName;
-            person.LastName = personUpdate.LastName;
-
-            var update = await _repository.Update(person);
-
-            var statusCode = update
-                .GetType()
-                .GetProperty("StatusCode")
-                .GetValue(update, null).ToString();
-
-            if (statusCode != "200")
-            {
-                return update;
-            }
-            else
-            {
-                await _addressesController.CreateOrEditAddresses(personUpdate.Addresses);
-                return Ok();
-            }
-        }
+        }        
     }
 }

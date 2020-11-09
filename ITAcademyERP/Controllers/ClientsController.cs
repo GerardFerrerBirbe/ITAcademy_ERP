@@ -41,76 +41,37 @@ namespace ITAcademyERP.Models
             _userManager = userManager;
         }
 
-        // GET: api/Clients
-        [HttpGet]
-        public async Task<IEnumerable<Client>> GetClients()
-        {
-            var clients = await _repository.GetAll();
-
-            return clients;
-        }        
-
-        // GET: api/Clients/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(Guid id)
-        {
-            var client = await _repository.Get(id);
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            return client;
-        }
-
         // PUT: api/Clients/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(Client clientUpdate)
+        public override async Task<IActionResult> Put(Client client)
         {
-            var personId = (await _peopleRepository.GetPerson(clientUpdate.Person.Id)).Id;
-
-            var person = new Person
-            {
-                Id = personId,
-                Email = clientUpdate.Person.Email,
-                FirstName = clientUpdate.Person.FirstName,
-                LastName = clientUpdate.Person.LastName,
-                Addresses = clientUpdate.Person.Addresses
-            };
-
-            return await _peopleController.UpdatePerson(person);
+            return await _peopleController.UpdatePerson(client.Person);
         }
 
         // POST: api/Clients
         [HttpPost]
-        public async Task<ActionResult<Client>> PostClient(Client newClient)
+        public override async Task<ActionResult> Post(Client newClient)
         {
             var person = await _peopleRepository.GetPersonByEmail(newClient.Person.Email);
 
             if (person == null)
             {
-                var newPerson = new Person
-                {
-                    Email = newClient.Person.Email,
-                    FirstName = newClient.Person.FirstName,
-                    LastName = newClient.Person.LastName,
-                    Addresses = newClient.Person.Addresses
-                };
+                await _peopleController.AddPerson(newClient.Person);
 
-                await _peopleController.AddPerson(newPerson);
-
-                var getPerson = await _peopleRepository.GetPersonByEmail(newPerson.Email);
-                getPerson.UserName = newPerson.Email;
+                var getPerson = await _peopleRepository.GetPersonByEmail(newClient.Person.Email);
+                getPerson.UserName = newClient.Person.Email;
 
                 await _userManager.UpdateAsync(getPerson);
             }
             else
             {
-                person.FirstName = newClient.Person.FirstName;
-                person.LastName = newClient.Person.LastName;
+                newClient.Person.Id = person.Id;
+                foreach (var address in newClient.Person.Addresses)
+                {
+                    address.PersonId = person.Id;
+                }
 
-                await _peopleRepository.Update(person);
+                await _peopleController.UpdatePerson(newClient.Person);
             }      
                        
             var client = new Client
@@ -118,12 +79,12 @@ namespace ITAcademyERP.Models
                 PersonId = _peopleRepository.GetPersonId(newClient.Person.Email)
             };
 
-            return await _repository.Add(client);                      
+            return await _repository.Add(client);                    
         }
 
         // DELETE: api/[controller]/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Client>> DeleteClient(Guid id)
+        public override async Task<ActionResult<Client>> Delete(Guid id)
         {
             var client = await _repository.Delete(id);
 
