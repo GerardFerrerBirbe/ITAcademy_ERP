@@ -67,10 +67,8 @@ export class ProductDetailComponent implements OnInit {
     let product: Product = {
       id: Guid.EMPTY,
       name: this.formGroup.get('name').value,
-      category: <ProductCategory>{
-        id: Guid.EMPTY,
-        name: this.formGroup.get('categoryName').value,
-      }
+      categoryId: this.productCategories.find(c => c.name == this.formGroup.get('categoryName').value).id,
+      category: null
     };
     console.table(product);
 

@@ -1,4 +1,5 @@
 ﻿using ITAcademyERP.Data;
+using ITAcademyERP.Data.Resources;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,9 @@ namespace ITAcademyERP.Models
         [ForeignKey("EmployeeId")]
         public Guid EmployeeId { get; set; }
         
-        public OrderState OrderState { get; set; }
+        public EOrderState OrderState { get; set; }
         
-        public OrderPriority OrderPriority { get; set; }
+        public EOrderPriority OrderPriority { get; set; }
         
         public DateTime CreationDate { get; set; }
         

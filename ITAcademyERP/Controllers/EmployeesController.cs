@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using ITAcademyERP.Data.Repositories;
 using System.Net;
-using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Data.Resources;
 
 namespace ITAcademyERP.Controllers
 {
@@ -24,7 +24,6 @@ namespace ITAcademyERP.Controllers
         private readonly PeopleController _peopleController;
         private readonly PeopleRepository _peopleRepository;
         private readonly ClientsRepository _clientsRepository;
-        private readonly AddressesController _addressesController;
         private readonly UserManager<Person> _userManager;
 
         public EmployeesController(
@@ -32,14 +31,12 @@ namespace ITAcademyERP.Controllers
             PeopleController peopleController,
             PeopleRepository peopleRepository,
             ClientsRepository clientsRepository,
-            AddressesController addressesController,
             UserManager<Person> userManager) : base(repository)
         {
             _repository = repository;
             _peopleRepository = peopleRepository;
             _peopleController = peopleController;
             _clientsRepository = clientsRepository;
-            _addressesController = addressesController;
             _userManager = userManager;
         }
 

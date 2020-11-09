@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ITAcademyERP.Controllers;
 using ITAcademyERP.Data;
-using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Data.Resources;
 using ITAcademyERP.Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +25,6 @@ namespace ITAcademyERP.Models
         private readonly PeopleController _peopleController;
         private readonly PeopleRepository _peopleRepository;
         private readonly EmployeesRepository _employeesRepository;
-        private readonly AddressesController _addressesController;
         private readonly UserManager<Person> _userManager;
 
         public ClientsController(
@@ -33,7 +32,6 @@ namespace ITAcademyERP.Models
             PeopleController peopleController,
             PeopleRepository peopleRepository,
             EmployeesRepository employeesRepository,
-            AddressesController addressesController,
             UserManager<Person> userManager) : base(repository)
         {
             _repository = repository;
@@ -41,7 +39,6 @@ namespace ITAcademyERP.Models
             _peopleRepository = peopleRepository;
             _employeesRepository = employeesRepository;
             _userManager = userManager;
-            _addressesController = addressesController;
         }
 
         // GET: api/Clients

@@ -1,4 +1,4 @@
-﻿using ITAcademyERP.Data.DTOs;
+﻿using ITAcademyERP.Data.Resources;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -219,18 +219,18 @@ namespace ITAcademyERP.Data
         {           
             List<Address> addresses = new List<Address>()
             {
-                new Address{Name = "C/ Montjuic, 127", Type = AddressType.Personal, PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
-                new Address{Name = "C/ Barcelona, 328", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
-                new Address{Name = "C/ Perill, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
-                new Address{Name = "C/ Girona, 124", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
-                new Address{Name = "C/ Granollers, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
-                new Address{Name = "C/ Major, 8", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
-                new Address{Name = "C/ Tort, 12", Type = AddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Mark").Id},
-                new Address{Name = "C/ Llarg, 200", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Maria").Id},
-                new Address{Name = "C/ Joanic, 12", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Silvia").Id},
-                new Address{Name = "C/ Ample, 1", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Gregori").Id},
-                new Address{Name = "C/ Curt, 320", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Philip").Id},
-                new Address{Name = "C/ Mallorca, 32", Type = AddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Georgina").Id}
+                new Address{Name = "C/ Montjuic, 127", Type = EAddressType.Personal, PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
+                new Address{Name = "C/ Barcelona, 328", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Jake").Id},
+                new Address{Name = "C/ Perill, 12", Type = EAddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
+                new Address{Name = "C/ Girona, 124", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Gerard").Id},
+                new Address{Name = "C/ Granollers, 12", Type = EAddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
+                new Address{Name = "C/ Major, 8", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Steve").Id},
+                new Address{Name = "C/ Tort, 12", Type = EAddressType.Personal,  PersonId = _context.People.First(p => p.FirstName == "Mark").Id},
+                new Address{Name = "C/ Llarg, 200", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Maria").Id},
+                new Address{Name = "C/ Joanic, 12", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Silvia").Id},
+                new Address{Name = "C/ Ample, 1", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Gregori").Id},
+                new Address{Name = "C/ Curt, 320", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Philip").Id},
+                new Address{Name = "C/ Mallorca, 32", Type = EAddressType.Entrega,  PersonId = _context.People.First(p => p.FirstName == "Georgina").Id}
             };
             return addresses;
         }
@@ -284,8 +284,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-09",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Gregori").Id,
-                    OrderPriority = OrderPriority.Baixa,
-                    OrderState = OrderState.Completada,
+                    OrderPriority = EOrderPriority.Baixa,
+                    OrderState = EOrderState.Completada,
                     CreationDate = new DateTime(2020,11,09),
                     AssignToEmployeeDate = new DateTime(2020,11,09),
                     FinalisationDate = new DateTime(2020,12,09)
@@ -295,8 +295,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-08",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Santi").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Philip").Id,
-                    OrderPriority = OrderPriority.Alta,
-                    OrderState = OrderState.PendentTractar,
+                    OrderPriority = EOrderPriority.Alta,
+                    OrderState = EOrderState.PendentTractar,
                     CreationDate = new DateTime(2020,09,09),
                     AssignToEmployeeDate = new DateTime(2020,10,09)
                 },
@@ -305,8 +305,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-07",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Georgina").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Silvia").Id,
-                    OrderPriority = OrderPriority.Mitjana,
-                    OrderState = OrderState.EnTractament,
+                    OrderPriority = EOrderPriority.Mitjana,
+                    OrderState = EOrderState.EnTractament,
                     CreationDate = new DateTime(2020,08,11),
                     AssignToEmployeeDate = new DateTime(2020,08,20)
                 },
@@ -315,8 +315,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-06",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Santi").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Silvia").Id,
-                    OrderPriority = OrderPriority.Baixa,
-                    OrderState = OrderState.Completada,
+                    OrderPriority = EOrderPriority.Baixa,
+                    OrderState = EOrderState.Completada,
                     CreationDate = new DateTime(2020,06,09),
                     AssignToEmployeeDate = new DateTime(2020,06,09),
                     FinalisationDate = new DateTime(2020,06,09)
@@ -326,8 +326,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-05",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Georgina").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Georgina").Id,
-                    OrderPriority = OrderPriority.Alta,
-                    OrderState = OrderState.PendentTractar,
+                    OrderPriority = EOrderPriority.Alta,
+                    OrderState = EOrderState.PendentTractar,
                     CreationDate = new DateTime(2020,05,09),
                     AssignToEmployeeDate = new DateTime(2020,05,09)
                 },
@@ -336,8 +336,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-04",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Gerard").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Maria").Id,
-                    OrderPriority = OrderPriority.Mitjana,
-                    OrderState = OrderState.EnTractament,
+                    OrderPriority = EOrderPriority.Mitjana,
+                    OrderState = EOrderState.EnTractament,
                     CreationDate = new DateTime(2020,04,11),
                     AssignToEmployeeDate = new DateTime(2020,04,20)
                 },
@@ -346,8 +346,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-03",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Steve").Id,
-                    OrderPriority = OrderPriority.Baixa,
-                    OrderState = OrderState.Completada,
+                    OrderPriority = EOrderPriority.Baixa,
+                    OrderState = EOrderState.Completada,
                     CreationDate = new DateTime(2020,03,09),
                     AssignToEmployeeDate = new DateTime(2020,03,09),
                     FinalisationDate = new DateTime(2020,03,09)
@@ -357,8 +357,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-02",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Jake").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Mark").Id,
-                    OrderPriority = OrderPriority.Alta,
-                    OrderState = OrderState.PendentTractar,
+                    OrderPriority = EOrderPriority.Alta,
+                    OrderState = EOrderState.PendentTractar,
                     CreationDate = new DateTime(2020,02,09),
                     AssignToEmployeeDate = new DateTime(2020,02,09)
                 },
@@ -367,8 +367,8 @@ namespace ITAcademyERP.Data
                     OrderNumber = "2020-01",
                     EmployeeId = _context.Employees.First(o => o.Person.FirstName == "Gerard").Id,
                     ClientId = _context.Clients.First(o => o.Person.FirstName == "Mark").Id,
-                    OrderPriority = OrderPriority.Mitjana,
-                    OrderState = OrderState.EnTractament,
+                    OrderPriority = EOrderPriority.Mitjana,
+                    OrderState = EOrderState.EnTractament,
                     CreationDate = new DateTime(2020,01,11),
                     AssignToEmployeeDate = new DateTime(2020,01,20)
                 }

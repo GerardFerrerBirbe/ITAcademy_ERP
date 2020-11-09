@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Product } from './product';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class ProductService {
 
   deleteProduct(product: Product | string): Observable<Product> {
     const id = typeof product === 'string' ? product : product.id;
-    const url = `${this.apiUrl}/generic/${id}`;
+    const url = `${this.apiUrl}/${id}`;
 
     return this.http.delete<Product>(url, this.httpOptions);
   }

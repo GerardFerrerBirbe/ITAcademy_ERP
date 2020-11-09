@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.Resources
 {
-    public enum OrderPriority
+    public enum EOrderPriority
     {
         [EnumMember(Value = "Baixa")]
         Baixa,

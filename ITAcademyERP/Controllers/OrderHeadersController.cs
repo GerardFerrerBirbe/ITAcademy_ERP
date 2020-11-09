@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ITAcademyERP.Data.Repositories;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Data.Resources;
 
 namespace ITAcademyERP.Controllers
 {
@@ -75,7 +75,7 @@ namespace ITAcademyERP.Controllers
         {
             var orderHeader = await _repository.Get(orderHeaderUpdate.Id);
 
-            if (orderHeaderUpdate.OrderState == OrderState.Completada && orderHeaderUpdate.OrderState != orderHeader.OrderState)
+            if (orderHeaderUpdate.OrderState == EOrderState.Completada && orderHeaderUpdate.OrderState != orderHeader.OrderState)
             {
                 orderHeader.FinalisationDate = DateTime.Now;
             }
@@ -127,7 +127,7 @@ namespace ITAcademyERP.Controllers
                         FirstName = orderHeader.Client.Person.FirstName,
                         LastName = orderHeader.Client.Person.LastName,
                         Email = orderHeader.Client.Person.Email,
-                        Addresses = orderHeader.Client.Person.Addresses.Where(a => a.Type == AddressType.Entrega).ToList()
+                        Addresses = orderHeader.Client.Person.Addresses.Where(a => a.Type == EAddressType.Entrega).ToList()
                     }
                 },
                 Employee = orderHeader.Employee,

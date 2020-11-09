@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using ITAcademyERP.Data;
 using Microsoft.EntityFrameworkCore;
 using ITAcademyERP.Data.Repositories;
-using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Data.Resources;
 
 namespace ITAcademyERP.Controllers
 {

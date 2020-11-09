@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ITAcademyERP.Data.DTOs
+namespace ITAcademyERP.Data.Resources
 {
     public class UserInfo
     {

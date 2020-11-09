@@ -20,7 +20,6 @@ namespace ITAcademyERP.Models
         [StringLength(50, ErrorMessage = "El producte ha de tenir menys de 50 caràcters")]
         public string Name { get; set; }
 
-        [JsonIgnore]
         //[Required(ErrorMessage = "Camp requerit")]
         [ForeignKey("CategoryId")]
         public Guid CategoryId { get; set; }

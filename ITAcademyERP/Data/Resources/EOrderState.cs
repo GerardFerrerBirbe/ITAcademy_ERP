@@ -5,9 +5,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace ITAcademyERP.Models
+namespace ITAcademyERP.Data.Resources
 {
-    public enum OrderState
+    public enum EOrderState
     {
         [EnumMember(Value = "Pendent de tractar")]
         PendentTractar,

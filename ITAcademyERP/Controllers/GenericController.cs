@@ -26,7 +26,6 @@ namespace ITAcademyERP.Controllers
         // GET: api/[controller]
 
         [HttpGet]
-        [Route("generic/")]
         public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
             return await _repository.GetAll();
@@ -34,8 +33,8 @@ namespace ITAcademyERP.Controllers
 
         // GET: api/[controller]/5
 
-        [HttpGet("generic/{id}")]
-        public async Task<ActionResult<TEntity>> Get(Guid id)
+        [HttpGet("{id}")]
+        public virtual async Task<ActionResult<TEntity>> Get(Guid id)
         {
             var entity = await _repository.Get(id);
             if (entity == null)
@@ -46,23 +45,22 @@ namespace ITAcademyERP.Controllers
         }
 
         // PUT: api/[controller]/5
-        [HttpPut("generic/{id}")]
-        public async Task<IActionResult> Put(TEntity entity)
+        [HttpPut("{id}")]
+        public virtual async Task<IActionResult> Put(TEntity entity)
         {
             return await _repository.Update(entity);
         }
 
         // POST: api/[controller]
-        [Route("generic/")]
         [HttpPost]
-        public async Task<ActionResult> Post(TEntity entity)
+        public virtual async Task<ActionResult> Post(TEntity entity)
         {
             return await _repository.Add(entity);            
         }
 
         // DELETE: api/[controller]/5
-        [HttpDelete("generic/{id}")]
-        public async Task<ActionResult<TEntity>> Delete(Guid id)
+        [HttpDelete("{id}")]
+        public virtual async Task<ActionResult<TEntity>> Delete(Guid id)
         {
             var entity = await _repository.Delete(id);
             if (entity == null)

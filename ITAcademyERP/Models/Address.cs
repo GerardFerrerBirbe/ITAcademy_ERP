@@ -1,5 +1,5 @@
 ﻿using ITAcademyERP.Data;
-using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Data.Resources;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace ITAcademyERP.Models
 
         //[Required(ErrorMessage = "Camp requerit")]
         [Column("Type", TypeName = "int")]
-        public AddressType Type { get; set; }       
+        public EAddressType Type { get; set; }       
 
         [JsonIgnore]
         public virtual Person Person { get; set; }

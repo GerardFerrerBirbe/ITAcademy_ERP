@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITAcademyERP.Data;
-using ITAcademyERP.Data.DTOs;
+using ITAcademyERP.Data.Resources;
 using ITAcademyERP.Data.Repositories;
 using ITAcademyERP.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

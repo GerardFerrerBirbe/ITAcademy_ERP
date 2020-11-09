@@ -17,25 +17,25 @@ export class ProductCategoryService {
   constructor(private http: HttpClient) { }
 
   getProductCategories(): Observable<ProductCategory[]>{
-    return this.http.get<ProductCategory[]>(this.apiUrl + "/generic/");
+    return this.http.get<ProductCategory[]>(this.apiUrl);
   }
 
   getProductCategory(id: string): Observable<ProductCategory> {
-    const url = `${this.apiUrl}/generic/${id}`;
+    const url = `${this.apiUrl}/${id}`;
     return this.http.get<ProductCategory>(url);
   }
 
   updateProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
-    return this.http.put<ProductCategory>(this.apiUrl + "/generic/" + productCategory.id, productCategory, this.httpOptions);
+    return this.http.put<ProductCategory>(this.apiUrl + "/" + productCategory.id, productCategory, this.httpOptions);
   }
 
   addProductCategory(productCategory: ProductCategory): Observable<ProductCategory> {
-    return this.http.post<ProductCategory>(this.apiUrl + "/generic", productCategory, this.httpOptions);
+    return this.http.post<ProductCategory>(this.apiUrl, productCategory, this.httpOptions);
   }
 
   deleteProductCategory(productCategory: ProductCategory | string): Observable<ProductCategory> {
     const id = typeof productCategory === 'string' ? productCategory : productCategory.id;
-    const url = `${this.apiUrl}/generic/${id}`;
+    const url = `${this.apiUrl}/${id}`;
 
     return this.http.delete<ProductCategory>(url, this.httpOptions);
   }
