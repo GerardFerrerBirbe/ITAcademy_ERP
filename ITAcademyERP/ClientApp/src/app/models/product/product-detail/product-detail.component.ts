@@ -63,7 +63,6 @@ export class ProductDetailComponent implements OnInit {
 
   save() {
     this.errors = {};
-    //let product: Product = Object.assign({}, this.formGroup.value;
     let product: Product = {
       id: Guid.EMPTY,
       name: this.formGroup.get('name').value,

@@ -17,7 +17,6 @@ namespace ITAcademyERP.Models
         [Key]
         public Guid Id { get; set; }
         
-        //[Required]
         [ForeignKey("PersonId")]
         public string PersonId { get; set; }
 

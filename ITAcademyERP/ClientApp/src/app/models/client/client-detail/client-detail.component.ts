@@ -123,7 +123,6 @@ export class ClientDetailComponent implements OnInit {
 
   save() {
     this.errors = {};
-    //let client: Client = Object.assign({}, this.formGroup.value);
     let client: Client = {
       id: Guid.EMPTY,
       personId: Guid.EMPTY,

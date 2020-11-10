@@ -12,7 +12,7 @@
         type="string"
         required
         formControlName="email"/>
-        <span class="text-danger small" *ngIf="errors">{{ errors.Email }}{{ errors.duplicateName }}</span>
+        <span class="text-danger small" *ngIf="errors">{{ errors["Person.Email"] }}{{ errors.duplicateName }}</span>
     </div>
   </div>
   <div class="row"> 
@@ -23,7 +23,7 @@
       type="string"
       required
       formControlName="firstName"/>
-      <span class="text-danger small" *ngIf="errors">{{ errors.FirstName }}</span>
+      <span class="text-danger small" *ngIf="errors">{{ errors["Person.FirstName"] }}</span>
     </div>
     <div class="form-group col-8 col-md-5 col-lg-4">
       <label for="lastNameId">Cognoms</label>
@@ -32,7 +32,7 @@
       type="string"
       required
       formControlName="lastName"/>
-      <span class="text-danger small" *ngIf="errors">{{ errors.LastName }}</span>
+      <span class="text-danger small" *ngIf="errors">{{ errors["Person.LastName"] }}</span>
     </div>
   </div>
   <div class="row">

@@ -20,11 +20,9 @@ namespace ITAcademyERP.Models
         [ForeignKey("PersonId")]
         public string PersonId { get; set; }
 
-        //[Required(ErrorMessage = "Camp requerit")]
         [MaxLength(20, ErrorMessage = "El nom ha de tenir com a màxim 20 caràcters")]
         public string Name { get; set; }
 
-        //[Required(ErrorMessage = "Camp requerit")]
         [Column("Type", TypeName = "int")]
         public EAddressType Type { get; set; }       
 

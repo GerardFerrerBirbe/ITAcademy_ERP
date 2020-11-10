@@ -16,7 +16,6 @@ namespace ITAcademyERP.Models
         [Key]
         public Guid Id { get; set; }        
         
-        [Required(ErrorMessage ="Camp requerit")]
         [StringLength(50, ErrorMessage ="El nom ha de tenir menys de 50 caràcters")]
         public string Name { get; set; }
 

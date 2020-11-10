@@ -114,7 +114,6 @@ export class OrderDetailComponent implements OnInit {
 
   addOrderLine(){
     this.errors = {};
-    //let orderLine: OrderLine = Object.assign({}, this.orderLineFormGroup.value);
     let orderLine: OrderLine = {
       id: Guid.EMPTY,
       orderHeaderId: this.orderHeader.id,

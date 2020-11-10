@@ -130,7 +130,6 @@ export class EmployeeDetailComponent implements OnInit {
 
   save() {
     this.errors = {};
-    //let employee: Employee = Object.assign({}, this.formGroup.value);
     let employee: Employee = {
       id: Guid.EMPTY,
       personId: Guid.EMPTY,
