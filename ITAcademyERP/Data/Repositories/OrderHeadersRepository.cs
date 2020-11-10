@@ -14,8 +14,7 @@ namespace ITAcademyERP.Data.Repositories
         private readonly ITAcademyERPContext _context;
 
         public OrderHeadersRepository(
-            ITAcademyERPContext context
-            ) : base(context)
+            ITAcademyERPContext context) : base(context)
         {
             _context = context;
         }

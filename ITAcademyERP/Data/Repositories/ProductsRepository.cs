@@ -31,12 +31,5 @@ namespace ITAcademyERP.Data.Repositories
                 .Include(p => p.Category)
                 .SingleOrDefaultAsync(p => p.Id == id);         
         }
-
-        public Guid GetProductId(string productName)
-        {
-            var productId = _context.Products.FirstOrDefault(x => x.Name == productName).Id;
-
-            return productId;
-        }
     }
 }

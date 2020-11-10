@@ -11,14 +11,11 @@ namespace ITAcademyERP.Data.Repositories
     public class EmployeesRepository : GenericRepository<Guid, Employee, ITAcademyERPContext>
     {
         private readonly ITAcademyERPContext _context;
-        private readonly PeopleRepository _peopleRepository;
 
         public EmployeesRepository(
-            ITAcademyERPContext context,
-            PeopleRepository peopleRepository) : base(context)
+            ITAcademyERPContext context) : base(context)
         {
             _context = context;
-            _peopleRepository = peopleRepository;
         }
 
         public override async Task<List<Employee>> GetAll()
@@ -43,15 +40,6 @@ namespace ITAcademyERP.Data.Repositories
                 .Include(e => e.Person)
                 .ThenInclude(p => p.Addresses)
                 .SingleOrDefaultAsync(e => e.PersonId == personId);
-        }
-
-        public Guid GetEmployeeId(string employeeName)
-        {
-            var personId = _peopleRepository.GetPersonIdByName(employeeName);
-
-            return _context.Employees
-                    .FirstOrDefault(x => x.PersonId == personId)
-                    .Id;
         }
     }
 }

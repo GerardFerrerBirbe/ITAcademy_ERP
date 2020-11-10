@@ -18,12 +18,6 @@ namespace ITAcademyERP.Data.Repositories
             _context = context;
         }
 
-        public async Task<Address> GetAddress(Guid id)
-        {
-            return await _context.Addresses
-                .SingleOrDefaultAsync(p => p.Id == id);
-        }
-
         public IActionResult DeleteList([FromBody] List<string> ids)
         {
             try

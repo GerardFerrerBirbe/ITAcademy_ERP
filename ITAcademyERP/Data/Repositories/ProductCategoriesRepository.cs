@@ -14,12 +14,5 @@ namespace ITAcademyERP.Data.Repositories
         {
             _context = context;
         }
-        
-        public Guid GetProductCategoryId(string name)
-        {
-            return _context.ProductCategories
-                .FirstOrDefault(p => p.Name == name)
-                .Id;
-        }
     }
 }

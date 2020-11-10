@@ -37,13 +37,6 @@ namespace ITAcademyERP.Data.Repositories
                 .Id;
         }
 
-        public string GetPersonIdByName(string personName)
-        {
-            return _context.People
-                            .FirstOrDefault(p => p.FullName == personName)
-                            .Id;
-        }
-
         public async Task<Person> Delete(string personId)
         {
             var person = await _context.People.FindAsync(personId);
